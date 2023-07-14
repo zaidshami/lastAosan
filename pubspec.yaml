@@ -1,0 +1,105 @@
+#chngname
+name: flutter_Aosan_ecommerce
+description: A new Flutter setup application for starting a project.
+
+publish_to: 'none'
+
+version: 1.4.2+38
+
+environment:
+  sdk: ">=2.7.0 <3.8.0"
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  firebase_remote_config:
+  decorated_dropdownbutton:
+ # getwidget:
+  #country_code_picker: ^2.0.2
+  logger:
+  firebase_auth: any
+  firebase_in_app_messaging: any
+  firebase_analytics: any
+  # open_street_map_search_and_pick:
+  slimy_card:
+  cupertino_icons: ^1.0.2
+  get_it: ^7.2.0
+  provider:
+  connectivity: ^3.0.3
+  dio: ^5.0.2
+  http: ^0.13.1
+  freezed: ^2.0.3+1
+  shared_preferences: ^2.0.5
+  fancy_bottom_navigation: ^0.3.3
+  carousel_slider: ^4.1.1
+  smooth_page_indicator: ^1.0.0+2
+  flutter_staggered_grid_view: ^0.4.1
+
+  shimmer: ^2.0.0-nullsafety.0
+  url_launcher: ^6.0.2
+  image_picker: ^0.8.4+8
+  webview_flutter: ^3.0.0
+  flutter_html: ^3.0.0-alpha.3
+  share: ^2.0.1
+  photo_view: ^0.14.0
+  package_info: ^2.0.0
+  firebase_core: ^1.7.0
+  firebase_messaging:  11.4.1
+  flutter_local_notifications: ^9.0.0
+  path_provider: ^2.0.1
+  google_sign_in: ^5.1.0
+  flutter_facebook_auth: ^4.0.1
+  flutter_svg: ^1.0.3
+  phone_number: ^0.12.0+1
+  #country_code_picker: ^2.0.2
+  pin_code_fields: ^7.0.0
+  google_maps_flutter: ^2.2.1
+  flutter_google_places: ^0.3.0
+  geocoding: ^2.0.0
+  geolocator: ^8.2.0
+#  flutter_typeahead: ^4.4.0
+  marquee: ^2.2.1
+  flutter_rating_bar: ^4.0.0
+  flutter_widget_from_html: ^0.8.5
+  flutter_widget_from_html_core: ^0.8.5+3
+  flutter_html_table: any
+  fluttertoast: ^8.0.9
+  cached_network_image: ^3.2.1
+  loading_overlay_pro:
+  firebase_core_platform_interface: 4.5.1
+  sign_in_with_apple:
+  flutter_staggered_animations:
+  flutter_web_auth:
+  flutter_swiper:
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/language/
+
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal/Tajawal-Light.ttf
+          weight: 400
+        - asset: assets/fonts/Tajawal/Tajawal-ExtraLight.ttf
+          weight: 500
+        - asset: assets/fonts/Tajawal/Tajawal-Bold.ttf
+          weight: 600
+        - asset: assets/fonts/Tajawal/Tajawal-ExtraBold.ttf
+          weight: 600
+
+        - asset: assets/fonts/Tajawal/Tajawal-Regular.ttf
+        - asset: assets/fonts/Tajawal/Tajawal-Bold.ttf
+          weight: 700
