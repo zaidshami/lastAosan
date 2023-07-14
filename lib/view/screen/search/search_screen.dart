@@ -16,12 +16,15 @@ import '../../../../utill/color_resources.dart';
 import '../../../../utill/custom_themes.dart';
 import '../../../../utill/dimensions.dart';
 import '../../../data/model/SearchListModels/SearchListModel.dart';
+import '../../../data/model/response/filter_category_1.dart';
 import '../../../provider/brand_provider.dart';
 import '../../../provider/category_provider.dart';
 import '../../basewidget/attributes_filter_category.dart';
 import '../../basewidget/product_attributes_filter_category.dart';
 
 class SearchScreen extends StatefulWidget {
+  Attribute searchAttribute;
+  SearchScreen(this.searchAttribute);
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -31,6 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SearchProvider>(context,listen: false).clearFilters();
+
       Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
       Provider.of<SearchProvider>(context, listen: false).initHistoryList();
       Provider.of<SearchProvider>(context, listen: false).init_lists(
@@ -70,8 +75,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         child: SearchWidget(
                           hintText: getTranslated('SEARCH_HINT', context),
                           onSubmit: (String text) {
-                            Provider.of<SearchProvider>(context, listen: false)
-                                .searchProduct(text, context,reload: true);
+                            // Provider.of<SearchProvider>(context, listen: false)
+                            //     .searchProduct(text, context,reload: true);
                             Provider.of<SearchProvider>(context, listen: false)
                                 .saveSearchAddress(text);
                           },
@@ -122,9 +127,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
                       :
                   Expanded(
-flex: 4,
+                      flex: 4,
                       child:
-                      NewProductAttributeList())
+                      NewProductAttributeList(widget.searchAttribute))
                   ///HISTORY WIDGET
 /*
                   Expanded(

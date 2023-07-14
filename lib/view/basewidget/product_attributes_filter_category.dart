@@ -3,6 +3,7 @@ import 'package:flutter_Aosan_ecommerce/provider/attributes_provider.dart';
 import 'package:flutter_Aosan_ecommerce/view/basewidget/get_loading.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/model/response/filter_category_1.dart';
 import '../../provider/search_provider.dart';
 
 /*class ProductAttributeList extends StatelessWidget {
@@ -54,32 +55,50 @@ import '../../provider/search_provider.dart';
   }
 }*/
 class NewProductAttributeList extends StatefulWidget {
+  Attribute searchAttribute;
+  NewProductAttributeList(this.searchAttribute);
   @override
   _NewProductAttributeListState createState() => _NewProductAttributeListState();
 }
 
 class _NewProductAttributeListState extends State<NewProductAttributeList> {
-  final TextEditingController _searchController = TextEditingController();
-  final Map<String, List<String>> _selectedAttributes = {};
 
   @override
   Widget build(BuildContext context) {
     return
 
       FutureBuilder(
-        future: Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterList(),
+        future: Provider.of<AttributeProvider>(context, listen: false).
+        fetchCategoryFilterList(Provider.of<SearchProvider>(context).category_search_list),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return getloading4(context);
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
+
+            var selectedAttributes=Provider.of<SearchProvider>(context).selectedAttributes;
+
             return Consumer<AttributeProvider>(
               builder: (context, provider, child) {
+
+                print("selectedAttributes klength ${selectedAttributes.keys.toList().length}");
+                print("attributes klength ${provider.attributes.length}");
+             //   if(provider.attributes.length>selectedAttributes.keys.toList().length) {
+                if(provider.attributes.length>selectedAttributes.keys.toList().length) {
+                  // Provider.of<SearchProvider>(context,listen: false).clearFilters();
+                  provider.attributes.forEach((element) =>
+                  selectedAttributes[element.id.toString()] = []);
+                  if(widget.searchAttribute!=Attribute.nonAttribute()){
+                    selectedAttributes[widget.searchAttribute.id.toString()] =widget.searchAttribute.getChildIds;
+                  }
+                }
+
+
                 return Column(
                   children: [
                     TextField(
-                      controller: _searchController,
+                      controller: Provider.of<SearchProvider>(context, listen: false).searchController,
                       decoration: InputDecoration(
                         labelText: 'Search',
                       ),
@@ -92,38 +111,93 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                             child: ListView.builder(
                               itemCount: provider.attributes.length,
                               itemBuilder: (context, index) {
+                                var item=provider.attributes[index];
                                 return ListTile(
-                                  title: Text(provider.attributes[index].name),
-                                  onTap: () => provider.selectParent(index),
-                                  tileColor: provider.selectedParentIndex == index ? Colors.blue : null,
+                                  title: Text(item.name),
+                                  onTap: () => provider.selectParent(item.id),
+                                  tileColor: provider.selectedParentIndex == item.id ? Colors.blue : null,
                                 );
                               },
                             ),
                           ),
                           Expanded(
                             flex: 7,
-                            child: ListView(
-                              children: provider.attributes[provider.selectedParentIndex].childes.map((child) {
-                                return CheckboxListTile(
-                                  title: Text(child.name),
-                                  value: Provider.of<SearchProvider>(context).selectedAttributes[provider.attributes[provider.selectedParentIndex].name]?.contains(child.name) ?? false,
-                                  onChanged: (bool value) {
-                                    if (value) {
-                                      Provider.of<SearchProvider>(context, listen: false).selectAttribute(provider.attributes[provider.selectedParentIndex].name, child.name);
-                                    } else {
-                                      Provider.of<SearchProvider>(context, listen: false).deselectAttribute(provider.attributes[provider.selectedParentIndex].name, child.name);
-                                    }
-                                  },
-                                );
+                            child: Builder(
+                              builder: (_) {
 
-                              }).toList(),
+                                var searchProvider=Provider.of<SearchProvider>(context,listen: false);
+
+                                int parentType=provider.attributes.firstWhere((element) =>
+                                element.id==provider.selectedParentIndex).type;
+
+                                var val=searchProvider.
+                                selectedAttributes[provider.selectedParentIndex.toString()];
+
+                                List<Child> childList=[];
+
+                                if(provider.attributes.where((element) => element.id==provider.selectedParentIndex).isNotEmpty){
+
+                                  childList=provider.attributes.firstWhere((element) =>
+                                  element.id==provider.selectedParentIndex).childes;
+
+                                }
+
+                                if(parentType==2){
+                                  return Column(
+                                    children: [
+                                      Switch(value: searchProvider.switchStatus, onChanged: (j){
+                                        searchProvider.setSearch(j);
+
+                                      }),
+                                      TextField(
+                                        controller: searchProvider.minPriceController,
+                                        decoration: InputDecoration(
+                                          labelText: 'الحد الادنى',
+                                          enabled: searchProvider.switchStatus
+                                        ),
+                                      ),
+                                      TextField(
+                                        controller: searchProvider.maxPriceController,
+                                        decoration: InputDecoration(
+                                          labelText: 'الحد الاعلى',
+                                            enabled: searchProvider.switchStatus
+
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                                return ListView(
+                                  children: childList.map((child) {
+                                    return CheckboxListTile(
+                                      title: Text(child.name),
+                                      value:
+
+                                      val.where((element) => element==child.id).isNotEmpty,
+
+                                       onChanged: (bool value) {
+                                        if (value) {
+                                          searchProvider.
+                                          selectAttribute(provider.attributes.firstWhere((element) =>
+                                          element.id==provider.selectedParentIndex).id.toString(), child.id);
+                                        } else {
+                                          searchProvider.
+                                          deselectAttribute(provider.attributes.firstWhere((element) =>
+                                          element.id==provider.selectedParentIndex).id.toString(), child.id);
+                                        }
+                                      },
+                                    );
+
+                                  }).toList(),
+                                );
+                              }
                             ),
                           ),
                         ],
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () => _search(context),
+                      onPressed: () =>Provider.of<SearchProvider>(context, listen: false).search(context),
                       child: Text('Search'),
                     ),
                   ],
@@ -137,26 +211,6 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
   }
 
 
-  void _search(BuildContext context) async {
-    print(   "the option is : "+ _selectedAttributes["option"].toString());
-    print(   "the category is : "+ _selectedAttributes["category"].toString());
-    print(   "the brand is : "+ _selectedAttributes["brand"].toString());
-    print(   "the price is : "+ _selectedAttributes["price"].toString());
-    print(   "the color is : "+ _selectedAttributes["color"].toString());
-    print(   "the discount is : "+ _selectedAttributes["discount"].toString());
-    // You might need to adjust this code   based on the structure of your _selectedAttributes map and the requirements of your server.
-    Provider.of<SearchProvider>(context, listen: false).newSearchProduct(
-      _searchController.text,
-      _selectedAttributes["option"],
-      _selectedAttributes["category"],
-      _selectedAttributes["brand"],
-      _selectedAttributes["price"]?.map((e) => double.tryParse(e))?.toList(),
-      _selectedAttributes["size"],
-      _selectedAttributes["color"],
-      _selectedAttributes["discount"]?.map((e) => double.tryParse(e))?.toList(),
-      context,
-      reload: false
-    );
-  }
+
 
 }

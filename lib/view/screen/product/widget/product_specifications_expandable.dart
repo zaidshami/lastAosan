@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
-import 'package:getwidget/getwidget.dart';
+// import 'package:getwidget/getwidget.dart';
 
 import '../../../../localization/language_constrants.dart';
 import '../../../../utill/custom_themes.dart';
@@ -26,109 +26,111 @@ class SimpleExpandablePage extends StatelessWidget {
           /// ----------------------------------------------------------
           /// First expandable widget
           /// ----------------------------------------------------------
-          productSpecification != null||modelNumber!=null ?   GFAccordion(
-            collapsedTitleBackgroundColor: Colors.grey.withOpacity(0.2),
-            contentBackgroundColor: Colors.transparent,
-        expandedTitleBackgroundColor:Colors.white,
-            titleChild:Text( getTranslated('specification', context), style: titilliumSemiBold.copyWith(fontSize: 15),),
-            contentChild:
-                Column(
-                  children: [
-                    productSpecification !=null ? Html(
-                      data: productSpecification,
-
-                      style: {
-                        "html": Style(
-                            fontFamily: 'Tajawal',
-                            fontSize: FontSize(13),
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey
-                        ),
-                        "table": Style(
-                          backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
-                          fontFamily: 'Tajawal',
-                          fontSize: FontSize(15),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        "tr": Style(
-                          border: Border(bottom: BorderSide(color: Colors.grey)),
-                          fontSize: FontSize(15),
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Tajawal',
-                        ),
-                        "th": Style(
-                          padding: EdgeInsets.all(6),
-                          backgroundColor: Colors.grey,
-                          fontFamily: 'Tajawal',
-                          fontSize: FontSize(15),
-                          fontWeight: FontWeight.bold,
-                        ),
-                        "td": Style(
-                          padding: EdgeInsets.all(6),
-                          alignment: Alignment.topLeft,
-                          fontFamily: 'Tajawal',
-                          fontSize: FontSize(15),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      },
-                    ) : SizedBox(),
-                    modelNumber !=null ? Align(
-                      alignment: Alignment.centerRight,
-                      child: Text('رقم الموديل:'+"   "+modelNumber,style: titilliumRegular.copyWith(
-                          fontSize: Dimensions.FONT_SIZE_DEFAULT,color: Colors.grey,),),
-                    ) : SizedBox(),
-
-                  ],
-                ),
-
-          ):SizedBox(),
-          productSpecification2!=null?  GFAccordion(
-            collapsedTitleBackgroundColor: Colors.grey.withOpacity(0.2),
-            contentBackgroundColor: Colors.transparent,
-            expandedTitleBackgroundColor:Colors.white,
-            titleChild:Text('الوصف', style: titilliumSemiBold.copyWith(fontSize: 15),),
-            contentChild:
-            productSpecification2 !=null ?
-            Html(
-              data: productSpecification2,
-
-              style: {
-                "html": Style(
-                  fontFamily: 'Tajawal',
-                  fontSize: FontSize(13),
-                  fontWeight: FontWeight.bold,
-                ),
-                "table": Style(
-                  backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
-                  fontFamily: 'Tajawal',
-                  fontSize: FontSize(15),
-                  fontWeight: FontWeight.bold,
-                ),
-                "tr": Style(
-                  border: Border(bottom: BorderSide(color: Colors.grey)),
-                  fontSize: FontSize(15),
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Tajawal',
-                ),
-                "th": Style(
-                  padding: EdgeInsets.all(6),
-                  backgroundColor: Colors.grey,
-                  fontFamily: 'Tajawal',
-                  fontSize: FontSize(15),
-                  fontWeight: FontWeight.bold,
-                ),
-                "td": Style(
-                  padding: EdgeInsets.all(6),
-                  alignment: Alignment.topLeft,
-                  fontFamily: 'Tajawal',
-                  fontSize: FontSize(15),
-                  fontWeight: FontWeight.bold,
-                ),
-              },
-            )
-                :
-          SizedBox(),
-          ):SizedBox(),
+          productSpecification != null||modelNumber!=null ?
+          SizedBox():SizedBox()
+        //   GFAccordion(
+        //     collapsedTitleBackgroundColor: Colors.grey.withOpacity(0.2),
+        //     contentBackgroundColor: Colors.transparent,
+        // expandedTitleBackgroundColor:Colors.white,
+        //     titleChild:Text( getTranslated('specification', context), style: titilliumSemiBold.copyWith(fontSize: 15),),
+        //     contentChild:
+        //         Column(
+        //           children: [
+        //             productSpecification !=null ? Html(
+        //               data: productSpecification,
+        //
+        //               style: {
+        //                 "html": Style(
+        //                     fontFamily: 'Tajawal',
+        //                     fontSize: FontSize(13),
+        //                     fontWeight: FontWeight.bold,
+        //                     color: Colors.grey
+        //                 ),
+        //                 "table": Style(
+        //                   backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+        //                   fontFamily: 'Tajawal',
+        //                   fontSize: FontSize(15),
+        //                   fontWeight: FontWeight.bold,
+        //                 ),
+        //                 "tr": Style(
+        //                   border: Border(bottom: BorderSide(color: Colors.grey)),
+        //                   fontSize: FontSize(15),
+        //                   fontWeight: FontWeight.bold,
+        //                   fontFamily: 'Tajawal',
+        //                 ),
+        //                 "th": Style(
+        //                   padding: EdgeInsets.all(6),
+        //                   backgroundColor: Colors.grey,
+        //                   fontFamily: 'Tajawal',
+        //                   fontSize: FontSize(15),
+        //                   fontWeight: FontWeight.bold,
+        //                 ),
+        //                 "td": Style(
+        //                   padding: EdgeInsets.all(6),
+        //                   alignment: Alignment.topLeft,
+        //                   fontFamily: 'Tajawal',
+        //                   fontSize: FontSize(15),
+        //                   fontWeight: FontWeight.bold,
+        //                 ),
+        //               },
+        //             ) : SizedBox(),
+        //             modelNumber !=null ? Align(
+        //               alignment: Alignment.centerRight,
+        //               child: Text('رقم الموديل:'+"   "+modelNumber,style: titilliumRegular.copyWith(
+        //                   fontSize: Dimensions.FONT_SIZE_DEFAULT,color: Colors.grey,),),
+        //             ) : SizedBox(),
+        //
+        //           ],
+        //         ),
+        //
+        //   ):SizedBox(),
+        //   productSpecification2!=null?  GFAccordion(
+        //     collapsedTitleBackgroundColor: Colors.grey.withOpacity(0.2),
+        //     contentBackgroundColor: Colors.transparent,
+        //     expandedTitleBackgroundColor:Colors.white,
+        //     titleChild:Text('الوصف', style: titilliumSemiBold.copyWith(fontSize: 15),),
+        //     contentChild:
+        //     productSpecification2 !=null ?
+        //     Html(
+        //       data: productSpecification2,
+        //
+        //       style: {
+        //         "html": Style(
+        //           fontFamily: 'Tajawal',
+        //           fontSize: FontSize(13),
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //         "table": Style(
+        //           backgroundColor: Color.fromARGB(0x50, 0xee, 0xee, 0xee),
+        //           fontFamily: 'Tajawal',
+        //           fontSize: FontSize(15),
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //         "tr": Style(
+        //           border: Border(bottom: BorderSide(color: Colors.grey)),
+        //           fontSize: FontSize(15),
+        //           fontWeight: FontWeight.bold,
+        //           fontFamily: 'Tajawal',
+        //         ),
+        //         "th": Style(
+        //           padding: EdgeInsets.all(6),
+        //           backgroundColor: Colors.grey,
+        //           fontFamily: 'Tajawal',
+        //           fontSize: FontSize(15),
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //         "td": Style(
+        //           padding: EdgeInsets.all(6),
+        //           alignment: Alignment.topLeft,
+        //           fontFamily: 'Tajawal',
+        //           fontSize: FontSize(15),
+        //           fontWeight: FontWeight.bold,
+        //         ),
+        //       },
+        //     )
+        //         :
+        //   SizedBox(),
+        //   ):SizedBox(),
 
           /// ----------------------------------------------------------
           /// Second expandable widget with icons

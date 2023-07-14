@@ -79,7 +79,7 @@ class SearchWidget extends StatelessWidget {
             InkWell(
               onTap: (){
                 Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( _controller.text.toString());
-                Provider.of<SearchProvider>(context, listen: false).searchProduct( _controller.text.toString(), context);
+               // Provider.of<SearchProvider>(context, listen: false).searchProduct( _controller.text.toString(), context);
               },
               child: Container(
                 width: 55,height: 60,decoration: BoxDecoration(color: Theme.of(context).primaryColor,

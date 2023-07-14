@@ -49,6 +49,9 @@ class CategoryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+  int getCatId(){
+    return _categoryList[_categorySelectedIndexhome].id;
+  }
 
   void changeSelectedIndex(int selectedIndex) {
     _categorySelectedIndexhome = selectedIndex;

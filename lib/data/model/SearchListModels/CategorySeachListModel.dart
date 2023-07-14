@@ -24,7 +24,7 @@ class CategorySearchListModel<T extends CatageorySearch> extends MainSearchModel
 
     if(search_list.length>0)return false;
 
-    search_list.add( CategorySearchListModel( is_selected: true, id: 0,name: "الكل") );
+    //search_list.add( CategorySearchListModel( is_selected: true, id: 0,name: "الكل") );
 
     list.forEach((element) {
       search_list.add(CategorySearchListModel( is_selected: false

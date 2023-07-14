@@ -139,6 +139,20 @@ class AppConstants {
 
   static const String USER_ADDRESS = 'user_address';
 
+
+  static const String categoryId = '1';
+  static const String brandsId = '77';
+  static const String sesonsId = '78';
+  static const String ocasionsId = '80';
+  static const String sizeId = '81';
+  static const String priceId = '83';
+  static const String qomashId = '85';
+  static const String shaklId = '86';
+  static const String colorsId = '0';
+
+
+
+
   //RemoteConfig
   static  bool showLogin = true;
   static  bool showBrand = false;

@@ -25,13 +25,15 @@ class SearchRepo {
     List<String> option,
     List<String> category,
     List<String> brand,
-    List<double> price,
+    List<String> price,
     List<String> size,
     List<String> color,
     List<double> discount,
     int offset,
   }) async {
+    print("cczzzz $color");
     try {
+
       final Map<String, dynamic> queryParameters = {
         'name': jsonEncode(name??''),
         'option': jsonEncode(option?? []),

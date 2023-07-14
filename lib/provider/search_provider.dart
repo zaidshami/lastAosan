@@ -204,7 +204,7 @@ class SearchProvider with ChangeNotifier {
   List<String> _searchOptions = [];
   List<String> _searchCategories = [];
   List<String> _searchBrands = [];
-  List<double> _searchPriceRange = [];
+  List<String> _searchPriceRange = [];
   List<String> _searchSizes = [];
   List<String> _searchColors = [];
   List<double> _searchDiscount = [];
@@ -227,75 +227,75 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  //todo: add a var in the declartion of this function to  make the _searchProductList = null only at the first time
-  void searchProduct(String query, BuildContext context,
-      {Function onNoMoreProducts, bool reload = true}) async {
-    _isLoading = true;
-    notifyListeners();
-    _searchText = query;
-    _isClear = false;
-
-    // Do not reset the _searchProductList here
-    reload ? _searchProductList = [] : null;
-    reload ? _filterProductList = [] : null;
-    reload ? offset = 1 : null;
-
-    notifyListeners();
-
-    ApiResponse apiResponse = await searchRepo.getSearchProductList(
-        name: _searchText,
-        option: _searchOptions,
-        category: _searchCategories,
-        brand: _searchBrands,
-        price: _searchPriceRange,
-        size: _searchSizes,
-        color: _searchColors,
-        discount: _searchDiscount,
-        offset: offset);
-
-    if (apiResponse.response != null &&
-        apiResponse.response.statusCode == 200) {
-      // Extract the new products from the response
-      List<Product> newProducts =
-          ProductModel.fromJson(apiResponse.response.data).products;
-      foundSize = ProductModel.fromJson(apiResponse.response.data).totalSize;
-
-      // Check if the query is not empty before adding new products
-      if (!query.isEmpty) {
-        if (newProducts.isEmpty && onNoMoreProducts != null) {
-          onNoMoreProducts();
-        } else {
-          _searchProductList.addAll(newProducts);
-          _filterProductList.addAll(newProducts);
-
-          // After new data is added, sort the product list based on the current filter index.
-          sortSearchList(0, 0,
-              isPrice: false); // Consider changing the parameters as needed.
-        }
-        //       else {
-        //         _searchProductList.addAll(newProducts);
-        //         try {
-        // _filterProductList.addAll(newProducts);
-        //         } catch (e, s) {
-        //
-        //
-        //         }
-        //       }
-      }
-    } else {
-      ApiChecker.checkApi(context, apiResponse);
-    }
-    _isLoading = false;
-
-    notifyListeners();
-  }
+  // //todo: add a var in the declartion of this function to  make the _searchProductList = null only at the first time
+  // void searchProduct(String query, BuildContext context,
+  //     {Function onNoMoreProducts, bool reload = true}) async {
+  //   _isLoading = true;
+  //   notifyListeners();
+  //   _searchText = query;
+  //   _isClear = false;
+  //
+  //   // Do not reset the _searchProductList here
+  //   reload ? _searchProductList = [] : null;
+  //   reload ? _filterProductList = [] : null;
+  //   reload ? offset = 1 : null;
+  //
+  //   notifyListeners();
+  //
+  //   ApiResponse apiResponse = await searchRepo.getSearchProductList(
+  //       name: _searchText,
+  //       option: _searchOptions,
+  //       category: _searchCategories,
+  //       brand: _searchBrands,
+  //       price: _searchPriceRange,
+  //       size: _searchSizes,
+  //       color: _searchColors,
+  //       discount: _searchDiscount,
+  //       offset: offset);
+  //
+  //   if (apiResponse.response != null &&
+  //       apiResponse.response.statusCode == 200) {
+  //     // Extract the new products from the response
+  //     List<Product> newProducts =
+  //         ProductModel.fromJson(apiResponse.response.data).products;
+  //     foundSize = ProductModel.fromJson(apiResponse.response.data).totalSize;
+  //
+  //     // Check if the query is not empty before adding new products
+  //     if (!query.isEmpty) {
+  //       if (newProducts.isEmpty && onNoMoreProducts != null) {
+  //         onNoMoreProducts();
+  //       } else {
+  //         _searchProductList.addAll(newProducts);
+  //         _filterProductList.addAll(newProducts);
+  //
+  //         // After new data is added, sort the product list based on the current filter index.
+  //         sortSearchList(0, 0,
+  //             isPrice: false); // Consider changing the parameters as needed.
+  //       }
+  //       //       else {
+  //       //         _searchProductList.addAll(newProducts);
+  //       //         try {
+  //       // _filterProductList.addAll(newProducts);
+  //       //         } catch (e, s) {
+  //       //
+  //       //
+  //       //         }
+  //       //       }
+  //     }
+  //   } else {
+  //     ApiChecker.checkApi(context, apiResponse);
+  //   }
+  //   _isLoading = false;
+  //
+  //   notifyListeners();
+  // }
 
   void newSearchProduct(
       String query,
       List<String> selectedOptions,
       List<String> selectedCategories,
       List<String> selectedBrands,
-      List<double> selectedPrices,
+      List<String> selectedPrices,
       List<String> selectedSizes,
       List<String> selectedColors,
       List<double> selectedDiscounts,
@@ -331,20 +331,21 @@ class SearchProvider with ChangeNotifier {
       List<Product> newProducts =
           ProductModel.fromJson(apiResponse.response.data).products;
       foundSize = ProductModel.fromJson(apiResponse.response.data).totalSize;
+      _searchProductList.addAll(newProducts);
 
       // Check if the query is not empty before adding new products
-      if (!query.isEmpty) {
-        if (newProducts.isEmpty && onNoMoreProducts != null) {
-          onNoMoreProducts();
-        } else {
-          _searchProductList.addAll(newProducts);
-          _filterProductList.addAll(newProducts);
-
-          // After new data is added, sort the product list based on the current filter index.
-          sortSearchList(0, 0,
-              isPrice: false); // Consider changing the parameters as needed.
-        }
-      }
+      // if (!query.isEmpty) {
+      //   if (newProducts.isEmpty && onNoMoreProducts != null) {
+      //     onNoMoreProducts();
+      //   } else {
+      //     _searchProductList.addAll(newProducts);
+      //     _filterProductList.addAll(newProducts);
+      //
+      //     // After new data is added, sort the product list based on the current filter index.
+      //     // sortSearchList(0, 0,
+      //     //     isPrice: false); // Consider changing the parameters as needed.
+      //   }
+      // }
     } else {
       ApiChecker.checkApi(context, apiResponse);
     }
@@ -357,16 +358,22 @@ class SearchProvider with ChangeNotifier {
   Map<String, List<String>> get selectedAttributes => _selectedAttributes;
 
   void selectAttribute(String category, String attribute) {
-    _selectedAttributes[category] = _selectedAttributes[category] ?? [];
-    if (!_selectedAttributes[category].contains(attribute)) {
+
+
+    if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
       _selectedAttributes[category].add(attribute);
+      notifyListeners();
+
     }
-    notifyListeners();
+
   }
 
   void deselectAttribute(String category, String attribute) {
-    _selectedAttributes[category]?.remove(attribute);
-    notifyListeners();
+    if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
+      _selectedAttributes[category]?.remove(attribute);
+      notifyListeners();
+    }
+
   }
 
 /*
@@ -448,8 +455,67 @@ class SearchProvider with ChangeNotifier {
   }*/
   void fetchMore(BuildContext context, {Function onNoMoreProducts}) async {
     offset += 1;
-    searchProduct(_searchText, context,
-        onNoMoreProducts: onNoMoreProducts, reload: false);
+    search(context);
+
+    // searchProduct(_searchText, context,
+    //     onNoMoreProducts: onNoMoreProducts, reload: false);
+  }
+  final TextEditingController searchController = TextEditingController();
+
+  bool switchStatus=false;
+  final TextEditingController minPriceController = TextEditingController();
+  final TextEditingController maxPriceController = TextEditingController();
+
+
+  setSearch(bool value){
+    switchStatus=value;
+    notifyListeners();
+  }
+  List<String> getPriceFiler(){
+    List<String> _temp=[];
+    if(switchStatus){
+      _temp=[minPriceController.text.trim(),maxPriceController.text.trim()];
+    }
+    return _temp;
+  }
+
+  clearFilters(){
+    switchStatus=false;
+    searchController.clear();
+    minPriceController.clear();
+    maxPriceController.clear();
+    offset=1;
+    _selectedAttributes.clear();
+  }
+
+
+
+  void search(BuildContext context) async {
+
+
+    List<String> brands= _selectedAttributes[AppConstants.brandsId];
+    List<String> seson= _selectedAttributes[AppConstants.sesonsId];
+    List<String> ocasions= _selectedAttributes[AppConstants.ocasionsId];
+    List<String> size= _selectedAttributes[AppConstants.sizeId];
+    //List<String> price= _selectedAttributes[AppConstants.priceId];
+    List<String> price= getPriceFiler();
+    List<String> qomash= _selectedAttributes[AppConstants.qomashId];
+    List<String> shakl= _selectedAttributes[AppConstants.shaklId];
+    List<String> colors= _selectedAttributes[AppConstants.colorsId];
+    List<String> category= _selectedAttributes[AppConstants.categoryId];
+
+    newSearchProduct(
+        searchController.text,
+        [],
+        category,
+        brands,
+        price,
+        size,
+        colors,
+        [],
+        context,
+        reload: false
+    );
   }
 
   void initHistoryList() {

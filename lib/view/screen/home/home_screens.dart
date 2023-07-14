@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_Aosan_ecommerce/data/model/response/filter_category_1.dart';
 import 'package:flutter_Aosan_ecommerce/provider/notification_provider.dart';
 import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/brand_view.dart';
@@ -502,7 +503,11 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             InkWell(
                               onTap: () => Navigator.push(context,
-                                  CupertinoPageRoute(builder: (_) => SearchScreen())),
+                                  CupertinoPageRoute(builder: (_) => SearchScreen(
+                                    Attribute(id: int.parse(AppConstants.categoryId),
+                                    name: "",childes:
+                                        [Child(id: Provider.of<CategoryProvider>(context,listen: false).getCatId().toString(),name: "")])
+                                  ))),
                               child: Container(
 
                                 height: MediaQuery.of(context).size.height*0.05,
