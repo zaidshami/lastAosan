@@ -3,6 +3,7 @@ import 'package:flutter_Aosan_ecommerce/provider/attributes_provider.dart';
 import 'package:flutter_Aosan_ecommerce/view/basewidget/get_loading.dart';
 import 'package:provider/provider.dart';
 
+import '../../data/model/SearchListModels/SearchListModel.dart';
 import '../../data/model/response/filter_category_1.dart';
 import '../../provider/search_provider.dart';
 
@@ -90,7 +91,8 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                   provider.attributes.forEach((element) =>
                   selectedAttributes[element.id.toString()] = []);
                   if(widget.searchAttribute!=Attribute.nonAttribute()){
-                    selectedAttributes[widget.searchAttribute.id.toString()] =widget.searchAttribute.getChildIds;
+                    selectedAttributes[widget.searchAttribute.id.toString()] =
+                        widget.searchAttribute.getChildIds;
                   }
                 }
 
@@ -173,13 +175,13 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                                       title: Text(child.name),
                                       value:
 
-                                      val.where((element) => element==child.id).isNotEmpty,
+                                      val.where((element) => element.id==child.id).isNotEmpty,
 
                                        onChanged: (bool value) {
                                         if (value) {
                                           searchProvider.
                                           selectAttribute(provider.attributes.firstWhere((element) =>
-                                          element.id==provider.selectedParentIndex).id.toString(), child.id);
+                                          element.id==provider.selectedParentIndex).id.toString(), Selected(child.id,child.name));
                                         } else {
                                           searchProvider.
                                           deselectAttribute(provider.attributes.firstWhere((element) =>

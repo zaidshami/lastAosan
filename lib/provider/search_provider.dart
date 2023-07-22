@@ -292,13 +292,13 @@ class SearchProvider with ChangeNotifier {
 
   void newSearchProduct(
       String query,
-      List<String> selectedOptions,
-      List<String> selectedCategories,
-      List<String> selectedBrands,
-      List<String> selectedPrices,
-      List<String> selectedSizes,
-      List<String> selectedColors,
-      List<double> selectedDiscounts,
+      // List<String> selectedOptions,
+      // List<String> selectedCategories,
+      // List<String> selectedBrands,
+      // List<String> selectedPrices,
+      // List<String> selectedSizes,
+      // List<String> selectedColors,
+      // List<double> selectedDiscounts,
       BuildContext context,
       {Function onNoMoreProducts,
       bool reload = true}) async {
@@ -353,11 +353,11 @@ class SearchProvider with ChangeNotifier {
 
     notifyListeners();
   }
-  Map<String, List<String>> _selectedAttributes = {};
+  Map<String, List<Selected>> _selectedAttributes = {};
 
-  Map<String, List<String>> get selectedAttributes => _selectedAttributes;
+  Map<String, List<Selected>> get selectedAttributes => _selectedAttributes;
 
-  void selectAttribute(String category, String attribute) {
+  void selectAttribute(String category, Selected attribute) {
 
 
     if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
@@ -368,7 +368,7 @@ class SearchProvider with ChangeNotifier {
 
   }
 
-  void deselectAttribute(String category, String attribute) {
+  void deselectAttribute(String category, Selected attribute) {
     if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
       _selectedAttributes[category]?.remove(attribute);
       notifyListeners();
@@ -493,16 +493,16 @@ class SearchProvider with ChangeNotifier {
   void search(BuildContext context) async {
 
 
-    List<String> brands= _selectedAttributes[AppConstants.brandsId];
-    List<String> seson= _selectedAttributes[AppConstants.sesonsId];
-    List<String> ocasions= _selectedAttributes[AppConstants.ocasionsId];
-    List<String> size= _selectedAttributes[AppConstants.sizeId];
-    //List<String> price= _selectedAttributes[AppConstants.priceId];
-    List<String> price= getPriceFiler();
-    List<String> qomash= _selectedAttributes[AppConstants.qomashId];
-    List<String> shakl= _selectedAttributes[AppConstants.shaklId];
-    List<String> colors= _selectedAttributes[AppConstants.colorsId];
-    List<String> category= _selectedAttributes[AppConstants.categoryId];
+    // List<String> brands= _selectedAttributes[AppConstants.brandsId];
+    // List<String> seson= _selectedAttributes[AppConstants.sesonsId];
+    // List<String> ocasions= _selectedAttributes[AppConstants.ocasionsId];
+    // List<String> size= _selectedAttributes[AppConstants.sizeId];
+    // //List<String> price= _selectedAttributes[AppConstants.priceId];
+    // List<String> price= getPriceFiler();
+    // List<String> qomash= _selectedAttributes[AppConstants.qomashId];
+    // List<String> shakl= _selectedAttributes[AppConstants.shaklId];
+    // List<String> colors= _selectedAttributes[AppConstants.colorsId];
+    // List<String> category= _selectedAttributes[AppConstants.categoryId];
 
     newSearchProduct(
         searchController.text,

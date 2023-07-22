@@ -41,6 +41,14 @@ abstract class MainSearchModel<T extends SearchRequerments>{
  }
 
 
+class Selected{
+  String id;
+  String name;
+
+  Selected(this.id,this.name);
+}
+
+
 
 
 

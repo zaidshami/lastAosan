@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../utill/app_constants.dart';
+import '../SearchListModels/SearchListModel.dart';
 
 class Attribute {
   int id;
@@ -8,10 +9,10 @@ class Attribute {
   List<Child> childes;
 
 
-  List<String> get getChildIds{
-    List<String> _temp=[];
+  List<Selected> get getChildIds{
+    List<Selected> _temp=[];
     childes.forEach((element) {
-      _temp.add(element.id);
+      _temp.add(Selected(element.id,element.name));
     });
     return _temp;
   }
