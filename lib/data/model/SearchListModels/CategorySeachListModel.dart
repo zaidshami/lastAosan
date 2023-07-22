@@ -15,7 +15,7 @@ class CategorySearchListModel<T extends CatageorySearch> extends MainSearchModel
 
 
   CategorySearchListModel({
-     bool is_selected, T item, int id, String name})
+    bool is_selected, T item, int id, String name})
       : super(is_selected, item, id, name);
 
 

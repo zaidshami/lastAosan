@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_Aosan_ecommerce/data/model/response/product_model.dart';
 import 'package:flutter_Aosan_ecommerce/provider/brand_provider.dart';
 import 'package:flutter_Aosan_ecommerce/provider/category_provider.dart';
+import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/search/widget/search_widgets.dart';
 import '../../../../data/model/SearchListModels/OptionsSearchListModel.dart';
+import '../../../../data/model/response/filter_category_1.dart';
 import '../../../../di_container.dart';
 import '../../../../localization/language_constrants.dart';
 import '../../../../provider/search_provider.dart';
@@ -14,11 +16,14 @@ import '../../../../utill/dimensions.dart';
 import '../../../../view/basewidget/button/custom_button.dart';
 import 'package:provider/provider.dart';
 
+import '../../../basewidget/product_attributes_filter_category.dart';
 import 'BrandItemWidget.dart';
 import 'CategoryItemWidget.dart';
 import 'OptionsItemWidget.dart';
 
 class SearchSortByBottomSheet extends StatefulWidget {
+  Attribute searchAttribute;
+  SearchSortByBottomSheet(this.searchAttribute);
   @override
   _SearchFilterBottomSheetState createState() => _SearchFilterBottomSheetState();
 }
@@ -38,63 +43,9 @@ class _SearchFilterBottomSheetState extends State<SearchSortByBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of( context).size.height-80,
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
-      decoration: BoxDecoration(
-        color: Theme.of(context).highlightColor,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
-      ),
-      child: SingleChildScrollView(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-          Consumer<SearchProvider>(
-            builder: (context, search, child) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // CategoryItemWidget("الاقسام",Provider.of<SearchProvider>(context, listen: false).category_search_list),
-                // SizedBox(height: 10,),
-                // BrandItemWidget("الماركات",Provider.of<SearchProvider>(context, listen: false).brand_search_list),
-                // SizedBox(height: 10,),
-
-
-
-                Divider(),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                Text(getTranslated('SORT_BY', context),
-                  style: titilliumSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
-                ),
-
-                MyCheckBox(title: getTranslated('latest_products', context), index: 0),
-                MyCheckBox(title: getTranslated('alphabetically_az', context), index: 1),
-                MyCheckBox(title: getTranslated('alphabetically_za', context), index: 2),
-                MyCheckBox(title: getTranslated('low_to_high_price', context), index: 3),
-                MyCheckBox(title: getTranslated('high_to_low_price', context), index: 4),
-
-
-
-                Padding(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                  child: CustomButton(
-                    buttonText: getTranslated('APPLY', context),
-                    onTap: () {
-                      double minPrice = 1.0;
-                      double maxPrice = 100000.0;
-
-                      Provider.of<SearchProvider>(context, listen: false).sortSearchList(minPrice, maxPrice,isPrice: false);
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-        ]),
-      ),
+    return    Padding(
+      padding: getPadding(top: 30, bottom:10,left: 10,right: 10),
+      child: NewProductAttributeList(widget.searchAttribute),
     );
   }
 }
@@ -121,3 +72,67 @@ class MyCheckBox extends StatelessWidget {
   }
 }
 
+
+
+class MiddlePageTransition extends StatelessWidget {
+  final Widget child;
+
+  const MiddlePageTransition({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showModalMiddle(context, child);
+      },
+      child: Center(child: _ItemWidget("SORT_BY", Icons.sort)),
+    );
+  }
+
+  void showModalMiddle(BuildContext context, Widget child) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double transitionHeight = screenHeight / 2; // Adjust as needed
+
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (BuildContext buildContext, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+              color: Colors.transparent,
+              alignment: Alignment.center,
+              child: AnimatedContainer(
+
+                duration: const Duration(milliseconds: 200),
+                margin: EdgeInsets.only(top: transitionHeight * (1 - animation.value)),
+                child: child,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _ItemWidget extends StatelessWidget {
+  final String text;
+  final IconData iconData;
+
+  const _ItemWidget(this.text, this.iconData);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(text),
+        Icon(iconData),
+      ],
+    );
+  }
+}

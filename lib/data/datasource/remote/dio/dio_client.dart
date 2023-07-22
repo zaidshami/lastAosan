@@ -34,7 +34,7 @@ class DioClient extends HttpOverrides{
         AppConstants.LANG_KEY : countryCode == 'US'? 'en':countryCode.toLowerCase(),
 
       };
-   // dio.interceptors.add(loggingInterceptor);
+    dio.interceptors.add(loggingInterceptor);
   }
 
   void updateHeader(String token, String countryCode) {

@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
@@ -57,7 +56,6 @@ import 'widget/featured_product_view.dart';
 import 'widget/flash_deals_view.dart';
 import 'widget/footer_banner.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -71,9 +69,10 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   TabController _tabController2;
-
+  Attribute attribute ;
 
   Future<void> _loadData(BuildContext context, bool reload) async {
+
     // Provider.of<HomeCategoryProductProvider>(context, listen: false).getHomeCategoryProductList(reload, context);
     // Provider.of<HomeCategoryProductProvider>(context, listen: false).getHomeCategoryProductList(reload, context);
     // Provider.of<TopSellerProvider>(context, listen: false).getTopSellerList(reload, context);
@@ -108,6 +107,7 @@ class _HomePageState extends State<HomePage> {
 
   bool singleVendor = false;
   bool isloading = false;
+
   @override
   void initState() {
     super.initState();
@@ -144,7 +144,9 @@ class _HomePageState extends State<HomePage> {
           .subCategories
           .clear();
     } catch (v) {}
-    Provider.of<FeaturedDealProvider>(context, listen: false).featuredDealProductList.clear();
+    Provider.of<FeaturedDealProvider>(context, listen: false)
+        .featuredDealProductList
+        .clear();
     Provider.of<ProductProvider>(context, listen: false)
         .get_list_type(ProductType.TOP_PRODUCT)
         .ProductList
@@ -203,10 +205,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
+    final bool shouldShowCategory = AppConstants.categoryType1 == 'true';
+    final bool shouldShowBannersView = AppConstants.bannersView;
+    final bool bannerFirst = AppConstants.bannerFirst;
+    final bool secondSectionBannerCondition = Provider.of<BannerProvider>(context, listen: false).secondSectionBannerList != null && Provider.of<BannerProvider>(context, listen: false).secondSectionBannerList.length >= 1;
 
     Provider.of<ProductProvider>(context, listen: false)
         .featuredProductList
@@ -260,33 +262,36 @@ class _HomePageState extends State<HomePage> {
       getTranslated('discounted_product', context)
     ];
     return Consumer<CategoryProvider>(
-      builder: (context, cProvider, child) =>
-         RefreshIndicator(
+      builder: (context, cProvider, child) => RefreshIndicator(
         backgroundColor: Theme.of(context).primaryColor,
         onRefresh: () async {
           try {
-        await    clearLists(context,
-                cProvider, cProvider.categorySelectedIndex);
+            await clearLists(
+                context, cProvider, cProvider.categorySelectedIndex);
           } catch (e, s) {
             print(s);
           }
-         // await _loadData(context, true);
+          // await _loadData(context, true);
           await Provider.of<FlashDealProvider>(context, listen: false)
-              .getMegaDealList(Provider.of<CategoryProvider>(context,listen: false).categoryList[cProvider
-                  .categorySelectedIndex]
-                  .id,
-              true,
-              context,
-              false);
-
+              .getMegaDealList(
+                  Provider.of<CategoryProvider>(context, listen: false)
+                      .categoryList[cProvider.categorySelectedIndex]
+                      .id,
+                  true,
+                  context,
+                  false);
 
           Provider.of<ProductProvider>(context, listen: false)
               .featuredProductList
               .clear();
-          if (Provider.of<CategoryProvider>(context,listen: false).categoryList.length > 0) {
-            var x = Provider.of<CategoryProvider>(context,listen: false)
+          if (Provider.of<CategoryProvider>(context, listen: false)
+                  .categoryList
+                  .length >
+              0) {
+            var x = Provider.of<CategoryProvider>(context, listen: false)
                 .categoryList[
-            Provider.of<CategoryProvider>(context,listen: false).categorySelectedIndex]
+                    Provider.of<CategoryProvider>(context, listen: false)
+                        .categorySelectedIndex]
                 .id;
             Provider.of<BannerProvider>(context, listen: false)
                 .getMainSectionBanner(x, context);
@@ -300,18 +305,19 @@ class _HomePageState extends State<HomePage> {
                 .getLatestProductList(x, 1, context, reload: true);
 
             /// new
-            Provider.of<ProductProvider>(context, listen: false).getHomeProductList(
-                ProductType.NEW_ARRIVAL, x, 1, context,
-                reload: true);
-            Provider.of<ProductProvider>(context, listen: false).getHomeProductList(
-                ProductType.DISCOUNTED_PRODUCT, x, 1, context,
-                reload: true);
-            Provider.of<ProductProvider>(context, listen: false).getHomeProductList(
-                ProductType.BEST_SELLING, x, 1, context,
-                reload: true);
-            Provider.of<ProductProvider>(context, listen: false).getHomeProductList(
-                ProductType.TOP_PRODUCT, x, 1, context,
-                reload: true);
+            Provider.of<ProductProvider>(context, listen: false)
+                .getHomeProductList(ProductType.NEW_ARRIVAL, x, 1, context,
+                    reload: true);
+            Provider.of<ProductProvider>(context, listen: false)
+                .getHomeProductList(
+                    ProductType.DISCOUNTED_PRODUCT, x, 1, context,
+                    reload: true);
+            Provider.of<ProductProvider>(context, listen: false)
+                .getHomeProductList(ProductType.BEST_SELLING, x, 1, context,
+                    reload: true);
+            Provider.of<ProductProvider>(context, listen: false)
+                .getHomeProductList(ProductType.TOP_PRODUCT, x, 1, context,
+                    reload: true);
 
             ///end new
             Provider.of<ProductProvider>(context, listen: false)
@@ -326,11 +332,10 @@ class _HomePageState extends State<HomePage> {
                 .getMegaDealList(x, true, context, true);
           }
           return true;
-
-
         },
         child: MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor:AppConstants.textScaleFactior),
+          data: MediaQuery.of(context)
+              .copyWith(textScaleFactor: AppConstants.textScaleFactior),
           child: SafeArea(
             child: Scaffold(
               key: _scaffoldKey,
@@ -342,17 +347,17 @@ class _HomePageState extends State<HomePage> {
                     controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     slivers: [
-
                       SliverAppBar(
-
-                        toolbarHeight: MediaQuery.of(context).size.height*0.055,
+                        toolbarHeight:
+                            MediaQuery.of(context).size.height * 0.055,
                         bottom: PreferredSize(
-
-                          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height*0.055),
+                          preferredSize: Size.fromHeight(
+                              MediaQuery.of(context).size.height * 0.055),
                           child: Consumer<CategoryProvider>(
                             builder: (context, categoryProvider, child) {
                               return DefaultTabController(
-                                initialIndex: categoryProvider.categorySelectedIndex,
+                                initialIndex:
+                                    categoryProvider.categorySelectedIndex,
                                 length: categoryProvider.categoryList.length,
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
@@ -361,132 +366,142 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                     border: Border.all(color: Colors.white),
                                   ),
-                                  child: StatefulBuilder(builder: (context, _change) {
+                                  child: StatefulBuilder(
+                                      builder: (context, _change) {
                                     return isloading
                                         ?
-                                    //   TabBar(
-                                    //     indicatorPadding: getPadding(all: 5),
-                                    //
-                                    //     controller: _tabController2,
-                                    //     unselectedLabelColor: Colors.white,
-                                    //     //  labelColor:Colors.redAccent,
-                                    //     labelStyle: robotoBold.copyWith(
-                                    //         fontSize: 13,
-                                    //         color: ColorResources
-                                    //             .getReviewRattingColor(context)),
-                                    //     isScrollable: true,
-                                    //
-                                    //     indicatorColor: Colors.white,
-                                    //     // indicatorWeight: 2.0,
-                                    //     indicator: BoxDecoration(
-                                    //       border: Border(
-                                    //         top: BorderSide(
-                                    //             color: Colors.white, width: 2.0),
-                                    //         bottom: BorderSide(
-                                    //             color: Colors.white, width: 2.0),
-                                    //       ),
-                                    //     ),
-                                    // /*    onTap: (value) async {
-                                    //       if (!isloading) {
-                                    //         _change(() {
-                                    //           isloading = true;
-                                    //         });
-                                    //         categoryProvider
-                                    //             .changeSelectedIndex(value);
-                                    //         try {
-                                    //           await clearLists(context,
-                                    //               categoryProvider, value);
-                                    //         } catch (e, s) {
-                                    //           print(s);
-                                    //         }
-                                    //
-                                    //         // Future.delayed(const Duration(seconds: 0), () {
-                                    //         _change(() {
-                                    //           isloading = false;
-                                    //         });
-                                    //         // });
-                                    //       }
-                                    //     },*/
-                                    //     // controller: _tabController,
-                                    //     labelColor: Colors.redAccent,
-                                    //     tabs: categoryProvider.categoryList
-                                    //         .map((e) => Tab(height: 40,
-                                    //       text: e.name,
-                                    //     ))
-                                    //         .toList(),
-                                    //   )
-                                    TabShimmer()
+                                        //   TabBar(
+                                        //     indicatorPadding: getPadding(all: 5),
+                                        //
+                                        //     controller: _tabController2,
+                                        //     unselectedLabelColor: Colors.white,
+                                        //     //  labelColor:Colors.redAccent,
+                                        //     labelStyle: robotoBold.copyWith(
+                                        //         fontSize: 13,
+                                        //         color: ColorResources
+                                        //             .getReviewRattingColor(context)),
+                                        //     isScrollable: true,
+                                        //
+                                        //     indicatorColor: Colors.white,
+                                        //     // indicatorWeight: 2.0,
+                                        //     indicator: BoxDecoration(
+                                        //       border: Border(
+                                        //         top: BorderSide(
+                                        //             color: Colors.white, width: 2.0),
+                                        //         bottom: BorderSide(
+                                        //             color: Colors.white, width: 2.0),
+                                        //       ),
+                                        //     ),
+                                        // /*    onTap: (value) async {
+                                        //       if (!isloading) {
+                                        //         _change(() {
+                                        //           isloading = true;
+                                        //         });
+                                        //         categoryProvider
+                                        //             .changeSelectedIndex(value);
+                                        //         try {
+                                        //           await clearLists(context,
+                                        //               categoryProvider, value);
+                                        //         } catch (e, s) {
+                                        //           print(s);
+                                        //         }
+                                        //
+                                        //         // Future.delayed(const Duration(seconds: 0), () {
+                                        //         _change(() {
+                                        //           isloading = false;
+                                        //         });
+                                        //         // });
+                                        //       }
+                                        //     },*/
+                                        //     // controller: _tabController,
+                                        //     labelColor: Colors.redAccent,
+                                        //     tabs: categoryProvider.categoryList
+                                        //         .map((e) => Tab(height: 40,
+                                        //       text: e.name,
+                                        //     ))
+                                        //         .toList(),
+                                        //   )
+                                        TabShimmer()
                                         :
-                                    // Future.delayed(const Duration(seconds: 0), () {
-                                    Center(
-                                      child: Column(
-                                        children: [
-                                          TabBar(
-                                            indicatorPadding: getPadding(all: 5),
+                                        // Future.delayed(const Duration(seconds: 0), () {
+                                        Center(
+                                            child: Column(
+                                              children: [
+                                                TabBar(
+                                                  indicatorPadding:
+                                                      getPadding(all: 5),
 
-                                            controller: _tabController2,
-                                            unselectedLabelColor: Colors.black,
-                                            //  labelColor:Colors.redAccent,
-                                            labelStyle: robotoBold.copyWith(
-                                              overflow: TextOverflow.ellipsis,
-                                                fontSize: 13,
-                                                color: ColorResources
-                                                    .getReviewRattingColor(context)),
-                                            isScrollable: true,
+                                                  controller: _tabController2,
+                                                  unselectedLabelColor:
+                                                      Colors.black,
+                                                  //  labelColor:Colors.redAccent,
+                                                  labelStyle: robotoBold.copyWith(
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      fontSize: 13,
+                                                      color: ColorResources
+                                                          .getReviewRattingColor(
+                                                              context)),
+                                                  isScrollable: true,
 
-                                            indicatorColor: Colors.white,
-                                            // indicatorWeight: 2.0,
-                                            indicator: BoxDecoration(
-                                              border: Border(
-                                                top: BorderSide(
-                                                    color: Colors.black, width: 2.0),
-                                                bottom: BorderSide(
-                                                    color: Colors.black, width: 2.0),
-                                              ),
+                                                  indicatorColor: Colors.white,
+                                                  // indicatorWeight: 2.0,
+                                                  indicator: BoxDecoration(
+                                                    border: Border(
+                                                      top: BorderSide(
+                                                          color: Colors.black,
+                                                          width: 2.0),
+                                                      bottom: BorderSide(
+                                                          color: Colors.black,
+                                                          width: 2.0),
+                                                    ),
+                                                  ),
+                                                  onTap: (value)
+
+                                                      //todo: here add the word async
+                                                      {
+                                                    _scrollController.animateTo(
+                                                      0,
+                                                      duration: Duration(
+                                                          milliseconds: 100),
+                                                      curve: Curves.easeInOut,
+                                                    );
+                                                    if (!isloading) {
+                                                      _change(() {
+                                                        isloading = true;
+                                                      });
+                                                      categoryProvider
+                                                          .changeSelectedIndex(
+                                                              value);
+                                                      try {
+                                                        clearLists(
+                                                            context,
+                                                            categoryProvider,
+                                                            value);
+                                                      } catch (e, s) {
+                                                        print(s);
+                                                      }
+
+                                                      // Future.delayed(const Duration(seconds: 0), () {
+                                                      _change(() {
+                                                        isloading = false;
+                                                      });
+                                                      // });
+                                                    }
+                                                  },
+                                                  // controller: _tabController,
+                                                  labelColor: Colors.redAccent,
+                                                  tabs: categoryProvider
+                                                      .categoryList
+                                                      .map((e) => Tab(
+                                                            height: 40,
+                                                            text: e.name,
+                                                          ))
+                                                      .toList(),
+                                                ),
+                                              ],
                                             ),
-                                            onTap: (value)
-
-                                            //todo: here add the word async
-                                            {
-                                              _scrollController.animateTo(
-                                                0,
-                                                duration: Duration(milliseconds: 100),
-                                                curve: Curves.easeInOut,
-                                              );
-                                              if (!isloading) {
-                                                _change(() {
-                                                  isloading = true;
-                                                });
-                                                categoryProvider
-                                                    .changeSelectedIndex(value);
-                                                try {
-                                                  clearLists(context,
-                                                      categoryProvider, value);
-                                                } catch (e, s) {
-                                                  print(s);
-                                                }
-
-                                                // Future.delayed(const Duration(seconds: 0), () {
-                                                _change(() {
-                                                  isloading = false;
-                                                });
-                                                // });
-                                              }
-                                            },
-                                            // controller: _tabController,
-                                            labelColor: Colors.redAccent,
-                                            tabs: categoryProvider.categoryList
-                                                .map((e) => Tab(
-
-                                              height: 40,
-                                              text: e.name,
-                                            ))
-                                                .toList(),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-
+                                          );
                                   }),
                                 ),
                               );
@@ -502,15 +517,29 @@ class _HomePageState extends State<HomePage> {
                         title: Column(
                           children: [
                             InkWell(
-                              onTap: () => Navigator.push(context,
-                                  CupertinoPageRoute(builder: (_) => SearchScreen(
-                                    Attribute(id: int.parse(AppConstants.categoryId),
-                                    name: "",childes:
-                                        [Child(id: Provider.of<CategoryProvider>(context,listen: false).getCatId().toString(),name: "")])
-                                  ))),
+                              onTap: () => Navigator.push(
+                                  context,
+                                  CupertinoPageRoute(
+                                      builder: (_) => SearchScreen(
+                                          Attribute(
+                                              id: int.parse(
+                                                  AppConstants.categoryId),
+                                              name: "",
+                                              childes: [
+                                                  Child(
+                                                    id:null,
+                                                  /*  id: Provider.of<
+                                                                CategoryProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .getCatId()
+                                                        .toString(),*/
+                                                    name: "")
+                                              ]
+                                          )))),
                               child: Container(
-
-                                height: MediaQuery.of(context).size.height*0.05,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05,
                                 padding: getPadding(top: 5),
                                 color: ColorResources.getHomeBg(context),
                                 alignment: Alignment.center,
@@ -522,13 +551,15 @@ class _HomePageState extends State<HomePage> {
                                     boxShadow: [
                                       BoxShadow(
                                           color: Colors.grey[
-                                          Provider.of<ThemeProvider>(context)
-                                              .darkTheme
-                                              ? 900
-                                              : 200],
+                                              Provider.of<ThemeProvider>(
+                                                          context)
+                                                      .darkTheme
+                                                  ? 900
+                                                  : 200],
                                           spreadRadius: 1,
                                           blurRadius: 1)
                                     ],
+
                                     borderRadius: BorderRadius.circular(50),
                                   ),
                                   child: Row(children: [
@@ -542,7 +573,8 @@ class _HomePageState extends State<HomePage> {
                                       child: Text(
                                           getTranslated('SEARCH_HINT', context),
                                           style: robotoRegular.copyWith(
-                                              color: Theme.of(context).hintColor)),
+                                              color:
+                                                  Theme.of(context).hintColor)),
                                     ),
                                   ]),
                                 ),
@@ -558,8 +590,7 @@ class _HomePageState extends State<HomePage> {
                                     CupertinoPageRoute(
                                         builder: (_) => NotificationScreen()));
                               },
-                              icon:
-                              Stack(children: <Widget>[
+                              icon: Stack(children: <Widget>[
                                 Image.asset(
                                   Images.notification,
                                   height: Dimensions.ICON_SIZE_DEFAULT,
@@ -567,34 +598,35 @@ class _HomePageState extends State<HomePage> {
                                   color: ColorResources.getPrimary(context),
                                 ),
                                 Provider.of<NotificationProvider>(context,
-                                    listen: false)
-                                    .notificationList
-                                    .length
-                                    .toString() ==
-                                    '0'
+                                                listen: false)
+                                            .notificationList
+                                            .length
+                                            .toString() ==
+                                        '0'
                                     ? SizedBox()
                                     : Positioned(
-                                  top: -0,
-                                  right: -0,
-                                  child: Consumer<NotificationProvider>(
-                                      builder: (context, cart, child) {
-                                        return CircleAvatar(
-                                          radius: 6,
-                                          backgroundColor: /*_pageIndex==2? ColorResources.BLACK:*/
-                                          Colors.red,
-                                          child: Text(
-                                            cart.notificationList.length.toString(),
-                                            style: titilliumSemiBold.copyWith(
-                                              color: ColorResources.WHITE,
-                                              fontSize:
-                                              Dimensions.FONT_SIZE_EXTRA_SMALL,
+                                        top: -0,
+                                        right: -0,
+                                        child: Consumer<NotificationProvider>(
+                                            builder: (context, cart, child) {
+                                          return CircleAvatar(
+                                            radius: 6,
+                                            backgroundColor: /*_pageIndex==2? ColorResources.BLACK:*/
+                                                Colors.red,
+                                            child: Text(
+                                              cart.notificationList.length
+                                                  .toString(),
+                                              style: titilliumSemiBold.copyWith(
+                                                color: ColorResources.WHITE,
+                                                fontSize: Dimensions
+                                                    .FONT_SIZE_EXTRA_SMALL,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      }),
-                                ),
+                                          );
+                                        }),
+                                      ),
                               ])
-                            /* Stack(clipBehavior: Clip.none, children: [
+                              /* Stack(clipBehavior: Clip.none, children: [
                               Image.asset(
                                 Images.notification,
                                 height: Dimensions.ICON_SIZE_DEFAULT,
@@ -602,9 +634,9 @@ class _HomePageState extends State<HomePage> {
                                 color: ColorResources.getPrimary(context),
                               ),
                             ]),*/
-                          ),
+                              ),
                         ],
-                      ) ,// search bar
+                      ), // search bar
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
@@ -612,76 +644,48 @@ class _HomePageState extends State<HomePage> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal:
                                       Dimensions.PADDING_SIZE_EXTRA_EXTRA_SMALL,
-                                  vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  vertical:
+                                      Dimensions.PADDING_SIZE_EXTRA_SMALL),
                             ),
 
-                            ///second section banner
-                            // Provider.of<BannerProvider>(context, listen: false).secondSectionBannerList!= null &&       Provider.of<BannerProvider>(context, listen: false).secondSectionBannerList.length >0?
-                            //  Consumer<BannerProvider>(builder: (context, footerBannerProvider, child) {return footerBannerProvider.secondSectionBannerList != null && footerBannerProvider.secondSectionBannerList.length > 0
 
 
-                                 // : SizedBox();
-                            // }),
 
-
-                         if (AppConstants.bannerFirst)
-                          SecondSectionBannersView(index: 0),
-                            SizedBox(height: Dimensions.HOME_PAGE_PADDING/2),
-                          AppConstants.categoryType1=='true'?  CategoryView(isHomePage: true):SizedBox(),
-                            if (!AppConstants.bannerFirst)
-                              Column(
-                                children: [
-
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  if(AppConstants.bannersView)
-                                    BannersView(
-
+                            /// categories and second
+                            Column(
+                              children: [
+                                if (bannerFirst) SecondSectionBannersView(index: 0),
+                                SizedBox(height: Dimensions.HOME_PAGE_PADDING / 2),
+                                if (shouldShowCategory) CategoryView(isHomePage: true),
+                                if (!bannerFirst) SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                if (shouldShowBannersView)
+                                  BannersView(
                                     width: MediaQuery.of(context).size.width,
                                     height: MediaQuery.of(context).size.width * 0.4,
-
                                   ),
-                                  if(!AppConstants.bannersView)
-                                    SecondSectionBannersView(index: 0),
-                                ],
-                              ),
-                            if (AppConstants.bannerFirst)
-                              Column(
-                                children: [
+                                if (!shouldShowBannersView && secondSectionBannerCondition&&!bannerFirst)
+                                  SecondSectionBannersView(index: 0),
+                              ],
+                            ),
 
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  if(AppConstants.bannersView)
-                                    BannersView(
-
-                                      width: MediaQuery.of(context).size.width,
-                                      height: MediaQuery.of(context).size.width * 0.4,
-
-                                    ),
-                                  if(!AppConstants.bannersView)
-                                    Provider.of<BannerProvider>(context, listen: false).secondSectionBannerList !=
-                                        null &&
-                                        Provider.of<BannerProvider>(context, listen: false).secondSectionBannerList.length >=
-                                            1? SecondSectionBannersView(index: 0):SizedBox(),
-                                ],
-                              ),
-
-
-
-
-                            /// ctegory filter new vertical and horizntal mayneed num1
 
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
                             ///flash deal  solved in all sections
                             // Mega Deal
 
-                            Provider.of<FlashDealProvider>(context, listen: false)
+                            Provider.of<FlashDealProvider>(context,
+                                            listen: false)
                                         .flashDealList !=
                                     null
                                 ? Consumer<FlashDealProvider>(
                                     builder: (context, flashDeal, child) {
                                       return (flashDeal.flashDeal != null &&
                                               flashDeal.flashDealList != null &&
-                                              flashDeal.flashDealList.length > 0)
+                                              flashDeal.flashDealList.length >
+                                                  0)
+                                      //it he saw the flashDeal
+
                                           ? Container(
                                               padding: EdgeInsets.only(
                                                   top: 10, left: 2, right: 2),
@@ -693,9 +697,10 @@ class _HomePageState extends State<HomePage> {
                                                   Container(
                                                     child: Column(
                                                       children: [
-                                                        Consumer<FlashDealProvider>(
-                                                          builder: (context, megaDeal,
-                                                              child) {
+                                                        Consumer<
+                                                            FlashDealProvider>(
+                                                          builder: (context,
+                                                              megaDeal, child) {
                                                             return (megaDeal.flashDeal != null &&
                                                                     megaDeal.flashDealList !=
                                                                         null &&
@@ -706,7 +711,8 @@ class _HomePageState extends State<HomePage> {
                                                                     height: 325,
                                                                     child:
                                                                         FlashDealsView())
-                                                                : SizedBox.shrink();
+                                                                : SizedBox
+                                                                    .shrink();
                                                           },
                                                         ),
                                                       ],
@@ -723,114 +729,113 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                             ///Brand
-                           AppConstants.showBrand?
-                               Consumer<BrandProvider>(
-                              builder: (context, brandProvider, child) {
-                                return brandProvider.brandList.length > 0
-                                    ? Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: Dimensions
-                                              .PADDING_SIZE_EXTRA_SMALL,
-                                          right: Dimensions
-                                              .PADDING_SIZE_EXTRA_SMALL,
-                                          bottom: Dimensions
-                                              .PADDING_SIZE_EXTRA_SMALL),
-                                      child: TitleRow(
-                                          title:
-                                          getTranslated('brand', context),
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (_) =>
-                                                        AllBrandScreen()));
-                                          }),
-                                    ),
-                                    SizedBox(
-                                        height:
-                                        Dimensions.PADDING_SIZE_SMALL),
-                                    BrandView(isHomePage: true),
-                                  ],
-                                )
-                                    : Container();
-                              },
-                            ):SizedBox  (),
+                            AppConstants.showBrand
+                                ? Consumer<BrandProvider>(
+                                    builder: (context, brandProvider, child) {
+                                      return brandProvider.brandList.length > 0
+                                          ? Column(
+                                              children: [
+                                                Padding(
+                                                  padding: const EdgeInsets
+                                                          .only(
+                                                      left: Dimensions
+                                                          .PADDING_SIZE_EXTRA_SMALL,
+                                                      right: Dimensions
+                                                          .PADDING_SIZE_EXTRA_SMALL,
+                                                      bottom: Dimensions
+                                                          .PADDING_SIZE_EXTRA_SMALL),
+                                                  child: TitleRow(
+                                                      title: getTranslated(
+                                                          'brand', context),
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder: (_) =>
+                                                                    AllBrandScreen()));
+                                                      }),
+                                                ),
+                                                SizedBox(
+                                                    height: Dimensions
+                                                        .PADDING_SIZE_SMALL),
+                                                BrandView(isHomePage: true),
+                                              ],
+                                            )
+                                          : SizedBox();
+                                    },
+                                  )
+                                : SizedBox(),
+
                             /// top seller num3
-                            AppConstants.showTopSeller?
-                                Column(children: [
-                                  singleVendor?SizedBox():
-                                  TitleRow(title: getTranslated('top_seller', context),
-                                    onTap: () {Navigator.push(context, MaterialPageRoute(builder: (_) => AllTopSellerScreen(topSeller: null,)));},),
-                                  singleVendor?SizedBox(height: 0):SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  singleVendor?SizedBox():
-                                  Padding(
-                                    padding: const EdgeInsets.only(bottom: Dimensions.HOME_PAGE_PADDING),
-                                    child: TopSellerView(isHomePage: true),
-                                  ),
-                                ],):SizedBox(),
+                            AppConstants.showTopSeller
+                                ? Column(
+                                    children: [
+                                      singleVendor
+                                          ? SizedBox()
+                                          : TitleRow(
+                                              title: getTranslated(
+                                                  'top_seller', context),
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (_) =>
+                                                            AllTopSellerScreen(
+                                                              topSeller: null,
+                                                            )));
+                                              },
+                                            ),
+                                      singleVendor
+                                          ? SizedBox(height: 0)
+                                          : SizedBox(
+                                              height: Dimensions
+                                                  .PADDING_SIZE_SMALL),
+                                      singleVendor
+                                          ? SizedBox()
+                                          : Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: Dimensions
+                                                      .HOME_PAGE_PADDING),
+                                              child: TopSellerView(
+                                                  isHomePage: true),
+                                            ),
+                                    ],
+                                  )
+                                : SizedBox(),
 
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
                             /// Featured Products
-                            Consumer<ProductProvider>(
-                                builder: (context, featured, _) {
-                              return featured.featuredProductList != null &&
-                                      featured.featuredProductList.length > 0
-                                  ? Padding(
-                                      padding: const EdgeInsets.only(
-                                          //  left: Dimensions.PADDING_SIZE_EXTRA_SMALL,
-                                          left: 15,
-                                          right: 25,
-                                          bottom:
-                                              Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            bottom: Dimensions.PADDING_SIZE_SMALL),
-                                        child: TitleRow(
-                                            title: getTranslated(
-                                                'featured_products', context),
-                                            onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  CupertinoPageRoute(
-                                                      builder: (_) => AllProductScreen(
-                                                          productType: ProductType
-                                                              .FEATURED_PRODUCT)));
-                                            }),
-                                      ),
-                                    )
-                                  : SizedBox();
-                            }),
-                            Padding(
+                           AppConstants.showFeaturedProducts? Padding(
                               padding: const EdgeInsets.only(
                                   bottom: Dimensions.HOME_PAGE_PADDING),
                               child: FeaturedProductView(
                                 scrollController: _scrollController,
                                 isHome: true,
                               ),
-                            ),
-
+                            ):SizedBox(),
 
                             /// feature deals fixed
-                            Column(
+                            AppConstants.showFeaturedDeals?      Column(
                               children: [
                                 //title
                                 Consumer<FeaturedDealProvider>(
-                                  builder: (context, featuredDealProvider, child) {
-                                    return featuredDealProvider.featuredDealProductList !=
+                                  builder:
+                                      (context, featuredDealProvider, child) {
+                                    return featuredDealProvider
+                                                    .featuredDealProductList !=
                                                 null &&
                                             featuredDealProvider
-                                                    .featuredDealProductList.length >
+                                                    .featuredDealProductList
+                                                    .length >
                                                 0
                                         ? Padding(
                                             padding: const EdgeInsets.only(
                                                 //  left: Dimensions.PADDING_SIZE_EXTRA_SMALL,
                                                 left: 15,
                                                 right: 25,
-                                                bottom:
-                                                    Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                bottom: Dimensions
+                                                    .PADDING_SIZE_EXTRA_SMALL),
                                             child: TitleRow(
                                                 title: getTranslated(
                                                     'featured_deals', context),
@@ -847,37 +852,37 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 //body
                                 Consumer<FeaturedDealProvider>(
-                                  builder: (context, featuredDealProvider, child) {
-                                    return featuredDealProvider.featuredDealProductList !=
-                                        null &&
-                                        featuredDealProvider
-                                            .featuredDealProductList.length >
-                                            0
+                                  builder:
+                                      (context, featuredDealProvider, child) {
+                                    return featuredDealProvider
+                                                    .featuredDealProductList !=
+                                                null &&
+                                            featuredDealProvider
+                                                    .featuredDealProductList
+                                                    .length >
+                                                0
                                         ? Container(
-                                        height:
-                                        350, //featuredDealProvider.featuredDealProductList.length> 4 ? 200 * 4.0 : 200 * (double.parse(featuredDealProvider.featuredDealProductList.length.toString())),
-                                        child: FeaturedDealsView())
+                                            height:
+                                                350, //featuredDealProvider.featuredDealProductList.length> 4 ? 200 * 4.0 : 200 * (double.parse(featuredDealProvider.featuredDealProductList.length.toString())),
+                                            child: FeaturedDealsView())
                                         : SizedBox.shrink();
                                   },
                                 ),
                               ],
-                            ),
-
+                            ):SizedBox(),
 
                             ///recomended product num4
 
                             //new recomended fixed
-                            Provider.of<ProductProvider>(context, listen: false)
-                                        .recommendedProduct !=
-                                    null
-                                ? InkWell(
+                            Provider.of<ProductProvider>(context, listen: false).recommendedProduct != null ? InkWell(
                                     onTap: () {
-                                   Navigator.push(
+                                      Navigator.push(
                                           context,
                                           PageRouteBuilder(
                                               transitionDuration:
                                                   Duration(milliseconds: 1000),
-                                              pageBuilder: (context, anim1, anim2) =>
+                                              pageBuilder: (context, anim1,
+                                                      anim2) =>
                                                   ProductDetails(
                                                       product: Provider.of<
                                                                   ProductProvider>(
@@ -886,25 +891,29 @@ class _HomePageState extends State<HomePage> {
                                                           .recommendedProduct)));
                                     },
                                     child: RecommendedProductCard1(),
-                                  )
-                                : SizedBox(),
+                                  ) : SizedBox(),
 
                             // NewCardRecomendedProduct(),
 
                             /// Latest Products
                             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-                            //footer banner list
+                            ///footer banner list sosan so that no one can say anything for me mother fuckers
+
+                            //
+                            AppConstants.showFooterBanner?
                             SingleChildScrollView(
-                              child: Consumer<BannerProvider>(
-                                  builder: (context, footerBannerProvider, child) {
+                              child: Consumer<BannerProvider>(builder:
+                                  (context, footerBannerProvider, child) {
                                 return footerBannerProvider.footerBannerList !=
                                             null &&
                                         footerBannerProvider
                                                 .footerBannerList.length >=
                                             1
                                     ? Container(
-                                        height: ((MediaQuery.of(context).size.width *
+                                        height: ((MediaQuery.of(context)
+                                                    .size
+                                                    .width *
                                                 footerBannerProvider
                                                     .footerBannerList.length) /
                                             2.1),
@@ -913,59 +922,35 @@ class _HomePageState extends State<HomePage> {
                                               const NeverScrollableScrollPhysics(),
                                           itemCount: footerBannerProvider
                                               .footerBannerList.length,
-                                          itemBuilder: (context, index) => Padding(
-                                            padding: const EdgeInsets.only(top: 8.0),
-                                            child: FooterBannersView(index: index),
+                                          itemBuilder: (context, index) =>
+                                              Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 8.0),
+                                            child:
+                                                FooterBannersView(index: index),
                                           ),
                                         ),
                                       )
                                     : SizedBox();
                               }),
-                            ),
+                            ):SizedBox(),
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
+                            //fuck zaid and my uncle jehad
+
 
                             /// Category Filter horizontal num5
 
-                            HomeProductView(
+                            AppConstants.showNewArrival?    HomeProductView(
                                 isHomePage: true,
                                 productType: ProductType.NEW_ARRIVAL,
-                                scrollController: _scrollController),
+                                scrollController: _scrollController):SizedBox(),
                             //  Provider.of<BannerProvider>(context, listen: false).mainSectionBannerList.length >=1 ?     MainSectionBannersView(index: Random().nextInt(  Provider.of<BannerProvider>(context, listen: false).mainSectionBannerList.length),):SizedBox(),
                             //  FooterBannersView(index:Random().nextInt( Provider.of<BannerProvider>(context, listen: false).footerBannerList.length) ),
 
+                           CustomBannerColumn(),
                             ///main section banner
-                            Consumer<BannerProvider>(
-                                builder: (context, footerBannerProvider, child) {
-                              return footerBannerProvider.mainSectionBannerList !=
-                                          null &&
-                                      footerBannerProvider
-                                              .mainSectionBannerList.length >
-                                          0
-                                  ? MainSectionBannersView(
-                                      index: Random().nextInt(footerBannerProvider
-                                          .mainSectionBannerList.length),
-                                    )
-                                  : SizedBox();
-                            }),
-                            SizedBox(
-                              height: 5,
-                            ),
 
-                            ///footer  banner
-                            Consumer<BannerProvider>(
-                                builder: (context, footerBannerProvider, child) {
-                              return footerBannerProvider.footerBannerList != null &&
-                                      footerBannerProvider.footerBannerList.length > 0
-                                  ? FooterBannersView(
-                                      index: Random().nextInt(footerBannerProvider
-                                          .footerBannerList.length))
-                                  : SizedBox();
-                            }),
-
-                            ///main section banner with builder num6
-
-                            SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
                             ///discount product
 
@@ -981,33 +966,7 @@ class _HomePageState extends State<HomePage> {
                                 scrollController: _scrollController),
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
-                            ///main section banner
-                            Consumer<BannerProvider>(
-                                builder: (context, footerBannerProvider, child) {
-                              return footerBannerProvider.mainSectionBannerList !=
-                                          null &&
-                                      footerBannerProvider
-                                              .mainSectionBannerList.length >
-                                          0
-                                  ? MainSectionBannersView(
-                                      index: Random().nextInt(footerBannerProvider
-                                          .mainSectionBannerList.length),
-                                    )
-                                  : SizedBox();
-                            }),
-                            SizedBox(height: Dimensions.HOME_PAGE_PADDING),
-
-                            ///footer  banner
-                            Consumer<BannerProvider>(
-                                builder: (context, footerBannerProvider, child) {
-                              return footerBannerProvider.footerBannerList != null &&
-                                      footerBannerProvider.footerBannerList.length > 0
-                                  ? FooterBannersView(
-                                      index: Random().nextInt(footerBannerProvider
-                                          .footerBannerList.length))
-                                  : SizedBox();
-                            }),
-                            SizedBox(height: Dimensions.HOME_PAGE_PADDING),
+                            CustomBannerColumn(),
 
                             HomeProductView(
                                 isHomePage: true,
@@ -1016,16 +975,18 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
-                            Consumer<BannerProvider>(
-                                builder: (context, footerBannerProvider, child) {
-                              return footerBannerProvider.mainSectionBannerList !=
+                            Consumer<BannerProvider>(builder:
+                                (context, footerBannerProvider, child) {
+                              return footerBannerProvider
+                                              .mainSectionBannerList !=
                                           null &&
                                       footerBannerProvider
                                               .mainSectionBannerList.length >
                                           0
                                   ? MainSectionBannersView(
-                                      index: Random().nextInt(footerBannerProvider
-                                          .mainSectionBannerList.length),
+                                      index: Random().nextInt(
+                                          footerBannerProvider
+                                              .mainSectionBannerList.length),
                                     )
                                   : SizedBox();
                             }),
@@ -1049,13 +1010,16 @@ class _HomePageState extends State<HomePage> {
                                     builder: (ctx, prodProvider, child) {
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL,
-                                        vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                        horizontal:
+                                            Dimensions.PADDING_SIZE_EXTRA_SMALL,
+                                        vertical: Dimensions
+                                            .PADDING_SIZE_EXTRA_SMALL),
                                     child: Row(children: [
                                       Expanded(
                                           child: Text(
                                               prodProvider.title == 'xyz'
-                                                  ? getTranslated('new_arrival', context)
+                                                  ? getTranslated(
+                                                      'new_arrival', context)
                                                   : prodProvider.title,
                                               style: titleHeader)),
                                       prodProvider.latestProductList != null
@@ -1063,89 +1027,110 @@ class _HomePageState extends State<HomePage> {
                                               itemBuilder: (context) {
                                                 return [
                                                   PopupMenuItem(
-                                                      value: ProductType.NEW_ARRIVAL,
+                                                      value: ProductType
+                                                          .NEW_ARRIVAL,
                                                       child: Text(getTranslated(
-                                                          'new_arrival', context)),
-                                                      textStyle: robotoRegular.copyWith(
-                                                        color:
-                                                            Theme.of(context).hintColor,
+                                                          'new_arrival',
+                                                          context)),
+                                                      textStyle: robotoRegular
+                                                          .copyWith(
+                                                        color: Theme.of(context)
+                                                            .hintColor,
                                                       )),
                                                   PopupMenuItem(
-                                                      value: ProductType.TOP_PRODUCT,
+                                                      value: ProductType
+                                                          .TOP_PRODUCT,
                                                       child: Text(getTranslated(
-                                                          'top_product', context)),
-                                                      textStyle: robotoRegular.copyWith(
-                                                        color:
-                                                            Theme.of(context).hintColor,
+                                                          'top_product',
+                                                          context)),
+                                                      textStyle: robotoRegular
+                                                          .copyWith(
+                                                        color: Theme.of(context)
+                                                            .hintColor,
                                                       )),
                                                   PopupMenuItem(
-                                                      value: ProductType.BEST_SELLING,
+                                                      value: ProductType
+                                                          .BEST_SELLING,
                                                       child: Text(getTranslated(
-                                                          'best_selling', context)),
-                                                      textStyle: robotoRegular.copyWith(
-                                                        color:
-                                                            Theme.of(context).hintColor,
+                                                          'best_selling',
+                                                          context)),
+                                                      textStyle: robotoRegular
+                                                          .copyWith(
+                                                        color: Theme.of(context)
+                                                            .hintColor,
                                                       )),
                                                   PopupMenuItem(
-                                                      value:
-                                                          ProductType.DISCOUNTED_PRODUCT,
+                                                      value: ProductType
+                                                          .DISCOUNTED_PRODUCT,
                                                       child: Text(getTranslated(
-                                                          'discounted_product', context)),
-                                                      textStyle: robotoRegular.copyWith(
-                                                        color:
-                                                            Theme.of(context).hintColor,
+                                                          'discounted_product',
+                                                          context)),
+                                                      textStyle: robotoRegular
+                                                          .copyWith(
+                                                        color: Theme.of(context)
+                                                            .hintColor,
                                                       )),
                                                 ];
                                               },
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(
-                                                      Dimensions.PADDING_SIZE_SMALL)),
+                                                  borderRadius: BorderRadius
+                                                      .circular(Dimensions
+                                                          .PADDING_SIZE_SMALL)),
                                               child: Padding(
                                                 padding: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        Dimensions.PADDING_SIZE_SMALL,
-                                                    vertical:
-                                                        Dimensions.PADDING_SIZE_SMALL),
+                                                    horizontal: Dimensions
+                                                        .PADDING_SIZE_SMALL,
+                                                    vertical: Dimensions
+                                                        .PADDING_SIZE_SMALL),
                                                 child: Image.asset(
                                                   Images.dropdown,
                                                   scale: 3,
                                                 ),
                                               ),
                                               onSelected: (value) {
-                                                if (value == ProductType.NEW_ARRIVAL) {
-                                                  Provider.of<ProductProvider>(context,
+                                                if (value ==
+                                                    ProductType.NEW_ARRIVAL) {
+                                                  Provider.of<ProductProvider>(
+                                                          context,
                                                           listen: false)
                                                       .changeTypeOfProduct(
                                                           value, types[0]);
                                                 } else if (value ==
                                                     ProductType.TOP_PRODUCT) {
-                                                  Provider.of<ProductProvider>(context,
+                                                  Provider.of<ProductProvider>(
+                                                          context,
                                                           listen: false)
                                                       .changeTypeOfProduct(
                                                           value, types[1]);
                                                 } else if (value ==
                                                     ProductType.BEST_SELLING) {
-                                                  Provider.of<ProductProvider>(context,
+                                                  Provider.of<ProductProvider>(
+                                                          context,
                                                           listen: false)
                                                       .changeTypeOfProduct(
                                                           value, types[2]);
                                                 } else if (value ==
-                                                    ProductType.DISCOUNTED_PRODUCT) {
-                                                  Provider.of<ProductProvider>(context,
+                                                    ProductType
+                                                        .DISCOUNTED_PRODUCT) {
+                                                  Provider.of<ProductProvider>(
+                                                          context,
                                                           listen: false)
                                                       .changeTypeOfProduct(
                                                           value, types[3]);
                                                 }
-                                                Provider.of<ProductProvider>(context,
+                                                Provider.of<ProductProvider>(
+                                                        context,
                                                         listen: false)
                                                     .getLatestProductList(
-                                                        Provider.of<CategoryProvider>(
+                                                        Provider.of<
+                                                                    CategoryProvider>(
                                                                 context,
                                                                 listen: false)
-                                                            .categoryList[Provider.of<
-                                                                        CategoryProvider>(
-                                                                    context,
-                                                                    listen: false)
+                                                            .categoryList[Provider
+                                                                    .of<CategoryProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
                                                                 .categorySelectedIndex]
                                                             .id,
                                                         1,
@@ -1172,7 +1157,6 @@ class _HomePageState extends State<HomePage> {
                                 )
                               ],
                             ),
-
                           ],
                         ),
                       ),
@@ -1207,6 +1191,52 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class CustomBannerColumn extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+
+        Consumer<BannerProvider>(builder:
+            (context, footerBannerProvider, child) {
+          return footerBannerProvider
+              .mainSectionBannerList !=
+              null &&
+              footerBannerProvider
+                  .mainSectionBannerList.length >
+                  0
+              ? MainSectionBannersView(
+            index: Random().nextInt(
+                footerBannerProvider
+                    .mainSectionBannerList.length),
+          )
+              : SizedBox();
+        }),
+        SizedBox(
+          height: 5,
+        ),
+        ///footer  banner
+        Consumer<BannerProvider>(builder:
+            (context, footerBannerProvider, child) {
+          return footerBannerProvider.footerBannerList !=
+              null &&
+              footerBannerProvider
+                  .footerBannerList.length >
+                  0
+              ? FooterBannersView(
+              index: Random().nextInt(
+                  footerBannerProvider
+                      .footerBannerList.length))
+              : SizedBox();
+        }),
+        SizedBox(height: Dimensions.HOME_PAGE_PADDING),
+      ],
     );
   }
 }

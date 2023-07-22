@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+
+import '../data/model/response/base/api_response.dart';
+import '../data/model/response/filter_category_1.dart';
+import '../data/repository/attribute_repo.dart';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_Aosan_ecommerce/utill/app_constants.dart';
 
 import '../data/model/SearchListModels/CategorySeachListModel.dart';
@@ -36,10 +42,10 @@ class AttributeProvider extends ChangeNotifier {
     if (response.response != null) {
       List<dynamic> list = response.response.data;
       attributes.clear();
-      attributes.where((element) => element.id.toString()==AppConstants.categoryId).isEmpty?
-      attributes.add(Attribute(id: 1,name: "الاقسام",childes: getCatChilds(category_search_list))):"";
+      // attributes.where((element) => element.id.toString()==AppConstants.categoryId).isEmpty?
+      // attributes.add(Attribute(id: 1,name: "الاقسام",childes: getCatChilds(category_search_list))):"";
 
-     list.map((item) => attributes.add(Attribute.fromJson(item))).toList();
+      list.map((item) => attributes.add(Attribute.fromJson(item))).toList();
       attributes.toSet();
 
     } else {
@@ -56,3 +62,5 @@ class AttributeProvider extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+

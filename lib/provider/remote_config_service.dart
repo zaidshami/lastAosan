@@ -24,9 +24,14 @@ class RemoteConfigService {
       'categoryType' :   AppConstants.categoryType,
       'categoryType1' :   AppConstants.categoryType1,
       'bannerFirst' :   AppConstants.bannerFirst,
+      'showFooterBanner' :   AppConstants.showFooterBanner,
       'bannersView': AppConstants.bannersView,
       'showBrand': AppConstants.showBrand,
+      'brandShowType': AppConstants.brandShowType,
       'showTopSeller': AppConstants.showTopSeller,
+      'showNewArrival': AppConstants.showNewArrival,
+      'showFeaturedProducts':AppConstants.showFeaturedProducts,
+      'showFeaturedDeals':AppConstants.showFeaturedDeals,
 
 
     });
@@ -35,8 +40,13 @@ class RemoteConfigService {
     // AppConstants.BASE_URL = remoteConfig.getString('baseUrlZ');
     AppConstants.showLogin = remoteConfig.getBool('showAndHideSocial');
     AppConstants.showBrand = remoteConfig.getBool('showBrand');
+    AppConstants.brandShowType = remoteConfig.getBool('brandShowType');
     AppConstants.showTopSeller = remoteConfig.getBool('showTopSeller');
     AppConstants.showLoginApple = remoteConfig.getBool('showAndHideSocialApple');
+    AppConstants.showNewArrival = remoteConfig.getBool('showNewArrival');
+    AppConstants.showFeaturedProducts = remoteConfig.getBool('showFeaturedProducts');
+    AppConstants.showFeaturedDeals = remoteConfig.getBool('showFeaturedDeals');
+    AppConstants.showFooterBanner = remoteConfig.getBool('showFooterBanner');
     AppConstants.showLoginAppleInside = remoteConfig.getBool('showAndHideSocialAppleInside');
     AppConstants.textScaleFactior = remoteConfig.getDouble('textScaleFactor');
     AppConstants.categoryType = remoteConfig.getBool('categoryType');

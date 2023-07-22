@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
 import '../../../../provider/search_provider.dart';
 import '../../../../utill/color_resources.dart';
 import '../../../../utill/custom_themes.dart';
@@ -79,8 +80,91 @@ class SearchWidget extends StatelessWidget {
             InkWell(
               onTap: (){
                 Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( _controller.text.toString());
-               // Provider.of<SearchProvider>(context, listen: false).searchProduct( _controller.text.toString(), context);
+                // Provider.of<SearchProvider>(context, listen: false).searchProduct( _controller.text.toString(), context);
               },
+              child: Container(
+                width: 55,height: 60,decoration: BoxDecoration(color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(Dimensions.PADDING_SIZE_SMALL),
+                      bottomLeft: Radius.circular(Dimensions.PADDING_SIZE_SMALL))
+              ),
+                child: Icon(Icons.search, color: Theme.of(context).cardColor, size: Dimensions.ICON_SIZE_SMALL),
+              ),
+            ),
+            SizedBox(width: 10),
+          ]),
+        ),
+      ),
+    ]);
+  }
+}
+
+class SecondSearchWidget extends StatelessWidget {
+  final String hintText;
+  final Function onTextChanged;
+  final Function onClearPressed;
+  final Function onSubmit;
+  final bool isSeller;
+  final Function onTap;
+  SecondSearchWidget({@required this.hintText, this.onTextChanged, @required this.onClearPressed, this.onSubmit, this.isSeller= false,this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController _controller =Provider.of<SearchProvider>(context, listen: false).searchController;
+    return Stack(children: [
+
+      Padding(
+        padding: getPadding(top: 20,right: 20,left:20),
+        child: Container(width : MediaQuery.of(context).size.width,
+          height: isSeller? 50 : 40,
+          alignment: Alignment.center,
+          child: Row(children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(Dimensions.PADDING_SIZE_SMALL),
+                        bottomRight: Radius.circular(Dimensions.PADDING_SIZE_SMALL))
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric( horizontal: Dimensions.PADDING_SIZE_SMALL),
+                  child: TextFormField(
+                    controller: _controller,
+                    onFieldSubmitted: (query) {
+                      onSubmit(query);
+                    },
+                    onChanged: (query) {
+                      //onTextChanged(query);
+                    },
+                    textInputAction: TextInputAction.search,
+                    maxLines: 1,
+                    textAlignVertical: TextAlignVertical.center,
+                    decoration: InputDecoration(
+                      hintText: hintText,
+                      isDense: true,
+                      hintStyle: robotoRegular.copyWith(color: Theme.of(context).hintColor),
+                      border: InputBorder.none,
+                      //prefixIcon: Icon(Icons.search, color: ColorResources.getColombiaBlue(context), size: Dimensions.ICON_SIZE_DEFAULT),
+                      suffixIcon: Provider.of<SearchProvider>(context).searchText.isNotEmpty ? IconButton(
+                        icon: Icon(Icons.clear, color: Colors.black),
+                        onPressed: () {
+                          onClearPressed();
+                          _controller.clear();
+                        },
+                      ) : _controller.text.isNotEmpty ? IconButton(
+                        icon: Icon(Icons.clear, color: ColorResources.getChatIcon(context)),
+                        onPressed: () {
+                          onClearPressed();
+                          _controller.clear();
+                        },
+                      ) : null,
+                    ),
+                  ),
+                ),
+
+              ),
+            ),
+            InkWell(
+              onTap:onTap,
               child: Container(
                 width: 55,height: 60,decoration: BoxDecoration(color: Theme.of(context).primaryColor,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(Dimensions.PADDING_SIZE_SMALL),

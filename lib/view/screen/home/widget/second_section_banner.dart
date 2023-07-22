@@ -171,7 +171,8 @@ class SecondSectionBannersView extends StatelessWidget {
             ),
           ),
         )    :
-        Container(
+            SizedBox()
+      /*  Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height*0.5,
           child: Shimmer.fromColors(
@@ -186,9 +187,9 @@ class SecondSectionBannersView extends StatelessWidget {
               color: ColorResources.WHITE,
             )),
           ),
-        )
+        )*/
             :
-        Container(
+       Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height*0.5,
           child: Shimmer.fromColors(

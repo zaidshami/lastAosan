@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../provider/brand_provider.dart';
 import '../../../../provider/splash_provider.dart';
+import '../../../../utill/app_constants.dart';
 import '../../../../utill/color_resources.dart';
 import '../../../../utill/custom_themes.dart';
 import '../../../../utill/dimensions.dart';
@@ -19,73 +20,8 @@ class BrandView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<BrandProvider>(
       builder: (context, brandProvider, child) {
-
         return brandProvider.brandList.length != 0 ?
-        isHomePage?
-        ConstrainedBox(
-          constraints: brandProvider.brandList.length > 0 ? BoxConstraints(maxHeight: 130):BoxConstraints(maxHeight: 0),
-          child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: brandProvider.brandList.length,
-              itemBuilder: (ctx,index){
-
-                return InkWell(
-                  onTap: () {
-                    Navigator.push(context, CupertinoPageRoute(builder: (_) => BrandAndCategoryProductScreen(
-                      isBrand: true,
-                      id: brandProvider.brandList[index].id.toString(),
-                      name: brandProvider.brandList[index].name,
-                      image: brandProvider.brandList[index].image,
-                    )));
-                   },
-                  child: Padding(
-                    padding:  EdgeInsets.only(right: 10),
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: (MediaQuery.of(context).size.width/5.9),
-                            height: (MediaQuery.of(context).size.width/5.9),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular((MediaQuery.of(context).size.width/5))),
-                                color: Theme.of(context).highlightColor,
-                                 ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular((MediaQuery.of(context).size.width/5))),
-                              child:
-                              CachedNetworkImage(
-                                errorWidget: (context, url, error) => Image.asset(
-                                  Images.placeholder,
-                                  fit: BoxFit.cover,
-                                ),
-                                placeholder: (context, url) => Image.asset(
-                                  Images.placeholder,
-                                  fit: BoxFit.cover,
-                                ),
-                                imageUrl:Provider.of<SplashProvider>(context,listen: false).baseUrls.brandImageUrl+'/'+brandProvider.brandList[index].image,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: (MediaQuery.of(context).size.width/4) * 0.3,
-                            width: MediaQuery.of(context).size.width/4.2,
-                            child: Center(child: Text(
-                              brandProvider.brandList[index].name,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: titilliumSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
-                            )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-
-              }),
-        ):
+        AppConstants.brandShowType==true?
         GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
@@ -149,7 +85,74 @@ class BrandView extends StatelessWidget {
             );
 
           },
-        ) : BrandShimmer(isHomePage: isHomePage);
+        )  :
+        ConstrainedBox(
+          constraints: brandProvider.brandList.length > 0 ? BoxConstraints(maxHeight: 130):BoxConstraints(maxHeight: 0),
+          child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: brandProvider.brandList.length,
+              itemBuilder: (ctx,index){
+
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context, CupertinoPageRoute(builder: (_) => BrandAndCategoryProductScreen(
+                      isBrand: true,
+                      id: brandProvider.brandList[index].id.toString(),
+                      name: brandProvider.brandList[index].name,
+                      image: brandProvider.brandList[index].image,
+                    )));
+                  },
+                  child: Padding(
+                    padding:  EdgeInsets.only(right: 10),
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: (MediaQuery.of(context).size.width/5.9),
+                            height: (MediaQuery.of(context).size.width/5.9),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.all(Radius.circular((MediaQuery.of(context).size.width/5))),
+                              color: Theme.of(context).highlightColor,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(Radius.circular((MediaQuery.of(context).size.width/5))),
+                              child:
+                              CachedNetworkImage(
+                                errorWidget: (context, url, error) => Image.asset(
+                                  Images.placeholder,
+                                  fit: BoxFit.cover,
+                                ),
+                                placeholder: (context, url) => Image.asset(
+                                  Images.placeholder,
+                                  fit: BoxFit.cover,
+                                ),
+                                imageUrl:Provider.of<SplashProvider>(context,listen: false).baseUrls.brandImageUrl+'/'+brandProvider.brandList[index].image,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: (MediaQuery.of(context).size.width/4) * 0.3,
+                            width: MediaQuery.of(context).size.width/4.2,
+                            child: Center(child: Text(
+                              brandProvider.brandList[index].name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: titilliumSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
+                            )),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+
+              }),
+        ):
+         AppConstants.brandShowType == true ?  BrandShimmer(isHomePage: isHomePage):BrandListShimmer();
+
+
 
       },
     );
@@ -188,3 +191,51 @@ class BrandShimmer extends StatelessWidget {
     );
   }
 }
+class BrandListShimmer extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 130,  // you can change this to fit your needs
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: 8,
+        itemBuilder: (ctx, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300],
+            highlightColor: Colors.grey[100],
+            child: Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Container(
+                width: MediaQuery.of(context).size.width/5.9,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: (MediaQuery.of(context).size.width/5.9),
+                      height: (MediaQuery.of(context).size.width/5.9),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular((MediaQuery.of(context).size.width/5))),
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                    SizedBox(height: 2,),
+                    SizedBox(
+                      height: (MediaQuery.of(context).size.width/4) * 0.2,
+                      width: MediaQuery.of(context).size.width/4.2,
+                      child: Container(
+                        color: Colors.grey[300],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+

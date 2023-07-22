@@ -14,7 +14,6 @@ class CategoryProvider extends ChangeNotifier {
 
   CategoryProvider({@required this.categoryRepo});
 
-
   List<Category> _categoryList = [];
   int _categorySelectedIndexhome=0;
   int _categorySubSelectedIndex=0;
@@ -41,8 +40,8 @@ class CategoryProvider extends ChangeNotifier {
         _categoryList.clear();
         apiResponse.response.data.forEach((category) => _categoryList.add(Category.fromJson(category)));
 
-   _categorySelectedIndexhome = 0;
-      //  sl<SearchProvider>()..set_search_list(_categoryList);
+        _categorySelectedIndexhome = 0;
+        //  sl<SearchProvider>()..set_search_list(_categoryList);
       } else {
         ApiChecker.checkApi(context, apiResponse);
       }

@@ -11,6 +11,7 @@ import '../data/model/SearchListModels/CategorySeachListModel.dart';
 import '../data/model/SearchListModels/OptionsSearchListModel.dart';
 import '../data/model/SearchListModels/SearchListModel.dart';
 import '../data/model/response/category.dart';
+import '../data/model/response/filter_category_1.dart';
 import '../utill/app_constants.dart';
 import '../view/screen/search/widget/OptionsItemWidget.dart';
 import 'brand_provider.dart';
@@ -91,9 +92,9 @@ class SearchProvider with ChangeNotifier {
         return _brand_search_list;
         break;
 
-      // case OptionsSearchListModel:
-      //   return OptionsList;
-      //   break;
+    // case OptionsSearchListModel:
+    //   return OptionsList;
+    //   break;
 
       default:
         return [];
@@ -111,8 +112,8 @@ class SearchProvider with ChangeNotifier {
     if (isPrice && startingPrice > 0 && endingPrice > startingPrice) {
       _searchProductList.addAll(_filterProductList
           .where((product) =>
-              (product.unitPrice) > startingPrice &&
-              (product.unitPrice) < endingPrice)
+      (product.unitPrice) > startingPrice &&
+          (product.unitPrice) < endingPrice)
           .toList());
     } else {
       _searchProductList.addAll(_filterProductList);
@@ -290,6 +291,15 @@ class SearchProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
+  List<Selected> filterEncode(){
+    List<Selected> _temp=[];
+    selectedAttributes.forEach((key, value) {
+      _temp.add(Selected(id: key,selected:value ));
+      
+    });
+    return _temp;
+
+  }
   void newSearchProduct(
       String query,
       // List<String> selectedOptions,
@@ -301,13 +311,13 @@ class SearchProvider with ChangeNotifier {
       // List<double> selectedDiscounts,
       BuildContext context,
       {Function onNoMoreProducts,
-      bool reload = true}) async {
+        bool reload = true}) async {
     _isLoading = true;
     notifyListeners();
     _searchText = query;
     _isClear = false;
 
-    // Do not reset the _searchProductList here
+
     reload ? _searchProductList = [] : null;
     reload ? _filterProductList = [] : null;
     reload ? offset = 1 : null;
@@ -316,13 +326,14 @@ class SearchProvider with ChangeNotifier {
 
     ApiResponse apiResponse = await searchRepo.getSearchProductList(
         name: _searchText,
-        option: selectedOptions,
-        category: selectedCategories,
-        brand: selectedBrands,
-        price: selectedPrices,
-        size: selectedSizes,
-        color: selectedColors,
-        discount: selectedDiscounts,
+     atts: filterEncode(),
+     //   option: selectedOptions,
+        // category: selectedCategories,
+        // brand: selectedBrands,
+        // price: selectedPrices,
+        // size: selectedSizes,
+        // color: selectedColors,
+        // discount: selectedDiscounts,
         offset: offset);
 
     if (apiResponse.response != null &&
@@ -353,11 +364,11 @@ class SearchProvider with ChangeNotifier {
 
     notifyListeners();
   }
-  Map<String, List<Selected>> _selectedAttributes = {};
+  Map<String, List<String>> _selectedAttributes = {};
 
-  Map<String, List<Selected>> get selectedAttributes => _selectedAttributes;
+  Map<String, List<String>> get selectedAttributes => _selectedAttributes;
 
-  void selectAttribute(String category, Selected attribute) {
+  void selectAttribute(String category, String attribute) {
 
 
     if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
@@ -368,7 +379,7 @@ class SearchProvider with ChangeNotifier {
 
   }
 
-  void deselectAttribute(String category, Selected attribute) {
+  void deselectAttribute(String category, String attribute) {
     if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
       _selectedAttributes[category]?.remove(attribute);
       notifyListeners();
@@ -486,11 +497,13 @@ class SearchProvider with ChangeNotifier {
     maxPriceController.clear();
     offset=1;
     _selectedAttributes.clear();
+    notifyListeners();
   }
 
 
 
-  void search(BuildContext context) async {
+  void search(BuildContext context,{bool reload = false}) async {
+
 
 
     // List<String> brands= _selectedAttributes[AppConstants.brandsId];
@@ -506,15 +519,16 @@ class SearchProvider with ChangeNotifier {
 
     newSearchProduct(
         searchController.text,
-        [],
-        category,
-        brands,
-        price,
-        size,
-        colors,
-        [],
+   //     _selectedAttributes,
+        // [],
+        // category,
+        // brands,
+        // price,
+        // size,
+        // colors,
+       // [],
         context,
-        reload: false
+        reload: reload
     );
   }
 

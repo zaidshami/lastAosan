@@ -68,6 +68,7 @@ Future<void> main() async {
 
   print('the baseurl before is : ' + AppConstants.BASE_URL);
   print('the categoryType before is : ' + AppConstants.categoryType.toString());
+  print('the showBrandType before is : ' + AppConstants.brandShowType.toString());
 
   try {
     await RemoteConfigService.init().timeout(Duration(seconds: 10));
@@ -75,9 +76,9 @@ Future<void> main() async {
     print('Failed to fetch remote config: $e');
     // Handle network errors here.
   }
-
+  print('the brandShowType after is : ' + AppConstants.showBrand.toString());
   print('the baseurl after is : ' + AppConstants.BASE_URL);
-  print('the categoryType after is : ' + AppConstants.categoryType.toString());
+
 
 
   await di.init();

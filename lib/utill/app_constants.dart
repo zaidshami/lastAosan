@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../data/model/response/language_model.dart';
 import '../data/model/response/product_model.dart';
 import 'dimensions.dart';
-
+///mine
 class AppConstants {
 
 
@@ -35,7 +35,7 @@ class AppConstants {
   static const String HOME_CATEGORY_PRODUCTS_URI = '/api/v1/products/home-categories';
   static const String PRODUCT_DETAILS_URI = '/api/v1/products/details/';
   static const String PRODUCT_REVIEW_URI = '/api/v1/products/reviews/';
-  static const String SEARCH_URI = '/api/v1/products/search?';
+  static const String SEARCH_URI = '/api/v1/products/search';
   static const String CONFIG_URI = '/api/v1/config';
   static const String ADD_WISH_LIST_URI = '/api/v1/customer/wish-list/add?product_id=';
   static const String REMOVE_WISH_LIST_URI = '/api/v1/customer/wish-list/remove?product_id=';
@@ -156,12 +156,17 @@ class AppConstants {
   //RemoteConfig
   static  bool showLogin = true;
   static  bool showBrand = false;
+  static  bool brandShowType = false;
   static  bool showTopSeller = false;
+  static  bool showFeaturedProducts = true;
+  static  bool showFeaturedDeals = true;
   static  String categoryType1 = 'true';
   static  bool categoryType = true;
   static  bool bannerFirst = true;
+  static  bool showFooterBanner = true;
   static  bool bannersView = true;
   static  bool showLoginApple = true;
+  static  bool showNewArrival = true;
   static  bool showLoginAppleInside = true;
   static double textScaleFactior = 1.0 ;
 

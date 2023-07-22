@@ -62,6 +62,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 child: Row(
                   children: [
+
                     Padding(
                       padding: EdgeInsets.only(
                           left: Dimensions.PADDING_SIZE_DEFAULT),
@@ -72,18 +73,26 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     Expanded(
                       child: Container(
-                        child: SearchWidget(
+                        child: SecondSearchWidget(
+
                           hintText: getTranslated('SEARCH_HINT', context),
+                          onTap:  (){
+                        Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
+                        Provider.of<SearchProvider>(context, listen: false).search( context,reload: true);
+          },
                           onSubmit: (String text) {
+                            Provider.of<SearchProvider>(context, listen: false).search(context);
                             // Provider.of<SearchProvider>(context, listen: false)
                             //     .searchProduct(text, context,reload: true);
-                            Provider.of<SearchProvider>(context, listen: false)
-                                .saveSearchAddress(text);
+                            // Provider.of<SearchProvider>(context, listen: false)
+                            //     .saveSearchAddress(text);
                           },
-                          onClearPressed: () async =>
-                              await Provider.of<SearchProvider>(context,
-                                      listen: false)
-                                  .cleanSearchProduct(),
+                          onClearPressed: () async {
+                            Provider.of<SearchProvider>(context, listen: false).clearFilters();
+                            await Provider.of<SearchProvider>(context,
+                              listen: false)
+                              .cleanSearchProduct();
+                          },
                         ),
                       ),
                     ),
@@ -96,34 +105,30 @@ class _SearchScreenState extends State<SearchScreen> {
               // SizedBox(height: 10,),
               // BrandItemWidget("الماركات", context.watch<SearchProvider>().brand_search_list),
               // SizedBox(height: 10,),
-  /*            Expanded(
-
-                  child: AttributeList()),*/
-
-
               Consumer<SearchProvider>(
                 builder: (context, searchProvider, child) {
                   return !searchProvider.isClear
                       ? searchProvider.searchProductList == null
-                          ? Expanded(
-                              child: ProductShimmer(
-                                isHomePage: false,
-                                isEnabled: Provider.of<SearchProvider>(context)
-                                        .searchProductList ==
-                                    null,
-                              ),
-                            )
-                          : searchProvider.searchProductList.isEmpty
-                              ? Expanded(
-                                  child: NoInternetOrDataScreen(
-                                      isNoInternet: false),
-                                )
-                              : Expanded(
-                                  child: SearchProductWidget(
-                                    products: searchProvider.searchProductList,
-                                    isViewScrollable: true,
-                                  ),
-                                )
+                      ? Expanded(
+                    child: ProductShimmer(
+                      isHomePage: false,
+                      isEnabled: Provider.of<SearchProvider>(context)
+                          .searchProductList ==
+                          null,
+                    ),
+                  )
+                      : searchProvider.searchProductList.isEmpty
+                      ? Expanded(
+                    child: NoInternetOrDataScreen(
+                        isNoInternet: false),
+                  )
+                      : Expanded(
+                    child: SearchProductWidget(
+                       searchAttribute: widget.searchAttribute,
+                      products: searchProvider.searchProductList,
+                      isViewScrollable: true,
+                    ),
+                  )
 
                       :
                   Expanded(
@@ -131,8 +136,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       child:
                       NewProductAttributeList(widget.searchAttribute))
                   ///HISTORY WIDGET
-/*
-                  Expanded(
+                /*  Expanded(
                           flex: 4,
                           child: Container(
                             padding:
@@ -190,14 +194,9 @@ class _SearchScreenState extends State<SearchScreen> {
                                             searchProvider.historyList.length,
                                         itemBuilder: (context, index) =>
                                             InkWell(
-                                          onTap: () =>
-                                              Provider.of<SearchProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .searchProduct(
-                                                      searchProvider
-                                                          .historyList[index],
-                                                      context),
+                                          onTap: () {
+                                            searchProvider.searchController.text = searchProvider.historyList[index];
+                                                searchProvider.search(context);},
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           child: Row(

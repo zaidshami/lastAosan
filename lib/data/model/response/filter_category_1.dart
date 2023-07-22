@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../utill/app_constants.dart';
-import '../SearchListModels/SearchListModel.dart';
 
 class Attribute {
   int id;
@@ -9,10 +8,10 @@ class Attribute {
   List<Child> childes;
 
 
-  List<Selected> get getChildIds{
-    List<Selected> _temp=[];
+  List<String> get getChildIds{
+    List<String> _temp=[];
     childes.forEach((element) {
-      _temp.add(Selected(element.id,element.name));
+      _temp.add(element.id);
     });
     return _temp;
   }
@@ -61,3 +60,21 @@ class Child {
     );
   }
 }
+
+class Selected {
+  String  id;
+  List<String> selected;
+
+  Selected({@required this.id, @required this.selected,});
+
+  factory Selected.fromJson(Map<String, dynamic> json) {
+    return Selected(
+      id: json['id'].toString(),
+      selected: json['selected'],
+    );
+  }
+
+
+}
+
+

@@ -11,6 +11,7 @@ import '../../../../utill/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/response/cart_model.dart';
+import '../model/response/filter_category_1.dart';
 
 
 class SearchRepo {
@@ -22,27 +23,29 @@ class SearchRepo {
 
   Future<ApiResponse> getSearchProductList({
     String name,
-    List<String> option,
-    List<String> category,
-    List<String> brand,
-    List<String> price,
-    List<String> size,
-    List<String> color,
-    List<double> discount,
+  List<String> option,
+    List<Selected> atts,
+    // List<String> category,
+    // List<String> brand,
+    // List<String> price,
+    // List<String> size,
+    // List<String> color,
+    // List<double> discount,
     int offset,
   }) async {
-    print("cczzzz $color");
+    // print("cczzzz $color");
     try {
 
       final Map<String, dynamic> queryParameters = {
         'name': jsonEncode(name??''),
-        'option': jsonEncode(option?? []),
-        'category': jsonEncode(category ?? []),
-        'brand': jsonEncode(brand ?? []),
-        'price': jsonEncode(price ?? []),
-        'size': jsonEncode(size ?? []),
-        'color': jsonEncode(color ?? []),
-        'discount': jsonEncode(discount ?? []),
+        // 'option': jsonEncode(option?? []),
+        // 'category': jsonEncode(category ?? []),
+        // 'brand': jsonEncode(brand ?? []),
+        // 'price': jsonEncode(price ?? []),
+        // 'size': jsonEncode(size ?? []),
+        // 'color': jsonEncode(color ?? []),
+        // 'discount': jsonEncode(discount ?? []),
+    'filter':atts??[],
 
         'offset': offset ?? 1,
         'limit': 10
@@ -50,12 +53,13 @@ class SearchRepo {
 
       logger.d('zxxx: $queryParameters');
 
-      final response = await dioClient.get(
+      final response = await dioClient.post(
         AppConstants.SEARCH_URI,
         queryParameters: queryParameters,
+        data: queryParameters
       );
 
-       logger.d("zxxxxx: " + response.data.toString());
+      logger.d("zxxxxx: " + response.data.toString());
 
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -63,7 +67,7 @@ class SearchRepo {
     }
   }
 
-   /* Future<ApiResponse> getSearchProductList(String query,List<String> option,List<String> category,List<String> brand,List<double> price,
+  /* Future<ApiResponse> getSearchProductList(String query,List<String> option,List<String> category,List<String> brand,List<double> price,
       List<String> size,List<String> color,List<double> discount,int offset) async {
     try {
       final response = await dioClient.get(AppConstants.SEARCH_URI ,

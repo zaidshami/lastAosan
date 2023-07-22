@@ -48,7 +48,7 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: MediaQuery.of( context).size.height-80,
+      // height: MediaQuery.of( context).size.height-80,
       padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
       decoration: BoxDecoration(
         color: Theme.of(context).highlightColor,
@@ -91,8 +91,8 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                       ,)
                 ),
                 SizedBox(height: 10,),
-
-                SizedBox(child: Row(
+                ///Price Range
+             /*   SizedBox(child: Row(
                   children: [
                     Text(getTranslated('PRICE_RANGE', context),
                         style: titilliumSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
@@ -138,20 +138,23 @@ class _SearchFilterBottomSheetState extends State<SearchFilterBottomSheet> {
                         ),
                       ),
                     ],
-                  ),
-                ),
+                  ),),*/
                 SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                Divider(),
-                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+
+
 
                 Text(getTranslated('SORT_BY', context),
                   style: titilliumSemiBold.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                 ),
 
                 MyCheckBox(title: getTranslated('latest_products', context), index: 0),
+                Divider(),
                 MyCheckBox(title: getTranslated('alphabetically_az', context), index: 1),
+                Divider(),
                 MyCheckBox(title: getTranslated('alphabetically_za', context), index: 2),
+                Divider(),
                 MyCheckBox(title: getTranslated('low_to_high_price', context), index: 3),
+                Divider(),
                 MyCheckBox(title: getTranslated('high_to_low_price', context), index: 4),
 
 

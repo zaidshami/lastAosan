@@ -31,15 +31,7 @@ class ProductShimmer extends StatelessWidget {
             color: Theme.of(context).highlightColor,
             boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), spreadRadius: 1, blurRadius: 5)],
           ),
-          child: FadeInImage.assetNetwork(
-            placeholder: Images.placeholder,
-            fit: BoxFit.cover,
-            image: Images.placeholder,
-            imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder, fit: BoxFit.cover),
-          )
-
-          /// old shimmer
-         /* Shimmer.fromColors(
+          child:   Shimmer.fromColors(
             baseColor: Colors.grey[300],
             highlightColor: Colors.grey[100],
             enabled: isEnabled,
@@ -80,7 +72,18 @@ class ProductShimmer extends StatelessWidget {
                 ),
               ),
             ]),
-          ),*/
+          ),
+
+
+          /*FadeInImage.assetNetwork(
+            placeholder: Images.placeholder,
+            fit: BoxFit.cover,
+            image: Images.placeholder,
+            imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder, fit: BoxFit.cover),
+          )*/
+
+
+
         );
       },
     );

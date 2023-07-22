@@ -160,7 +160,8 @@ BannersView({this.width,this.height,this.discount =false});
             return Container(
               width: width,
               height:height,
-              child: bannerProvider.mainBannerList != null ? bannerProvider.mainBannerList.length != 0 ? Stack(
+              child: bannerProvider.mainBannerList != null ? bannerProvider.mainBannerList.length != 0 ?
+              Stack(
                 fit: StackFit.expand,
                 children: [
                   CarouselSlider.builder(

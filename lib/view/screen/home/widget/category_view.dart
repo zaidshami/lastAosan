@@ -19,14 +19,20 @@ class CategoryView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
+    int i =  Provider.of<CategoryProvider>(context,
+        listen: false).categoryList[ Provider.of<CategoryProvider>(context,
+        listen: false).categorySelectedIndex].subCategories.length;
+    int x =  Provider.of<CategoryProvider>(context,
+        listen: false).categoryList[ Provider.of<CategoryProvider>(context,
+        listen: false).categorySelectedIndex].subCategories.length>4?4 :Provider.of<CategoryProvider>(context,
+        listen: false).categoryList[ Provider.of<CategoryProvider>(context,
+        listen: false).categorySelectedIndex].subCategories.length;
 
     return Consumer<CategoryProvider>(
       builder: (context, categoryProvider, child) {
 
         return categoryProvider.categoryList.length != 0 ?
-            AppConstants.categoryType==true?
+            AppConstants.categoryType==false?
             GridView.builder(
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -63,7 +69,8 @@ class CategoryView extends StatelessWidget {
                 category: categoryProvider.categoryList[categoryProvider.categorySelectedIndex].subCategories[index],),
             );
           },
-        ):   Container(
+        ):
+            Container(
               height: MediaQuery.of(context).size.height*0.15,
               padding:getPadding(top: 10,bottom: 10),
 
@@ -96,7 +103,7 @@ class CategoryView extends StatelessWidget {
               ),
             )
 
-            : CategoryShimmer();
+            : AppConstants.categoryType==false? CategoryShimmerGrid(count: i,):CategoryShimmerList(count: x);
       },
     );
   }
