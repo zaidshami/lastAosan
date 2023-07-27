@@ -78,7 +78,7 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
                       showModalBottomSheet(context: context,
                               isScrollControlled: true,
                           backgroundColor: Colors.white,
-                              useSafeArea:  false,
+                           //   useSafeArea:  false,
                               builder: (c) => SearchSortByBottomSheet(widget.searchAttribute));
 
                     },

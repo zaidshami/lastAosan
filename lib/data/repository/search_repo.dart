@@ -14,6 +14,14 @@ import '../model/response/cart_model.dart';
 import '../model/response/filter_category_1.dart';
 
 
+List<Map<String,dynamic>> test(List<Selected> atts){
+  List<Map<String,dynamic>>  _temp=[];
+  atts.forEach((element) {
+    _temp.add(element.tojson());
+  });
+  return _temp;
+
+}
 class SearchRepo {
   final DioClient dioClient;
   final SharedPreferences sharedPreferences;
@@ -33,11 +41,14 @@ class SearchRepo {
     // List<double> discount,
     int offset,
   }) async {
-    // print("cczzzz $color");
+    print("cczzzz ${test(atts)}");
     try {
+      List jsonList = [];
+      jsonList.add(atts[0].tojson().toString());
+      // atts.map((item) => jsonList.add(item.tojson().toString())).toList();
 
       final Map<String, dynamic> queryParameters = {
-        'name': jsonEncode(name??''),
+        'name': name??'',
         // 'option': jsonEncode(option?? []),
         // 'category': jsonEncode(category ?? []),
         // 'brand': jsonEncode(brand ?? []),
@@ -45,24 +56,29 @@ class SearchRepo {
         // 'size': jsonEncode(size ?? []),
         // 'color': jsonEncode(color ?? []),
         // 'discount': jsonEncode(discount ?? []),
-    'filter':atts??[],
+    // 'filter':jsonEncode(test(atts)),
+     'filter':jsonList,
 
         'offset': offset ?? 1,
         'limit': 10
       };
-
       logger.d('zxxx: $queryParameters');
 
       final response = await dioClient.post(
         AppConstants.SEARCH_URI,
-        queryParameters: queryParameters,
+        // queryParameters: queryParameters,
         data: queryParameters
       );
+      print("search result "+response.statusCode.toString());
+      print("search result "+response.data.toString());
 
       logger.d("zxxxxx: " + response.data.toString());
 
       return ApiResponse.withSuccess(response);
     } catch (e) {
+      print("search result error "+e.toString());
+      print("search result error "+ApiResponse.withError(ApiErrorHandler.getMessage(e)).toString());
+
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }

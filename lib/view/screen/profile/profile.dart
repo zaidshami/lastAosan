@@ -22,7 +22,7 @@ import '../auth/auth_screen.dart';
 
 import '../loyaltyPoint/loyalty_point_screen.dart';
 import '../more/web_view_screen.dart';
-import '../more/widget/delet_my_account>confirmation_dialog.dart';
+import '../more/widget/delet_my_account_confirmation_dialog.dart';
 import '../more/widget/html_view_Screen.dart';
 import '../more/widget/sign_out_confirmation_dialog.dart';
 

@@ -95,6 +95,7 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                   provider.attributes.forEach((element) =>
                   selectedAttributes[element.id.toString()] = []);
                   if(widget.searchAttribute!=Attribute.nonAttribute()){
+
                     selectedAttributes[widget.searchAttribute.id.toString()] =widget.searchAttribute.getChildIds;
                   }
                 }
@@ -241,7 +242,8 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                           Navigator.pop(context);
                         },
                         child: Text(
-                          getTranslated('show_results', context),
+
+                           getTranslated('show_results', context),
                         ),
                       ),
                     ),

@@ -11,6 +11,7 @@ class Attribute {
   List<String> get getChildIds{
     List<String> _temp=[];
     childes.forEach((element) {
+      if(element.id!=null)
       _temp.add(element.id);
     });
     return _temp;
@@ -72,6 +73,15 @@ class Selected {
       id: json['id'].toString(),
       selected: json['selected'],
     );
+  }
+  Map<String,dynamic> tojson(){
+    return {
+      "id":id,
+      "selected":selected??[]
+
+
+
+    };
   }
 
 
