@@ -1,7 +1,5 @@
 
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../../../../data/datasource/remote/dio/dio_client.dart';
@@ -9,13 +7,12 @@ import '../../../../data/datasource/remote/exception/api_error_handler.dart';
 import '../../../../data/model/response/base/api_response.dart';
 import '../../../../utill/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/response/cart_model.dart';
 import '../model/response/filter_category_1.dart';
 
 
-List<Map<String,dynamic>> test(List<Selected> atts){
-  List<Map<String,dynamic>>  _temp=[];
+List<Map<String, dynamic>> test(List<Selected> atts){
+  List<Map<String, dynamic>> _temp = [];
   atts.forEach((element) {
     _temp.add(element.tojson());
   });
@@ -31,43 +28,65 @@ class SearchRepo {
 
   Future<ApiResponse> getSearchProductList({
     String name,
-  List<String> option,
+    List<String> option,
     List<Selected> atts,
-    // List<String> category,
-    // List<String> brand,
-    // List<String> price,
-    // List<String> size,
-    // List<String> color,
-    // List<double> discount,
     int offset,
   }) async {
     print("cczzzz ${test(atts)}");
     try {
-      List jsonList = [];
-      jsonList.add(atts[0].tojson().toString());
-      // atts.map((item) => jsonList.add(item.tojson().toString())).toList();
+      // We're taking all the Selected objects from atts and converting them to JSON.
+      // List jsonList = atts.map((item) => item.tojson()).toList();
 
       final Map<String, dynamic> queryParameters = {
-        'name': name??'',
-        // 'option': jsonEncode(option?? []),
-        // 'category': jsonEncode(category ?? []),
-        // 'brand': jsonEncode(brand ?? []),
-        // 'price': jsonEncode(price ?? []),
-        // 'size': jsonEncode(size ?? []),
-        // 'color': jsonEncode(color ?? []),
-        // 'discount': jsonEncode(discount ?? []),
-    // 'filter':jsonEncode(test(atts)),
-     'filter':jsonList,
-
+        'name': jsonEncode(name??''),
+        'filter':  jsonEncode(test(atts)),
         'offset': offset ?? 1,
         'limit': 10
       };
       logger.d('zxxx: $queryParameters');
 
+      //[{"id":"1","selected":["176","179"]},{"id":"3","selected":["9"]},{"id":"81","selected":["XL"]},{"id":"0","selected":["Olive"]}]
+      //[{"id":"77","selected":[]},{"id":"78","selected":[]},{"id":"80","selected":[]},{"id":"81","selected":[]},{"id":"83","selected":[]},{"id":"85","selected":[]},{"id":"86","selected":[]},{"id":"0","selected":[]},{"id":"1","selected":["177"]},{"id":"2","selected":[]},{"id":"3","selected":[]},{"id":"4","selected":[]}]
       final response = await dioClient.post(
-        AppConstants.SEARCH_URI,
-        // queryParameters: queryParameters,
-        data: queryParameters
+          AppConstants.SEARCH_URI,
+          // queryParameters: queryParameters,
+        data: queryParameters,
+      );
+     print("search result "+response.statusCode.toString());
+     print("search result "+response.data.toString());
+
+      logger.d("zxxxxx: " + response.data.toString());
+
+      return ApiResponse.withSuccess(response);
+    } catch (e) {
+      print("search result error "+e.toString());
+      print("search result error "+ApiResponse.withError(ApiErrorHandler.getMessage(e)).toString());
+
+      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
+    }
+  }
+  Future<ApiResponse> getCategoryFilterListCategoryAgain1({
+    String name,
+
+    List<Selected> atts,
+
+  }) async {
+    print("cczzzz ${test(atts)}");
+    try {
+
+
+      final Map<String, dynamic> queryParameters = {
+        'name': jsonEncode(name??''),
+        'filter':  jsonEncode(test(atts)),
+
+      };
+      logger.d('zxxx: $queryParameters');
+
+      //[{"id":"1","selected":["176","179"]},{"id":"3","selected":["9"]},{"id":"81","selected":["XL"]},{"id":"0","selected":["Olive"]}]
+      //[{"id":"77","selected":[]},{"id":"78","selected":[]},{"id":"80","selected":[]},{"id":"81","selected":[]},{"id":"83","selected":[]},{"id":"85","selected":[]},{"id":"86","selected":[]},{"id":"0","selected":[]},{"id":"1","selected":["177"]},{"id":"2","selected":[]},{"id":"3","selected":[]},{"id":"4","selected":[]}]
+      final response = await dioClient.get(
+        AppConstants.ATTRBUITES_CATEGORIES_URI_WITH_SEARCH,
+        queryParameters: queryParameters,
       );
       print("search result "+response.statusCode.toString());
       print("search result "+response.data.toString());
@@ -83,32 +102,8 @@ class SearchRepo {
     }
   }
 
-  /* Future<ApiResponse> getSearchProductList(String query,List<String> option,List<String> category,List<String> brand,List<double> price,
-      List<String> size,List<String> color,List<double> discount,int offset) async {
-    try {
-      final response = await dioClient.get(AppConstants.SEARCH_URI ,
-      queryParameters:
 
-      {
-        'name':   "\"$query\"",
-        'option':[],
-        'category':[],
-        'brand':[],
-        'price':[1000,1200],
-         // 'limit':10,
-        'size': [],
-        'color':[],
-        'discount':[],
 
-        'offset':1
-      });
-      print("zzxxxx "+response.data.toString());
-      return ApiResponse.withSuccess(response);
-    } catch (e) {
-      return ApiResponse.withError(ApiErrorHandler.getMessage(e));
-    }
-  }
-*/
   Future<ApiResponse> addToCartListData1(CartModel cart) async {
     Map<String, dynamic> _choice = Map();
     //   for(int index=0; index<choiceOptions.length; index++){
@@ -116,15 +111,7 @@ class SearchRepo {
     //   }
     Map<String, dynamic> _data =cart.variationModel.toJson(cart.id.toString(), cart.quantity.toString());
 
-    // {'id': cart.id,
-    //   /*'variant': cart.variation != null ? cart.variation.type : null,*/
-    //   'quantity': cart.quantity};
 
-
-    //_data.addAll(_choice);
-    // if(cart.variant.isNotEmpty) {
-    //   _data.addAll({'color': cart.color});
-    // }
 
     try {
       final response = await dioClient.post(
@@ -145,6 +132,20 @@ class SearchRepo {
         searchKeywordList.add(searchAddress);
       }
       await sharedPreferences.setStringList(AppConstants.SEARCH_ADDRESS, searchKeywordList);
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future<bool> removeSearchAddress(String searchAddress) async {
+    try {
+      List<String> searchKeywordList = sharedPreferences.getStringList(AppConstants.SEARCH_ADDRESS);
+      if (searchKeywordList.contains(searchAddress)) {
+        searchKeywordList.remove(searchAddress);
+        await sharedPreferences.setStringList(AppConstants.SEARCH_ADDRESS, searchKeywordList);
+        return true; // Indicate that the item was removed successfully
+      }
+      return false; // Indicate that the item was not found in the list
     } catch (e) {
       throw e;
     }

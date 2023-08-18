@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_Aosan_ecommerce/utill/app_constants.dart';
 import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
+import 'package:flutter_Aosan_ecommerce/view/basewidget/get_loading.dart';
 import 'package:flutter_Aosan_ecommerce/view/basewidget/no_internet_screen.dart';
 import 'package:flutter_Aosan_ecommerce/view/basewidget/product_shimmer.dart';
 import 'package:flutter_Aosan_ecommerce/view/basewidget/search_widget.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/search/widget/search_product_widget.dart';
-import 'package:flutter_Aosan_ecommerce/view/screen/search/widget/BrandItemWidget.dart';
-import 'package:flutter_Aosan_ecommerce/view/screen/search/widget/CategoryItemWidget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../localization/language_constrants.dart';
 import '../../../../provider/search_provider.dart';
 import '../../../../utill/color_resources.dart';
 import '../../../../utill/custom_themes.dart';
 import '../../../../utill/dimensions.dart';
-import '../../../data/model/SearchListModels/SearchListModel.dart';
 import '../../../data/model/response/filter_category_1.dart';
+import '../../../provider/attributes_provider.dart';
 import '../../../provider/brand_provider.dart';
 import '../../../provider/category_provider.dart';
-import '../../basewidget/attributes_filter_category.dart';
-import '../../basewidget/product_attributes_filter_category.dart';
 
 class SearchScreen extends StatefulWidget {
   Attribute searchAttribute;
@@ -45,6 +42,11 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     });
   }
+  @override
+  // void dispose (){
+  //   Provider.of<SearchProvider>(context,listen: false).searchController.text = null;
+  //   Provider.of<SearchProvider>(context,listen: false).searchText= null ;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,11 @@ class _SearchScreenState extends State<SearchScreen> {
             children: [
               Container(
                 decoration: BoxDecoration(
+
                   color: Theme.of(context).canvasColor,
-                  boxShadow: [],
+                  boxShadow: [
+
+                  ],
                 ),
                 child: Row(
                   children: [
@@ -73,26 +78,102 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     Expanded(
                       child: Container(
-                        child: SecondSearchWidget(
+                        child: Consumer<AttributeProvider>(
+                          builder: (context, provider, child) =>
+                          SecondSearchWidget(
 
-                          hintText: getTranslated('SEARCH_HINT', context),
-                          onTap:  (){
-                        Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
-                        Provider.of<SearchProvider>(context, listen: false).search( context,reload: true);
-          },
-                          onSubmit: (String text) {
-                            Provider.of<SearchProvider>(context, listen: false).search(context);
-                            // Provider.of<SearchProvider>(context, listen: false)
-                            //     .searchProduct(text, context,reload: true);
-                            // Provider.of<SearchProvider>(context, listen: false)
-                            //     .saveSearchAddress(text);
-                          },
-                          onClearPressed: () async {
-                            Provider.of<SearchProvider>(context, listen: false).clearFilters();
-                            await Provider.of<SearchProvider>(context,
-                              listen: false)
-                              .cleanSearchProduct();
-                          },
+                            hintText: getTranslated('SEARCH_HINT', context),
+                            onTap:  ()  {
+                              String seearchText = Provider.of<SearchProvider>(context, listen: false).searchController.text.toString();
+
+                              if (seearchText == null || seearchText.isEmpty) {
+                                Fluttertoast.showToast(
+                                    msg:
+                                    'يرجى ادخال نص للبحث ',
+                                    toastLength: Toast
+                                        .LENGTH_SHORT,
+                                    gravity:
+                                    ToastGravity
+                                        .BOTTOM,
+                                    timeInSecForIosWeb:
+                                    1,
+                                    backgroundColor:
+                                    Colors.red,
+                                    textColor:
+                                    Colors.white,
+                                    fontSize: 16.0);
+                              }
+                              else {
+                                provider.attributes.clear();
+                                   provider.fetchCategoryFilterListCatNew(seearchText,'177');
+                                Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
+
+                                Provider.of<SearchProvider>(context, listen: false).search(context);
+
+                                // Provider.of<AttributeProvider>(context, listen: false).initialized= false;
+                                Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter=false;
+
+                                // await   Provider.of<AttributeProvider>(context, listen: false).initializeData('176');
+
+                                // Provider.of<SearchProvider>(context, listen: false)
+                                //     .searchProduct(text, context,reload: true);
+                                // Provider.of<SearchProvider>(context, listen: false)
+                                //     .saveSearchAddress(text);
+                              }
+
+
+
+
+
+                            },
+                            onSubmit: (String text) async {
+
+                              String seearchText = Provider.of<SearchProvider>(context, listen: false).searchController.text.toString();
+
+                              if (seearchText == null || seearchText.isEmpty) {
+                                Fluttertoast.showToast(
+                                    msg:
+                                    'يرجى ادخال نص للبحث ',
+                                    toastLength: Toast
+                                        .LENGTH_SHORT,
+                                    gravity:
+                                    ToastGravity
+                                        .BOTTOM,
+                                    timeInSecForIosWeb:
+                                    1,
+                                    backgroundColor:
+                                    Colors.red,
+                                    textColor:
+                                    Colors.white,
+                                    fontSize: 16.0);
+                              }
+                              else {
+                                Provider.of<AttributeProvider>(context, listen: false).attributes.clear();
+                                   Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,'177');
+                                Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
+
+                                Provider.of<SearchProvider>(context, listen: false).search(context,reload: true);
+
+                                // Provider.of<AttributeProvider>(context, listen: false).initialized= false;
+                                Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter=false;
+
+                                // await   Provider.of<AttributeProvider>(context, listen: false).initializeData('176');
+
+                                // Provider.of<SearchProvider>(context, listen: false)
+                                //     .searchProduct(text, context,reload: true);
+                                // Provider.of<SearchProvider>(context, listen: false)
+                                //     .saveSearchAddress(text);
+                              }
+
+
+
+
+                            },
+                            onClearPressed: () async {
+                              Provider.of<SearchProvider>(context, listen: false).clearFilters();
+                              await Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -108,7 +189,7 @@ class _SearchScreenState extends State<SearchScreen> {
               Consumer<SearchProvider>(
                 builder: (context, searchProvider, child) {
                   return !searchProvider.isClear
-                      ? searchProvider.searchProductList == null
+                      ? searchProvider.isLoading&&searchProvider.searchProductList.isEmpty
                       ? Expanded(
                     child: ProductShimmer(
                       isHomePage: false,
@@ -117,7 +198,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           null,
                     ),
                   )
-                      : searchProvider.searchProductList.isEmpty
+                      : searchProvider.searchProductList == null? getloading4(context):
+                  searchProvider.searchProductList.isEmpty
                       ? Expanded(
                     child: NoInternetOrDataScreen(
                         isNoInternet: false),
@@ -131,12 +213,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   )
 
                       :
-                  Expanded(
+                  /*Expanded(
                       flex: 4,
                       child:
-                      NewProductAttributeList(widget.searchAttribute))
+                      NewProductAttributeList(widget.searchAttribute))*/
                   ///HISTORY WIDGET
-                /*  Expanded(
+                  Expanded(
                           flex: 4,
                           child: Container(
                             padding:
@@ -196,7 +278,38 @@ class _SearchScreenState extends State<SearchScreen> {
                                             InkWell(
                                           onTap: () {
                                             searchProvider.searchController.text = searchProvider.historyList[index];
-                                                searchProvider.search(context);},
+                                            String seearchText = searchProvider.searchController.text;
+
+                                            if (seearchText == null || seearchText.isEmpty) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                  'يرجى ادخال نص للبحث ',
+                                                  toastLength: Toast
+                                                      .LENGTH_SHORT,
+                                                  gravity:
+                                                  ToastGravity
+                                                      .BOTTOM,
+                                                  timeInSecForIosWeb:
+                                                  1,
+                                                  backgroundColor:
+                                                  Colors.red,
+                                                  textColor:
+                                                  Colors.white,
+                                                  fontSize: 16.0);
+                                            }
+                                            else {
+                                              Provider.of<AttributeProvider>(context, listen: false).attributes.clear();
+                                              Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,'177');
+                                              searchProvider.saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
+                                              searchProvider.search(context,reload: true);
+
+                                              Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter=false;
+
+
+                                            }
+
+
+},
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           child: Row(
@@ -239,7 +352,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                                               SearchProvider>(
                                                           context,
                                                           listen: false)
-                                                      .deleteFromHistory(index),
+                                                      .removeSearchHistoryIndex(index),
                                                   child: Container(
                                                     decoration: BoxDecoration(
                                                       borderRadius:
@@ -266,7 +379,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               ],
                             ),
                           ),
-                        )*/
+                        )
                   ;
                 },
               )

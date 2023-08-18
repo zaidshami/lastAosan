@@ -177,6 +177,7 @@ print("the imageeeee buid and " +    Provider.of<ProductDetailsProvider>(
                                 ),
                             placeholder: (context, url) =>
                                 Image.asset(Images.placeholder),
+
                             imageUrl:
                             '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/'
                                 '${widget.imagesList[index]}')

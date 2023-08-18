@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
-
 import 'package:flutter/material.dart';
 import '../../../../data/datasource/remote/dio/dio_client.dart';
 import '../../../../data/datasource/remote/exception/api_error_handler.dart';
@@ -112,7 +111,7 @@ class AuthRepo {
       FirebaseMessaging.instance.subscribeToTopic(AppConstants.TOPIC);
       // Retrieve the FCM token using the APNS device token
       final headers = {
-        'apns-topic': '<com.aosan.online>',
+        'apns-topic': '<com.aosan1.online>',
       };
       final endpoint = 'https://iid.googleapis.com/iid/v1/$_deviceToken/rel/topics/<Jwaher>';
       final request = {

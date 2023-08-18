@@ -1,55 +1,26 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_Aosan_ecommerce/data/model/response/product_model.dart';
-import 'package:flutter_Aosan_ecommerce/provider/brand_provider.dart';
-import 'package:flutter_Aosan_ecommerce/provider/category_provider.dart';
 import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
-import 'package:flutter_Aosan_ecommerce/view/screen/search/widget/search_widgets.dart';
-import '../../../../data/model/SearchListModels/OptionsSearchListModel.dart';
 import '../../../../data/model/response/filter_category_1.dart';
-import '../../../../di_container.dart';
-import '../../../../localization/language_constrants.dart';
-import '../../../../provider/search_provider.dart';
-import '../../../../utill/custom_themes.dart';
-import '../../../../utill/dimensions.dart';
-import '../../../../view/basewidget/button/custom_button.dart';
-import 'package:provider/provider.dart';
-
 import '../../../basewidget/product_attributes_filter_category.dart';
-import 'BrandItemWidget.dart';
-import 'CategoryItemWidget.dart';
-import 'OptionsItemWidget.dart';
-
-class SearchSortByBottomSheet extends StatefulWidget {
+// ignore: must_be_immutable
+class SearchSortByBottomSheet extends StatelessWidget {
   Attribute searchAttribute;
-  SearchSortByBottomSheet(this.searchAttribute);
-  @override
-  _SearchFilterBottomSheetState createState() => _SearchFilterBottomSheetState();
-}
+  bool isCategory;
+  String catId;
 
-class _SearchFilterBottomSheetState extends State<SearchSortByBottomSheet> {
-  final TextEditingController _firstPriceController = TextEditingController();
-  final FocusNode _firstFocus = FocusNode();
-  final TextEditingController _lastPriceController = TextEditingController();
-  final FocusNode _lastFocus = FocusNode();
 
-  @override
-  void initState() {
-
-    super.initState();
-
-  }
-
+  SearchSortByBottomSheet(this.searchAttribute ,this.catId,this.isCategory);
   @override
   Widget build(BuildContext context) {
     return    Padding(
       padding: getPadding(top: 30, bottom:10,left: 10,right: 10),
-      child: NewProductAttributeList(widget.searchAttribute),
-    );
+
+      child: NewProductAttributeList(searchAttribute,catId,isCategory: isCategory,),);
   }
 }
-
+///some fantastic widgets
+/*
 class MyCheckBox extends StatelessWidget {
   final String title;
   final int index;
@@ -136,3 +107,4 @@ class _ItemWidget extends StatelessWidget {
     );
   }
 }
+*/

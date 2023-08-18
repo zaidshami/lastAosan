@@ -18,8 +18,10 @@ class ProductDetailsRepo {
       final response = await dioClient.get(
         AppConstants.PRODUCT_DETAILS_URI+productID, options: Options(headers: {AppConstants.LANG_KEY: languageCode}),
       );
+      ///neededComment
       return ApiResponse.withSuccess(response);
     } catch (e) {
+   ///neededComment
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }

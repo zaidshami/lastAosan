@@ -254,14 +254,16 @@ class ProductImageView extends StatelessWidget {
                                 ),
                               ),
 
-                              ///favorite color
+                              ///favorite color and cart and share
                               Positioned(
                                 top: 30,
                                 right: MediaQuery.of(context).size.width / 1.2 +
                                     15,
                                 child: Column(
                                   children: [
-                                    ///the first cart i did
+                                    SizedBox(
+                                      height: Dimensions.PADDING_SIZE_SMALL*2,
+                                    ),
                                     InkWell(
                                       onTap: (){
                                         Navigator.of(context).push(CupertinoPageRoute(builder: (context) => CartScreen(fromCheckout: false,)));
@@ -296,15 +298,8 @@ class ProductImageView extends StatelessWidget {
                                           )
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: Dimensions.PADDING_SIZE_SMALL,
-                                    ),
-                                    FavouriteButton(
-                                      backgroundColor:
-                                          ColorResources.getImageBg(context),
-                                      favColor: Colors.redAccent,
-                                      product: productModel,
-                                    ),
+
+
                                     SizedBox(
                                       height: Dimensions.PADDING_SIZE_SMALL,
                                     ),
@@ -377,6 +372,32 @@ class ProductImageView extends StatelessWidget {
                                     )
                                   : SizedBox.shrink(),
                               SizedBox.shrink(),
+
+                              Positioned(
+                                bottom: 30,
+                                right: 16,
+                                child: InkWell(
+                                  onTap: () => Navigator.pop(context),
+                                  child: Container(
+
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey.withOpacity(.2),
+                                        borderRadius:
+                                        BorderRadius.circular(50)),
+                                    //color: Colors.grey.withOpacity(.5),
+                                    child:Row(children: [
+                                      FavouriteButton(
+                                        isDetails: true,
+                                        backgroundColor:
+                                        ColorResources.getImageBg(context),
+                                        favColor: Colors.redAccent,
+                                        product: productModel,
+                                      ),
+                                    ],)
+                                  ),
+                                ),
+                              ),
+
                             ]);
                           },
                         ),

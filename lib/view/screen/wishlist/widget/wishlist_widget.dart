@@ -164,51 +164,54 @@ class WishListWidget extends StatelessWidget {
                             SizedBox(
                                 width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                             Consumer<WishListProvider>(
-                              builder: (context, wishProvider, child) {
-                                return InkWell(
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => new AlertDialog(
-                                                title: new Text(getTranslated(
-                                                    'ARE_YOU_SURE_WANT_TO_REMOVE_WISH_LIST',
-                                                    context)),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    child: Text(getTranslated(
-                                                        'YES', context)),
-                                                    onPressed: () async {
-                                                      wishProvider
-                                                          .removeWishList(
-                                                              product);
-                                                      Navigator.of(context)
-                                                          .pop();
-                                                      await Provider.of<WishListProvider>(context, listen: false).initWishList(context,
-                                                        Provider.of<LocalizationProvider>(
-                                                                context,
-                                                                listen: false)
-                                                            .locale
-                                                            .countryCode,
-                                                      );
-                                                    },
-                                                  ),
-                                                  TextButton(
-                                                    child: Text(getTranslated(
-                                                        'NO', context)),
-                                                    onPressed: () =>
+                              builder: (context, value, child) =>
+                              Consumer<WishListProvider>(
+                                builder: (context, wishProvider, child) {
+                                  return InkWell(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => new AlertDialog(
+                                                  title: new Text(getTranslated(
+                                                      'ARE_YOU_SURE_WANT_TO_REMOVE_WISH_LIST',
+                                                      context)),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text(getTranslated(
+                                                          'YES', context)),
+                                                      onPressed: () async {
+                                                        wishProvider
+                                                            .removeWishList(
+                                                                product);
                                                         Navigator.of(context)
-                                                            .pop(),
-                                                  ),
-                                                ],
-                                              ));
-                                    },
-                                    child: Image.asset(
-                                      Images.delete,
-                                      scale: 3,
-                                      color: ColorResources.getRed(context)
-                                          .withOpacity(.90),
-                                    ));
-                              },
+                                                            .pop();
+                                                        // await Provider.of<WishListProvider>(context, listen: false).initWishList(context,
+                                                        //   Provider.of<LocalizationProvider>(
+                                                        //           context,
+                                                        //           listen: false)
+                                                        //       .locale
+                                                        //       .countryCode,
+                                                        // );
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: Text(getTranslated(
+                                                          'NO', context)),
+                                                      onPressed: () =>
+                                                          Navigator.of(context)
+                                                              .pop(),
+                                                    ),
+                                                  ],
+                                                ));
+                                      },
+                                      child: Image.asset(
+                                        Images.delete,
+                                        scale: 3,
+                                        color: ColorResources.getRed(context)
+                                            .withOpacity(.90),
+                                      ));
+                                },
+                              ),
                             ),
                           ],
                         ),

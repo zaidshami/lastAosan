@@ -42,11 +42,10 @@ import '../../basewidget/animated_custom_dialog.dart';
 import '../../basewidget/button/custom_button.dart';
 import '../../basewidget/guest_dialog.dart';
 import '../../basewidget/show_custom_snakbar.dart';
-import '../auth/auth_screen.dart';
 import '../cart/cart_screen.dart';
 import '../more/widget/html_view_Screen.dart';
 import 'faq_and_review_screen.dart';
-import 'package:decorated_dropdownbutton/decorated_dropdownbutton.dart';
+
 
 class ProductDetails extends StatefulWidget {
   final Product product;
@@ -383,7 +382,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ),
                                         Padding(
                                           padding: getPadding(bottom: 7,right: 5),
-                                          child: Stack(children: [
+                                          child: Stack(
+
+                                              children: [
                                             GestureDetector(
                                                 onTap: () {
                                                   Navigator.of(context).push(CupertinoPageRoute(
@@ -394,6 +395,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                     fit:  BoxFit.cover,
                                                     height: 45,
                                                     color: ColorResources.getPrimary(context))),
+
                                             Positioned(
                                               top: 0,
                                               right: 0,
@@ -417,6 +419,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 );
                                               }),
                                             )
+
                                           ]),
                                         )
                                       ],
@@ -505,15 +508,21 @@ class _ProductDetailsState extends State<ProductDetails> {
 
                                   ///the image of the product
                                   InkWell(
-                                      onTap: () => Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (context) =>
-                                                  ProductsImageView(
-                                                      product: widget.product,
-                                                      imagesList: details
-                                                          .imagesList(widget
-                                                              .product)))),
+                                      onTap: () {
+                        Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                        builder: (context) =>
+                        ProductsImageView(
+                        product: widget.product,
+                        imagesList: details
+                            .imagesList(widget
+                            .product))));
+
+                        },
+
+
+
                                       child: ProductImageView(
                                         productModel: widget.product,
                                         imagesList:

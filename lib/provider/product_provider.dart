@@ -21,10 +21,27 @@ class ProductProvider extends ChangeNotifier {
   HomeListModel _bestproductsProductList = new HomeListModel("best_selling");
   HomeListModel _offerProductList =  new HomeListModel("discounted_product");
   int selectedSub ;
+  bool _isFiltring = false;
+var _ourList ;
 
+  set ourList(value) {
+    _ourList = value;
 
+  }
+  void clearOurList() {
+    _ourList = null;
+    // _iscOLoading= true;
+    notifyListeners();
 
+  }
+  get ourList => _ourList;
 
+  set isFiltring(bool value) {
+    _isFiltring = value;
+
+  }
+
+  bool get isFiltring => _isFiltring;
   List<Product> _lProductList = [];
 
   List<Product> get lProductList => _lProductList;
@@ -349,20 +366,25 @@ notifyListeners();
 }
   List<Product> _brandOrCategoryProductList = [];
   List<Product> _brandOrCategoryProductListWith50Disc = [];
+  // void cleanBrandCategoryProductLIst() {
+  //   _brandOrCategoryProductList = [];
+  //   notifyListeners();
+  // }
 
   void initBrandOrCategoryProductList(bool isBrand, String id, BuildContext context, int offset, {bool reload = true}) async {
     if (reload) {
       _brandOrCategoryProductList.clear();
-      _brandOrCategoryProductListWith50Disc.clear(); // Clear the discount list as well
+      _brandOrCategoryProductListWith50Disc.clear();
+
     }
 
     _hasData = true;
     _cOffset = offset;
 
     ApiResponse apiResponse = await productRepo.getBrandOrCategoryProductList(isBrand, id, cOffset);
-    _isLoading = false;
+    _iscOLoading = false;
 
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (/*apiResponse.response != null &&*/ apiResponse.response.statusCode == 200) {
       _brandOrCategoryProductList.addAll(ProductModel.fromJson(apiResponse.response.data).products);
 
       for (Product product in _brandOrCategoryProductList) {
@@ -372,6 +394,7 @@ notifyListeners();
       }
 
       _hasData = _brandOrCategoryProductList.length > 1;
+
     } else {
       ApiChecker.checkApi(context, apiResponse);
     }

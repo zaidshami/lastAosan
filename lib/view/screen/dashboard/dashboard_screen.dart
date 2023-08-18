@@ -83,6 +83,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
 
     return MediaQuery(
+
+      //lets try something defferent
       data: MediaQuery.of(context).copyWith(textScaleFactor:AppConstants.textScaleFactior),
       child: WillPopScope(
         onWillPop: () async {

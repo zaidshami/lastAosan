@@ -85,15 +85,18 @@ class ProductWidgetNew extends StatelessWidget {
                   Positioned(
                     left: 0,
                     top: 0,
-                    child: Consumer<WishListProvider>(
-                      builder: (context, value, child) =>
-                          FavouriteButton(
-                            backgroundColor: ColorResources.getImageBg(context),
-                            favColor: Colors.redAccent,
-                            product: productModel,
+                    child:
+
+                          Consumer<WishListProvider>(
+                             builder: (context, value, child) =>
+                             FavouriteButton(
+                              backgroundColor: ColorResources.getImageBg(context),
+                              favColor: Colors.redAccent,
+                              product: productModel,
+                            ),
                           ),
                     ),
-                  ),
+
                   productModel.productType == ProductVarType.productWithColor && productModel.productColorsList.length>1  ?
                   Positioned(
                     right: 0,

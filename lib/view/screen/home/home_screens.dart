@@ -6,17 +6,13 @@ import 'package:flutter_Aosan_ecommerce/data/model/response/filter_category_1.da
 import 'package:flutter_Aosan_ecommerce/provider/notification_provider.dart';
 import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/brand_view.dart';
+import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/category_view_main.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/home_category_product_view.dart';
-
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/home_products_view.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/main_section_banner.dart';
-import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/products_view.dart';
-
-import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/products_view_1.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/recomended_product_view_fixed.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/second_section_banner.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/top_seller_view.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import '../../../helper/product_type.dart';
 import '../../../localization/language_constrants.dart';
@@ -26,13 +22,13 @@ import '../../../provider/brand_provider.dart';
 import '../../../provider/category_provider.dart';
 import '../../../provider/featured_deal_provider.dart';
 import '../../../provider/flash_deal_provider.dart';
-
+import '../../../provider/localization_provider.dart';
 import '../../../provider/product_provider.dart';
 import '../../../provider/profile_provider.dart';
 import '../../../provider/splash_provider.dart';
 import '../../../provider/theme_provider.dart';
 import '../../../provider/top_seller_provider.dart';
-
+import '../../../provider/wishlist_provider.dart';
 import '../../../utill/app_constants.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/custom_themes.dart';
@@ -40,12 +36,10 @@ import '../../../utill/dimensions.dart';
 import '../../../utill/images.dart';
 import '../../basewidget/category_shimmer.dart';
 import '../../basewidget/title_row.dart';
-
 import '../brand/all_brand_screen.dart';
 import '../featureddeal/featured_deal_screen.dart';
 import '../notification/notification_screen.dart';
 import '../product/product_details_screen.dart';
-import '../product/view_all_product_screen.dart';
 import '../search/search_screen.dart';
 import '../topSeller/all_top_seller_screen.dart';
 import 'widget/announcement.dart';
@@ -68,8 +62,12 @@ class _HomePageState extends State<HomePage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+
   TabController _tabController2;
   Attribute attribute ;
+  void changeTab(int newIndex) {
+    _tabController2.animateTo(newIndex);
+  }
 
   Future<void> _loadData(BuildContext context, bool reload) async {
 
@@ -86,6 +84,12 @@ class _HomePageState extends State<HomePage> {
     var isGuestMode =
         !Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (!isGuestMode) {
+      Provider.of<WishListProvider>(context, listen: false).initWishList(
+        context,
+        Provider.of<LocalizationProvider>(context, listen: false)
+            .locale
+            .countryCode,
+      );
       // Provider.of<WishListProvider>(context, listen: false).initWishList(
       //   context,
       //   Provider.of<LocalizationProvider>(context, listen: false).locale.countryCode,);
@@ -356,7 +360,9 @@ class _HomePageState extends State<HomePage> {
                           child: Consumer<CategoryProvider>(
                             builder: (context, categoryProvider, child) {
                               return DefaultTabController(
+
                                 initialIndex:
+
                                     categoryProvider.categorySelectedIndex,
                                 length: categoryProvider.categoryList.length,
                                 child: Container(
@@ -428,6 +434,7 @@ class _HomePageState extends State<HomePage> {
                                             child: Column(
                                               children: [
                                                 TabBar(
+
                                                   indicatorPadding:
                                                       getPadding(all: 5),
 
@@ -457,9 +464,8 @@ class _HomePageState extends State<HomePage> {
                                                     ),
                                                   ),
                                                   onTap: (value)
-
-                                                      //todo: here add the word async
-                                                      {
+                                                  //todo: here add the word async
+                                                  {
                                                     _scrollController.animateTo(
                                                       0,
                                                       duration: Duration(
@@ -489,7 +495,7 @@ class _HomePageState extends State<HomePage> {
                                                       // });
                                                     }
                                                   },
-                                                  // controller: _tabController,
+                                                   //controller: _tabController,
                                                   labelColor: Colors.redAccent,
                                                   tabs: categoryProvider
                                                       .categoryList
@@ -1001,8 +1007,59 @@ class _HomePageState extends State<HomePage> {
 
                             /// this is the widget that shows the products horizontally without title row num10
 
-                            ///category filter very new vertical and horizntal num11
 
+
+                            ///category filter very new vertical and horizntal num11
+                            Consumer<CategoryProvider>(
+
+                              builder: (context,categoryProvider, child) =>
+                                  StatefulBuilder(
+                                      builder: (context, _change) =>
+                                          MainCategoryView(
+                                            onTap: (value)
+                                            //todo: here add the word async
+                                            {
+
+                                              _scrollController.animateTo(
+                                                0,
+                                                duration: Duration(
+                                                    milliseconds: 100),
+                                                curve: Curves.easeInOut,
+                                              );
+                                              if (!isloading) {
+                                                _change(() {
+                                                  isloading = true;
+                                                });
+                                                categoryProvider
+                                                    .changeSelectedIndex(
+                                                    value);
+                                                try {
+                                                  clearLists(
+                                                      context,
+                                                      categoryProvider,
+                                                      value);
+                                                } catch (e, s) {
+                                                  print(s);
+                                                }
+
+                                                // Future.delayed(const Duration(seconds: 0), () {
+                                                _change(() {
+                                                  isloading = false;
+                                                });
+                                                // });
+                                              }
+                                            },
+                                            excludeId: categoryProvider.categorySelectedIndex,
+                                            isHomePage: true,
+                                            tabController: _tabController2,
+
+                                            scrollController: _scrollController,
+                                          )
+                                  ),
+                            ),
+
+
+/*
                             /// Category Filter
                             Column(
                               children: [
@@ -1156,7 +1213,9 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.transparent,
                                 )
                               ],
-                            ),
+                            ),*/
+
+
                           ],
                         ),
                       ),
@@ -1164,10 +1223,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Provider.of<SplashProvider>(context, listen: false)
                               .configModel
-                              .announcement
+                           .announcement
                               .status ==
                           '1'
                       ? Positioned(
+
                           top: MediaQuery.of(context).size.height - 128,
                           left: 0,
                           right: 0,

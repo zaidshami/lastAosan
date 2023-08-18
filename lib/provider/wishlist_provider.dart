@@ -29,8 +29,8 @@ class WishListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Product> _wishList;
-  List<Product> _allWishList;
+  List<Product> _wishList=[];
+  List<Product> _allWishList=[];
 
   List<Product> get wishList => _wishList;
 
@@ -74,25 +74,25 @@ class WishListProvider extends ChangeNotifier {
     ApiResponse apiResponse = await wishListRepo.removeWishList(product.id);
     if (apiResponse.response != null &&
         apiResponse.response.statusCode == 200) {
+
       Map map = apiResponse.response.data;
       String message = map['message'];
-      feedbackMessage(message);
+      try{feedbackMessage(message);}catch(e){}
       _wishList.remove(product);
       _allWishList.remove(product);
-      notifyListeners();
     } else {
-      feedbackMessage('${apiResponse.error.toString()}');
+      try{ feedbackMessage('${apiResponse.error.toString()}');}catch(e){}
     }
     notifyListeners();
   }
 
-  Future<void> initWishList(BuildContext context, String languageCode) async {
+  /*Future<void> initWishList(BuildContext context, String languageCode) async {
     _isLoading = true;
     ApiResponse apiResponse = await wishListRepo.getWishList();
     if (apiResponse.response != null &&
         apiResponse.response.statusCode == 200) {
       _wishList = [];
-      _allWishList = [];
+     _allWishList = [];
       for (int i = 0; i < apiResponse.response.data.length; i++) {
         ApiResponse productResponse = await productDetailsRepo.getProduct(
           WishListModel
@@ -120,6 +120,40 @@ class WishListProvider extends ChangeNotifier {
     }
     notifyListeners();
     _isLoading = false;
+  }*/
+  Future<void> initWishList(BuildContext context, String languageCode) async {
+    _isLoading = true;
+    ApiResponse apiResponse = await wishListRepo.getWishList();
+
+    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+      _wishList = [];
+      _allWishList = [];
+      List<String> productSlugs = [];
+      List<Future<ApiResponse>> productResponses = [];
+
+      for (int i = 0; i < apiResponse.response.data.length; i++) {
+        productSlugs.add(WishListModel.fromJson(apiResponse.response.data[i]).product.slug.toString());
+      }
+
+      productResponses = productSlugs.map((slug) => productDetailsRepo.getProduct(slug, languageCode)).toList();
+
+      List<ApiResponse> fetchedProducts = await Future.wait(productResponses);
+
+      for (ApiResponse productResponse in fetchedProducts) {
+        if (productResponse.response != null && productResponse.response.statusCode == 200) {
+          Product _product = Product.fromJson(productResponse.response.data);
+          _wishList.add(_product);
+          _allWishList.add(_product);
+        } else {
+          ApiChecker.checkApi(context, productResponse);
+        }
+      }
+    } else {
+      ApiChecker.checkApi(context, apiResponse);
+    }
+
+    _isLoading = false;
+    notifyListeners();
   }
 
 
@@ -128,6 +162,14 @@ class WishListProvider extends ChangeNotifier {
     _allWishList
         .where((element) => element.id == productId)
         .isNotEmpty : false;
+  }
+
+  set wishList(List<Product> value) {
+    _wishList = value;
+  }
+
+  set allWishList(List<Product> value) {
+    _allWishList = value;
   }
 }
 

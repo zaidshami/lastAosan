@@ -83,3 +83,71 @@ final double width;
     );
   }
 }
+
+
+class MainCategoryWidget extends StatelessWidget {
+  final Category category;
+final double height ;
+final double width;
+  const MainCategoryWidget({Key key, @required this.category , this.height=70, this.width}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Container(
+          // decoration: BoxDecoration(
+          //   border: Border.all(width: 1),
+          //     borderRadius:BorderRadius.circular(25),
+          //     boxShadow: [
+          //                      // BoxShadow(color: Colors.black.withOpacity(0.2),
+          //                      //     spreadRadius: 1,
+          //                      //     blurRadius: 5)
+          //                    ],
+          // ),
+          padding: getPadding(bottom: 3),
+          height: height,
+          width: width,
+          margin: const EdgeInsets.only(right: 0.0, left: 10.0),
+          child: ClipRRect(
+
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+
+              child: CachedNetworkImage(
+                fit: BoxFit.fill,
+                errorWidget: (context, url, error) => Image.asset(
+                  Images.placeholder,
+                  fit: BoxFit.fill,
+                ),
+                placeholder: (context, url) => Image.asset(
+                  Images.placeholder,
+                  fit: BoxFit.fill,
+                ),
+                imageUrl:
+                '${Provider.of<SplashProvider>(context, listen: false).baseUrls.categoryImageUrl}'
+                    '/${category.icon}',
+              ),
+            ),
+          ),
+        ),
+        Flexible( // Wrap the Text widget with a Flexible widget
+          child: Text(
+            category.name,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            // Apply the text scale factor to the font size
+            style: titilliumRegular.copyWith(
+              fontSize: Dimensions.FONT_SIZE_SMALL ,
+              color: ColorResources.getTextTitle(context),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

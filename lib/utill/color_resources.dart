@@ -119,7 +119,7 @@ class ColorResources {
     900: Color(0xff192D6B),
   };
 
-  static const MaterialColor PRIMARY_MATERIAL = MaterialColor(0xFF192D6B, colorMap);
+  static  MaterialColor PRIMARY_MATERIAL = MaterialColor(0xFF192D6B, colorMap);
 }
 extension HexColor on Color {
   /// String is in the format "aabbcc" or "ffaabbcc" with an optional leading "#".

@@ -1,7 +1,7 @@
   import 'package:flutter/cupertino.dart';
   import 'package:flutter/material.dart';
   import 'package:flutter_Aosan_ecommerce/view/screen/profile/profile_screen.dart';
-  // import 'package:getwidget/components/accordion/gf_accordion.dart';
+  import 'package:getwidget/components/accordion/gf_accordion.dart';
   import 'package:provider/provider.dart';
 
   import '../../../data/model/body/order_place_model.dart';
@@ -77,7 +77,7 @@ import '../address/widget/expandable_listscreen.dart';
     @override
     void initState() {
       super.initState();
-
+      Provider.of<ProfileProvider>(context,listen: false).initAddressList(context);
       Provider.of<ProfileProvider>(context, listen: false).initAddressList(context);
       Provider.of<ProfileProvider>(context, listen: false).initAddressTypeList(context);
       Provider.of<CouponProvider>(context, listen: false).removePrevCouponData();

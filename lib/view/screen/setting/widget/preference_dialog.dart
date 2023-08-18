@@ -22,7 +22,7 @@ class PreferenceDialog extends StatelessWidget {
           alignment: Alignment.centerRight,
           child: TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(getTranslated('CANCEL', context), style: robotoRegular.copyWith(color: ColorResources.YELLOW)),
+            Widget: Text(getTranslated('CANCEL', context), style: robotoRegular.copyWith(color: ColorResources.YELLOW)),
           ),
         ),
       ]),

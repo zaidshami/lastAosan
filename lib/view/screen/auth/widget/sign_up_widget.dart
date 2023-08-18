@@ -297,6 +297,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
               children: [TextButton(
                   onPressed: () =>
                     Navigator.pushReplacement(context, CupertinoPageRoute(builder: (_) => DashBoardScreen())),
+
                   child: Text(getTranslated('SKIP_FOR_NOW', context),
                       style: titilliumRegular.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT,
                           color: ColorResources.getPrimary(context)))),

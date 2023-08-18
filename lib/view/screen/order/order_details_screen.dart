@@ -496,7 +496,10 @@ class OrderDetailsScreen extends StatelessWidget {
                                   side: BorderSide(color: ColorResources.getPrimary(context)),
                                 )),
                               ),
+
                             ),
+
+
                           ),
                         ],
                       ),

@@ -33,6 +33,7 @@ class AnnouncementScreen extends StatelessWidget {
               child: Center(
                 child: InkWell(
                     onTap: (){
+
                       Provider.of<SplashProvider>(context,listen: false).changeAnnouncementOnOff(false);
                     },
                     child: Text('ok' ,style: TextStyle(color: Color(int.parse(textColor))))),

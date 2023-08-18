@@ -33,7 +33,7 @@ showCustomModalDialog(
     transitionBuilder: (context, anim1, anim2, child) => SlideTransition(
       transformHitTests: false,
       position: Tween<Offset>(
-        begin: const Offset(0.0, -1.0),
+        begin:  Offset(0.0, -1.0),
         end: Offset.zero,
       ).chain(CurveTween(curve: Curves.linear)).animate(anim1),
       child: child,

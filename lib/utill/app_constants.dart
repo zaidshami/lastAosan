@@ -12,14 +12,21 @@ class AppConstants {
   // static const String BASE_URL = 'http://192.168.1.134/Admin';
   static const String TOPIC = 'Jwaher';
   // static  String BASE_URL = 'https://aosan.co';
-  static  String BASE_URL = 'https://jwaher.co';
+  // static  String BASE_URL = 'https://jwaher.co';
+  // static  String BASE_URL = 'http://192.168.228.93/last';
   // static  String BASE_URL -= 'https://aosantest.info/';
-  // static  String BASE_URL = 'http://s955305333.onlinehome.us';
+  static  String BASE_URL = 'http://s955305333.onlinehome.us';
+
   static const String USER_ID = 'userId';
   static const String NAME = 'name';
   static const String CATEGORIES_URI = '/api/v1/categories';
   static const String Filter_CATEGORIES_URI = '/api/v1/attributes';
-  static const String ATTRBUITES_CATEGORIES_URI = '/api/v1/products/attrbuites';
+  static const String ATTRBUITES_CATEGORIES_URI = '/api/v1/products/attrbuites?name=';
+  static const String ATTRBUITES_CATEGORIES_URI_WITH_SEARCH = '/api/v1/products/attrbuites';
+  static const String ATTRBUITES_CATEGORIES_URI_CATEGORY = '/api/v1/products/attrbuites';
+
+
+
   static const String BRANDS_URI = '/api/v1/brands?category_id=';
   static const String BRAND_PRODUCT_URI = '/api/v1/brands/products/';
   static const String CATEGORY_PRODUCT_URI = '/api/v1/categories/products/';
@@ -149,8 +156,6 @@ class AppConstants {
   static const String qomashId = '85';
   static const String shaklId = '86';
   static const String colorsId = '0';
-
-
 
 
   //RemoteConfig

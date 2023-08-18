@@ -1,48 +1,47 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:loading_overlay_pro/animations/bouncing_line.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/response/category.dart';
+import '../../../data/model/response/filter_category_1.dart';
 import '../../../localization/language_constrants.dart';
 import '../../../provider/category_provider.dart';
-import '../../../provider/notification_provider.dart';
 import '../../../provider/product_provider.dart';
-import '../../../provider/theme_provider.dart';
+import '../../../provider/search_provider.dart';
 import '../../../utill/app_constants.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/custom_themes.dart';
 import '../../../utill/dimensions.dart';
-import '../../../utill/images.dart';
+import '../../../utill/math_utils.dart';
 import '../../basewidget/custom_app_bar.dart';
 import '../../basewidget/get_loading.dart';
 import '../../basewidget/no_internet_screen.dart';
 import '../../basewidget/product_shimmer.dart';
-import '../../basewidget/product_widget.dart';
 import '../../basewidget/product_widget_new.dart';
-import '../home/widget/home_products_view.dart';
-import '../notification/notification_screen.dart';
-import '../search/search_screen.dart';
 import '../search/widget/search_filter_bottom_sheet.dart';
 import '../search/widget/search_sortby_bottom_sheet.dart';
 
 class BrandAndCategoryProductScreen extends StatefulWidget {
   final bool isBrand;
   String id;
-  final String name;
-  final String image;
-  final List<SubSubCategory> subSubCategory;
-  final bool isBacButtonExist;
-  final bool isDiscounted;
+  final String name ;
+  final String image ;
+  final List<SubSubCategory> subSubCategory ;
+  final bool isBacButtonExist ;
+  final bool isDiscounted ;
+  final Attribute attribute ;
+  final bool isFiltering ;
 
   BrandAndCategoryProductScreen(
       {@required this.isBrand,
-      @required this.id,
-      @required this.name,
-      this.image,
-      this.subSubCategory,
+        @required this.id,
+        @required this.name,
+        this.image,
+        this.subSubCategory,
         this.isBacButtonExist = true,
-      this.isDiscounted=false});
+        this.isDiscounted=false,
+        this.attribute,
+       this.isFiltering=false});
 
   @override
   State<BrandAndCategoryProductScreen> createState() =>
@@ -56,10 +55,9 @@ class _BrandAndCategoryProductScreenState
 
   @override
   void initState() {
-    Provider.of<ProductProvider>(context, listen: false)
-        .initBrandOrCategoryProductList(
-            widget.isBrand, widget.id, context, offset,
-            reload: true);
+    Provider.of<ProductProvider>(context, listen: false).isFiltring= false;
+    Provider.of<ProductProvider>(context,listen: false).selectedSub = null ;
+    Provider.of<ProductProvider>(context, listen: false).initBrandOrCategoryProductList(widget.isBrand, widget.id, context, offset, reload: true);
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -67,12 +65,12 @@ class _BrandAndCategoryProductScreenState
         if (_scrollController.position.maxScrollExtent ==
             _scrollController.position.pixels) {
           // offset = Provider.of<ProductProvider>(context, listen: false).cOffset;
+
+
           offset++;
           Provider.of<ProductProvider>(context, listen: false).setcatsloading();
-          Provider.of<ProductProvider>(context, listen: false)
-              .initBrandOrCategoryProductList(
-                  widget.isBrand, widget.id, context, offset,
-                  reload: false);
+          Provider.of<ProductProvider>(context, listen: false).isFiltring?   fetchMore():  Provider.of<ProductProvider>(context, listen: false).initBrandOrCategoryProductList(widget.isBrand, widget.id, context, offset,   reload: false);
+          Provider.of<ProductProvider>(context, listen: false).initBrandOrCategoryProductList(widget.isBrand, widget.id, context, offset,   reload: false);
           print('the ppp is ' + widget.id);
           //  print('the ppppp is ' +  Provider.of<ProductProvider>(context, listen: false).brandOrCategoryProductList.length.toString());
           print('the sssss is ' +
@@ -92,30 +90,37 @@ class _BrandAndCategoryProductScreenState
   //   Provider.of<ProductProvider>(context,listen: false).selectedSub = null ;
   //   super.dispose();
   // }
-
+  void fetchMore() {
+    Provider.of<SearchProvider>(context, listen: false).fetchMore(context,onNoMoreProducts: showNoMoreProductsSnackbar);
+  }
+  void showNoMoreProductsSnackbar() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("No more products")),
+    );
+  }
   @override
   Widget build(BuildContext context) {
-    var ourList;
+    var ourList=Provider.of<ProductProvider>(context).ourList;
 
-    Provider.of<ProductProvider>(context, listen: false).selectedSub = null;
+
     widget.isDiscounted? ourList = Provider.of<ProductProvider>(context, listen: false).brandOrCategoryProductListWith50Disc :
-    ourList = Provider.of<ProductProvider>(context).brandOrCategoryProductList;
+    ourList = Provider.of<ProductProvider>(context).isFiltring? Provider.of<SearchProvider>(context).searchProductList:Provider.of<ProductProvider>(context).brandOrCategoryProductList;
 
     return  MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: AppConstants.textScaleFactior),
       child: Scaffold(
         appBar:     defaultTargetPlatform == TargetPlatform.android?
         PreferredSize(
-            // CustomAppBarIos
-          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height*0.055),
-          child:SizedBox(height: 40,)
+          // CustomAppBarIos
+            preferredSize: Size.fromHeight(MediaQuery.of(context).size.height*0.055),
+            child:SizedBox(height: 40,)
         ):
         PreferredSize(
           // CustomAppBarIos
             preferredSize: Size.fromHeight(MediaQuery.of(context).size.height*0.055),
             child:Container(height: MediaQuery.of(context).size.height*0.055/1.1 ))
-     ,
-       /* bottomNavigationBar: Consumer<ProductProvider>(
+        ,
+        /* bottomNavigationBar: Consumer<ProductProvider>(
             builder: (context, productProvider, child) {
               return Provider.of<ProductProvider>(context, listen: false)
                   .iscOLoading
@@ -135,113 +140,152 @@ class _BrandAndCategoryProductScreenState
             Consumer<CategoryProvider>(
               builder: (context, categoryProvider, child) {
                 return Column(
-                   children: [
+                    children: [
 
-                     defaultTargetPlatform == TargetPlatform.android?
-                     CustomAppBar(title: widget.name,isBackButtonExist: true )
-                     :CustomAppBarIos(title: widget.name,isBackButtonExist: true,),
+                      defaultTargetPlatform == TargetPlatform.android?
+                      CustomAppBar(title: widget.name,isBackButtonExist: true )
+                          :CustomAppBarIos(title: widget.name,isBackButtonExist: true,),
 
-                     SizedBox(height: 3,),
-                  widget.isBrand?SizedBox(): Consumer<ProductProvider>(
-                    builder: (context, productProvider, child) =>
-                        Column(
-                          children: [
-                            Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 20,
-                      child: widget.subSubCategory != null
-                              ? ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: widget.subSubCategory.length,
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                  onTap: () {
-                                    widget.id = widget
-                                        .subSubCategory[index].id
-                                        .toString();
-                                    productProvider.selectedSub =
-                                        index;
-                                    offset = 1;
-                                    Provider.of<ProductProvider>(
-                                        context,
-                                        listen: false)
-                                        .initBrandOrCategoryProductList(
-                                        widget.isBrand,
-                                        widget
-                                            .subSubCategory[
-                                        index]
-                                            .id
-                                            .toString(),
-                                        context,
-                                        offset,
-                                        reload: true);
-                                    print(widget
-                                        .subSubCategory[index]
-                                        .name);
-                                    print(widget.name);
-                                    print(widget
-                                        .subSubCategory[index].id);
-                                    print(widget.id);
-                                    print(productProvider
-                                        .selectedSub);
-                                  },
-                                  child: Container(
-                                    alignment: Alignment.center,
-                                    width: MediaQuery.of(context)
-                                        .size
-                                        .width /
-                                        3,
-                                    margin: EdgeInsets.only(
-                                        right: Dimensions
-                                            .PADDING_SIZE_SMALL,
-                                        left: Dimensions
-                                            .PADDING_SIZE_SMALL),
+                      SizedBox(height: 3,),
+                      widget.isBrand?SizedBox():
+
+
+                            Column(
+                              children: [
+                                Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height / 20,
+                                  child: widget.subSubCategory != null
+                                      ? ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.subSubCategory.length,
+                                    itemBuilder: (context, index) {
+                                      return Consumer<ProductProvider>(
+                                        builder: (context, productProvider, child) =>
+                                         InkWell(
+                                            onTap: () {
+                                              productProvider.selectedSub =
+                                                  index;
+                                              widget.id = widget
+                                                  .subSubCategory[index].id
+                                                  .toString();
+
+                                              offset = 1;
+
+                                              productProvider.isFiltring= false;
+                                            productProvider.initBrandOrCategoryProductList(widget.isBrand, widget
+                                                .subSubCategory[index].id.toString(), context, offset, reload: true);
+                                              print(widget
+                                                  .subSubCategory[index]
+                                                  .name);
+                                              print(widget.name);
+                                              print(widget
+                                                  .subSubCategory[index].id);
+                                              print(widget.id);
+                                              print(productProvider
+                                                  .selectedSub);
+                                            },
+                                            child: Container(
+                                              alignment: Alignment.center,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                                  3,
+                                              margin: EdgeInsets.only(
+                                                  right: Dimensions
+                                                      .PADDING_SIZE_SMALL,
+                                                  left: Dimensions
+                                                      .PADDING_SIZE_SMALL),
+                                              decoration: BoxDecoration(
+                                                  color: productProvider
+                                                      .selectedSub ==
+                                                      index
+                                                      ? Colors.black
+                                                      : Colors.white,
+                                                  border: Border.all(
+                                                      color: Colors.grey)),
+                                              child: Text(
+                                                  widget.subSubCategory[index]
+                                                      .name,
+                                                  style:
+                                                  robotoRegular.copyWith(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: productProvider
+                                                        .selectedSub ==
+                                                        index
+                                                        ? Colors.white
+                                                        : Colors.black,
+                                                  )),
+                                            )),
+                                      );
+                                    },
+                                  )
+                                      : SizedBox(),
+                                ),
+                                SizedBox(height: 3,),
+                                Container(
+                                  margin:getMargin(all: 10),
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.height / 20,
+                                  child: widget.subSubCategory != null
+                                      ?   Container(
+                                    padding: getPadding(),
                                     decoration: BoxDecoration(
-                                        color: productProvider
-                                            .selectedSub ==
-                                            index
-                                            ? Colors.black
-                                            : Colors.white,
-                                        border: Border.all(
-                                            color: Colors.grey)),
-                                    child: Text(
-                                        widget.subSubCategory[index]
-                                            .name,
-                                        style:
-                                        robotoRegular.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: productProvider
-                                              .selectedSub ==
-                                              index
-                                              ? Colors.white
-                                              : Colors.black,
-                                        )),
-                                  ));
-                            },
-                      )
-                              : SizedBox(),
-                    ),
-                            SizedBox(height: 3,),
-                            Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 20,
-                      child: widget.subSubCategory != null
-                              ?    Expanded(child: InkWell(
-                          onTap: (){
-                            showModalBottomSheet(context: context,
-                                isScrollControlled: true, backgroundColor: Colors.transparent,
-                                builder: (c) => SearchFilterBottomSheet());
-                          },
-                          child: Center(child: _ItemWidget(getTranslated("sort_and_filters",context),Icons.filter_alt))))
-                              : SizedBox(),
-                    ),
-                          ],
-                        ),
-
-                  ),
+                                      color:Colors.black,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    width: MediaQuery.of(context).size.width*0.5,
 
 
-                ]
+                                    // width: 170,
+                                    child: IntrinsicHeight(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          // Expanded(child: Text('${getTranslated('products', context)}',style: robotoBold,)),
+                                          ///التصفية
+                                          Expanded(
+
+                                              child: InkWell(
+                                              onTap: (){
+
+                                                showModalBottomSheet(context: context,
+
+                                                    isScrollControlled: true,
+
+                                                    backgroundColor: Colors.white,
+
+                                                    //   useSafeArea:  false,
+
+                                                    builder: (c) => SearchSortByBottomSheet(widget.attribute,widget.id,true));
+
+                                              },
+                                              child: Center(child: _ItemWidget(getTranslated("sort_and_filters",context),Icons.sort)))),
+                                          // MiddlePageTransition(child: SearchSortByBottomSheet(widget.searchAttribute),),
+
+
+                                          VerticalDivider(thickness: 5,color: Colors.white,),
+                                          Expanded(child: InkWell(
+                                              onTap: (){
+                                                showModalBottomSheet(context: context,
+                                                    isScrollControlled: true, backgroundColor: Colors.transparent,
+                                                    builder: (c) => SearchFilterBottomSheet());
+                                              },
+                                              child: Center(child: _ItemWidget(getTranslated("sort_by",context),Icons.filter_alt)))),
+
+
+                                        ],
+                                      ),
+                                    ),
+                                  )
+                                      : SizedBox(),
+                                ),
+                              ],
+                            ),
+
+
+
+                    ]
                 );
               },
             ),
@@ -258,43 +302,49 @@ class _BrandAndCategoryProductScreenState
                           height: Dimensions.PADDING_SIZE_SMALL/2),
                       // Products
 
-                   ourList.length > 0
-                          ? Expanded(
-                        flex: 15,
-                        child:
-                        Container(
-                          height: MediaQuery.of(context).size.height *0.8,
-                          child: StaggeredGridView.countBuilder(
-                             // padding: EdgeInsets.symmetric(
-                             //     horizontal: 2),
+                      ourList.length > 0
+                          ?
+                      Consumer<ProductProvider>(
+                        builder: (context, value, child) =>
 
-                            physics: BouncingScrollPhysics(),
-                            crossAxisCount: 2,
-                            itemCount:ourList
-                                .length,
-                            controller: _scrollController,
-                            shrinkWrap: true,
-                            staggeredTileBuilder:
-                                (int index) =>
-                                StaggeredTile.fit(1),
-                            itemBuilder:
-                                (BuildContext context,
-                                int index) {
-                              return ProductWidgetNew(
-                                  productModel:ourList[
-                                  index]);
-                            },
-                            crossAxisSpacing: 0,
+                         Expanded(
+                          flex: 15,
+                          child:
+                          Container(
+                            height: MediaQuery.of(context).size.height *0.8,
+                            child: StaggeredGridView.countBuilder(
+                              // padding: EdgeInsets.symmetric(
+                              //     horizontal: 2),
+
+                              physics: BouncingScrollPhysics(),
+                              crossAxisCount: 2,
+                              itemCount:ourList
+                                  .length,
+                              controller: _scrollController,
+                              shrinkWrap: true,
+                              staggeredTileBuilder:
+                                  (int index) =>
+                                  StaggeredTile.fit(1),
+                              itemBuilder:
+                                  (BuildContext context,
+                                  int index) {
+                                return ProductWidgetNew(
+                                    productModel:ourList[
+                                    index]);
+                              },
+                              crossAxisSpacing: 0,
+                            ),
                           ),
                         ),
                       )
+
                           : Center(
                         child: productProvider.hasData
                             ? ProductShimmer(
                             isHomePage: false,
                             isEnabled: ourList
                                 .length ==
-                                0)
+                                null)
                             : NoInternetOrDataScreen(
                             isNoInternet: false),
                       ),
@@ -330,13 +380,17 @@ Widget _ItemWidget(String title, IconData iconData) {
     width: 150,
     child: Row(
       children: [
+        Spacer(),
         Text(
+
+
           '${title}',
-          style: robotoBold,
+          style: robotoBold.copyWith(color: Colors.white),
         ),
-        Icon(iconData)
+        Spacer(),
+        Icon(iconData,color: Colors.white),
+        Spacer()
       ],
     ),
   );
 }
-

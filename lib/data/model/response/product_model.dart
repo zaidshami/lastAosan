@@ -85,6 +85,7 @@ class Product {
   double _shippingCost;
   int _isMultiPly;
   int _reviewCount;
+  int _wish_list_count;
   String _videoUrl;
   String _desc;
   List<DetailsOption> _details_option;
@@ -128,6 +129,7 @@ class Product {
     double shippingCost,
     int isMultiPly,
     int reviewCount,
+    int wish_list_count,
     String videoUrl,
     String desc,
     List<DetailsOption> details_option,
@@ -168,6 +170,7 @@ class Product {
     this._shippingCost = shippingCost;
     this._isMultiPly = isMultiPly;
     this._reviewCount = reviewCount;
+    this._wish_list_count = wish_list_count;
     this._details_option = details_option;
     this._productSizeList = productSizeList;
     this._productOptionList = productOptionLIst;
@@ -241,6 +244,7 @@ class Product {
   int get isMultiPly => _isMultiPly;
 
   int get reviewCount => _reviewCount;
+  int get wish_list_count => wish_list_count;
 
   String get videoUrl => _videoUrl;
 
@@ -437,6 +441,11 @@ class Product {
     if (json['reviews_count'] != null) {
       _reviewCount = int.parse(json['reviews_count'].toString());
     }
+
+    if (json['_wish_list_count'] != null) {
+      _wish_list_count = int.parse(json['_wish_list_count'].toString());
+    }
+
     if (json['details_option'] != null) {
       _details_option = [];
       try {
@@ -530,6 +539,7 @@ class Product {
     data['shipping_cost'] = this._shippingCost;
     data['multiply_qty'] = this._isMultiPly;
     data['reviews_count'] = this._reviewCount;
+    data['_wish_list_count'] = this._wish_list_count;
     data['video_url'] = this._videoUrl;
     data['desc'] = this._desc;
     return data;

@@ -48,6 +48,19 @@ class ProductDetailsProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get orderCount => _orderCount;
   int get wishCount => _wishCount;
+
+  void incrementWishCount() {
+    _wishCount++;
+    notifyListeners();
+  }
+
+  void decrementWishCount() {
+    if (_wishCount > 0) {
+      _wishCount--;
+      notifyListeners();
+    }
+  }
+
   String get sharableLink => _sharableLink;
   String get radioValue => _radioValue;
   String get errorText => _errorText;

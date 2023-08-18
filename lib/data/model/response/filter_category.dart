@@ -43,6 +43,8 @@ class CategoryFilter {
   final int parentId;
   final bool isMain;
   final int categoryId;
+  final int count;
+
   final List<dynamic> translations;
   final List<CategoryFilter> children;
 
@@ -54,6 +56,7 @@ class CategoryFilter {
     this.parentId,
     @required this.isMain,
     this.categoryId,
+    this.count,
     @required this.translations,
     @required this.children,  // Add a parameter for the child attributes
   });
@@ -67,6 +70,7 @@ class CategoryFilter {
       parentId: json['Parent_Id'],
       isMain: json['IsMain'] == 1,
       categoryId: json['category_id'],
+      count: json['count'],
       translations: json['translations'],
       children: json['children'] != null ? json['children'].map((item) => CategoryFilter.fromJson(item)).toList() : [],  // Add a null check
     );

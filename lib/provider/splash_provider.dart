@@ -71,8 +71,6 @@ class SplashProvider extends ChangeNotifier {
         _hasConnection = false;
       }
     }
-  //  Provider.of<ProductDetailsProvider>(context, listen: false).setsize(Product().filteredproductsizelist(Provider.of<ProductDetailsProvider>(context, listen: false).variantIndex).size[0].code);
-
 
     notifyListeners();
        Provider.of<AuthProvider>(context, listen: false).isLoggedIn() ?
@@ -124,3 +122,4 @@ class SplashProvider extends ChangeNotifier {
 
 
 }
+
