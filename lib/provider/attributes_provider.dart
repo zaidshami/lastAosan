@@ -86,11 +86,16 @@ int _selectedCount = 0;
     ApiResponse response = _isCategoryFilter ? await attributeRepo.getCategoryFilterListCategory(catId) : await attributeRepo.getCategoryFilterList(searchText);
 
     if (response.response != null) {
+      print('zzzzz ${response.response.data}');
 
-      List<dynamic> list = response.response.data;
+      MainAttribute tdata =MainAttribute.fromJson(response.response.data) ;
+      print('zzzzz2 ${tdata.toJson()}');
+
+      List<Attribute> list = tdata.data;
       _attributes.clear();
     try{
-      list.map((item) => _attributes.add(Attribute.fromJson(item))).toList();
+      _attributes.addAll(list);
+      // list.map((item) => _attributes.add(Attribute.fromJson(item))).toList();
 
     }catch(e){}
       _attributes.toSet();
@@ -98,6 +103,7 @@ int _selectedCount = 0;
       errorMessage = 'Failed to fetch attributes: ${response.error.toString()}';
       print(errorMessage);
     }
+    print("Dddd ${_attributes.length}");
 
     setLoading(false);
      notifyListeners();

@@ -55,7 +55,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin {
   // TabController _tabController;
 
   final ScrollController _scrollController = ScrollController();
@@ -116,6 +116,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // _checkPermission(context);
+
     singleVendor = Provider.of<SplashProvider>(context, listen: false)
             .configModel
             .businessMode ==
@@ -359,6 +360,13 @@ class _HomePageState extends State<HomePage> {
                               MediaQuery.of(context).size.height * 0.055),
                           child: Consumer<CategoryProvider>(
                             builder: (context, categoryProvider, child) {
+
+                              print("tttt ${categoryProvider.categorySelectedIndex}");
+                              if(_tabController2==null){
+                                _tabController2 = TabController(vsync: this, length:categoryProvider.categoryList.length);
+
+                                // changeTab(categoryProvider.categorySelectedIndex);
+                              }
                               return DefaultTabController(
 
                                 initialIndex:
@@ -1030,6 +1038,7 @@ class _HomePageState extends State<HomePage> {
                                                 _change(() {
                                                   isloading = true;
                                                 });
+                                                _tabController2.animateTo(value);
                                                 categoryProvider
                                                     .changeSelectedIndex(
                                                     value);

@@ -45,6 +45,7 @@ class AttributeRepo {
   Future<ApiResponse> getCategoryFilterListCategory(String catId) async {
     try {
       final response = await dioClient.get(AppConstants.ATTRBUITES_CATEGORIES_URI_CATEGORY+(catId.isNotEmpty?("/$catId"):""));
+
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

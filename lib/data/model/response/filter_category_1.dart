@@ -2,6 +2,33 @@ import 'package:flutter/material.dart';
 
 import '../../../utill/app_constants.dart';
 
+
+class MainAttribute {
+  List<Attribute> data;
+  int count;
+
+  MainAttribute({this.data, this.count});
+
+  MainAttribute.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      data = <Attribute>[];
+      json['data'].forEach((v) {
+        data.add(new Attribute.fromJson(v));
+      });
+    }
+    count = json['count'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.data != null) {
+      data['data'] = this.data.map((v) => v).toList();
+    }
+    data['count'] = this.count;
+    return data;
+  }
+}
+
 class Attribute {
   int id;
   String name;

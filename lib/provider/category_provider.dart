@@ -53,6 +53,7 @@ class CategoryProvider extends ChangeNotifier {
   }
 
   void changeSelectedIndex(int selectedIndex) {
+    print("sssss $selectedIndex");
     _categorySelectedIndexhome = selectedIndex;
 
     notifyListeners();

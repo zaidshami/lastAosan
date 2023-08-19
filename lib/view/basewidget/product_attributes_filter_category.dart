@@ -98,7 +98,8 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
 
 
                                   }
-                                  ,icon: Text(getTranslated('remove_all', context))),
+                                  //,icon: Text(getTranslated('remove_all', context))),
+                                  ,icon: Text('remove_all')),
                             ),
 
                           ],
@@ -244,7 +245,8 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
 
                             },
                             child: Center(child:     Text(
-                              getTranslated('apply_changes', context),
+                              // getTranslated('apply_changes', context),
+                              'getTranslated(''apply_changes'', context)',
                             ))
                           ),
                         ):
@@ -272,7 +274,8 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                       children: [
                     Spacer(),
                     Text(
-                    getTranslated('show_results', context),
+                   // getTranslated('show_results', context),
+                    'getTranslated(''show_results'', context)',
                     ),
                     Spacer(),
        /*             provider.selectedCount>0?
@@ -407,6 +410,7 @@ Map<String, List<String>> groupChildrenByAttribute(List<String> selectedChildIds
   Map<String, List<String>> grouped = {};
   for (var childId in selectedChildIds) {
     for (var attribute in attributes) {
+
       var childName = getChildNameById(attribute.childes, childId);
       if (childName != null) {
         if (!grouped.containsKey(attribute.name)) {

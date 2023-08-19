@@ -22,7 +22,7 @@ import '../auth/auth_screen.dart';
 
 import '../loyaltyPoint/loyalty_point_screen.dart';
 import '../more/web_view_screen.dart';
-import '../more/widget/delet_my_account>confirmation_dialog.dart';
+// import '../more/widget/delet_my_account>confirmation_dialog.dart';
 import '../more/widget/html_view_Screen.dart';
 import '../more/widget/sign_out_confirmation_dialog.dart';
 
@@ -754,7 +754,7 @@ class _ProfileState extends State<Profile> {
                 leading: Icon(Icons.delete_forever_outlined, color: ColorResources.getPrimary(context), size: 18),
                 title: Text(getTranslated('delete_account', context),
                     style: titilliumRegular.copyWith(fontSize: 10)),
-                onTap: () => showAnimatedDialog(context, DeleteAccountConfirmationDialog(), isFlip: true),
+                // onTap: () => showAnimatedDialog(context, DeleteAccountConfirmationDialog(), isFlip: true),
               ) : SizedBox(),
 
 
