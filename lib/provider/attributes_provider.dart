@@ -10,7 +10,9 @@ class AttributeProvider extends ChangeNotifier {
   final AttributeRepo attributeRepo;
   List<Attribute> _attributes = [];
 
+  MainAttribute _mainAttribute ;
   List<Attribute> get attributes => _attributes;
+  MainAttribute get  mainAttribute=> _mainAttribute;
 
   set attributes(List<Attribute> value) {
     _attributes = value;
@@ -89,6 +91,7 @@ int _selectedCount = 0;
       print('zzzzz ${response.response.data}');
 
       MainAttribute tdata =MainAttribute.fromJson(response.response.data) ;
+      _mainAttribute=tdata;
       print('zzzzz2 ${tdata.toJson()}');
 
       List<Attribute> list = tdata.data;

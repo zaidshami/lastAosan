@@ -362,8 +362,9 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                             builder: (context, categoryProvider, child) {
 
                               print("tttt ${categoryProvider.categorySelectedIndex}");
-                              if(_tabController2==null){
-                                _tabController2 = TabController(vsync: this, length:categoryProvider.categoryList.length);
+                              if(_tabController2==null&&categoryProvider.categoryList.isNotEmpty){
+                                _tabController2 = TabController(vsync: this, length:
+                                categoryProvider.categoryList.length);
 
                                 // changeTab(categoryProvider.categorySelectedIndex);
                               }
@@ -441,7 +442,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                         Center(
                                             child: Column(
                                               children: [
-                                                TabBar(
+                                                categoryProvider.categoryList.isNotEmpty? TabBar(
 
                                                   indicatorPadding:
                                                       getPadding(all: 5),
@@ -512,7 +513,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                                             text: e.name,
                                                           ))
                                                       .toList(),
-                                                ),
+                                                ):SizedBox(),
                                               ],
                                             ),
                                           );

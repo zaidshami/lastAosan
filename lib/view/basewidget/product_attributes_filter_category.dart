@@ -246,7 +246,7 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                             },
                             child: Center(child:     Text(
                               // getTranslated('apply_changes', context),
-                              'getTranslated(''apply_changes'', context)',
+                              'getTranslated(''apply_changes'', context)'+provider.mainAttribute.count.toString(),
                             ))
                           ),
                         ):
