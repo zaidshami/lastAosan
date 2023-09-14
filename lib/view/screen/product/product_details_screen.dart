@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +8,7 @@ import 'package:flutter_Aosan_ecommerce/view/screen/product/widget/product_speci
 import 'package:flutter_Aosan_ecommerce/view/screen/product/widget/quantity_bottom_sheet.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:share/share.dart';
 import '../../../../helper/product_type.dart';
 import '../../../../provider/auth_provider.dart';
 import '../../../../utill/color_resources.dart';
@@ -43,6 +42,7 @@ import '../../basewidget/button/custom_button.dart';
 import '../../basewidget/guest_dialog.dart';
 import '../../basewidget/show_custom_snakbar.dart';
 import '../cart/cart_screen.dart';
+import '../home/widget/products_view_1.dart';
 import '../more/widget/html_view_Screen.dart';
 import 'faq_and_review_screen.dart';
 
@@ -1556,11 +1556,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         : SizedBox(),
 
                                     /// the seller of the product if we activate  the multivindor
-                                    widget.product.addedBy == 'seller'
+                            AppConstants.showSellerInfo?
+                            widget.product.addedBy == 'seller'
                                         ? SellerView(
                                             sellerId: widget.product.userId
                                                 .toString())
-                                        : SizedBox.shrink(),
+                                        : SizedBox.shrink():SizedBox(),
 
                                     ///customer review
                                     revList.length > 0
@@ -1708,7 +1709,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                         ? Padding(
                                             padding: EdgeInsets.all(Dimensions
                                                 .PADDING_SIZE_EXTRA_SMALL),
-                                            child: ProductView(
+                                            child: ProductView1(
                                                 isHomePage: true,
                                                 productType:
                                                     ProductType.SELLER_PRODUCT,
@@ -1723,6 +1724,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       children: [
                                         SizedBox(width: 4),
                                         Expanded(
+
+                                          flex: 4,
                                             child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
@@ -1740,7 +1743,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                             )
                                           ],
                                         )),
+
                                         Expanded(
+
+                                            flex: 4,
+
                                             child: Row(
                                           children: [
                                             // SvgPicture.asset(Images.sdr, width: 30, height: 30, color: Colors.black,),
@@ -1782,6 +1789,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                                                 ))
                                           ],
                                         )),
+
                                         SizedBox(
                                           width: 20,
                                         )

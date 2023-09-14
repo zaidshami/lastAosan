@@ -52,7 +52,7 @@ class FavouriteButton extends StatelessWidget {
                   Provider.of<WishListProvider>(context, listen: false)
                       .removeWishList(product,
                           feedbackMessage: feedbackMessage);
-                  wishCount--;
+                  wishCount>1? wishCount--:wishCount;
                 } else {
                   Provider.of<WishListProvider>(context, listen: false)
                       .addWishList(product, feedbackMessage: feedbackMessage);

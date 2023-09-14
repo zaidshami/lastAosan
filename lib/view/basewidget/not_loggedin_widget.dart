@@ -100,12 +100,7 @@ class WhyShoppingWithUs extends StatelessWidget {
                   height: 107,
                   width: 107,
 
-                  decoration:BoxDecoration(
-                    border: Border.all(
-                      color: Colors.green.withOpacity(0.4),
-                      width:0.5 ,
-                    ),
-                  ),
+                  decoration:shopWithUsDecoration,
                   child: Column(
                     children: [
                       SvgPicture.asset(
@@ -152,3 +147,103 @@ class WhyShoppingWithUs extends StatelessWidget {
     );
   }
 }
+///new design
+// class WhyShoppingWithUs extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final _height = MediaQuery.of(context).size.height;
+//     final _width = MediaQuery.of(context).size.width;
+//
+//     return Container(
+//       padding: EdgeInsets.symmetric(vertical: _height * 0.02),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.center,
+//         children: [
+//           Text(
+//             'لماذا تتسوق معنا؟',
+//             style: TextStyle(
+//               fontSize: _height * 0.03,
+//               fontWeight: FontWeight.bold,
+//             ),
+//           ),
+//           SizedBox(height: _height * 0.02),
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//             children: [
+//               Expanded(
+//                 child: FeatureItem(
+//                   icon: Icons.local_shipping,
+//                   title: 'توصيل سريع',
+//                   description: 'احصل على طلباتك بسرعة.',
+//                   widthFactor: 0.3, // Adjust the width factor as needed
+//                 ),
+//               ),
+//               Expanded(
+//                 child: FeatureItem(
+//                   icon: Icons.payment,
+//                   title: 'دفع آمن',
+//                   description: 'تسوق بثقة باستخدام وسائل الدفع الآمنة.',
+//                   widthFactor: 0.3, // Adjust the width factor as needed
+//                 ),
+//               ),
+//               Expanded(
+//                 child: FeatureItem(
+//                   icon: Icons.thumb_up,
+//                   title: 'منتجات عالية الجودة',
+//                   description: 'اكتشف منتجات عالية الجودة من أفضل العلامات التجارية.',
+//                   widthFactor: 0.3, // Adjust the width factor as needed
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class FeatureItem extends StatelessWidget {
+//   final IconData icon;
+//   final String title;
+//   final String description;
+//   final double widthFactor;
+//
+//   const FeatureItem({
+//     Key key,
+//     @required this.icon,
+//     @required this.title,
+//     @required this.description,
+//     this.widthFactor = 0.3,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         Icon(
+//           icon,
+//           size: MediaQuery.of(context).size.width * 0.12,
+//           color: Theme.of(context).primaryColor,
+//         ),
+//         SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+//         Text(
+//           title,
+//           style: TextStyle(
+//             fontSize: MediaQuery.of(context).size.height * 0.018,
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+//         Text(
+//           description,
+//           textAlign: TextAlign.center,
+//           style: TextStyle(
+//             fontSize: MediaQuery.of(context).size.height * 0.014,
+//             color: Colors.grey,
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
+//

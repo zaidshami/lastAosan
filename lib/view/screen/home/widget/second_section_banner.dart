@@ -7,12 +7,14 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../../../data/model/response/category.dart';
+import '../../../../data/model/response/filter_category_1.dart';
 import '../../../../data/model/response/product_model.dart';
 import '../../../../provider/banner_provider.dart';
 import '../../../../provider/brand_provider.dart';
 import '../../../../provider/category_provider.dart';
 import '../../../../provider/splash_provider.dart';
 import '../../../../provider/top_seller_provider.dart';
+import '../../../../utill/app_constants.dart';
 import '../../../../utill/color_resources.dart';
 import '../../../../utill/images.dart';
 import '../../../basewidget/get_loading.dart';
@@ -35,6 +37,20 @@ class SecondSectionBannersView extends StatelessWidget {
     if(type == 'category'){
       if(Provider.of<CategoryProvider>(context, listen: false).categoryList[cIndex].name != null){
         Navigator.push(context, CupertinoPageRoute(builder: (_) => BrandAndCategoryProductScreen(
+          attribute:    Attribute(
+              id: int.parse(
+                  AppConstants.categoryId),
+              name: "",
+              childes: [
+
+                Child(
+                  id:id.toString(),
+                  name: '${Provider.of<CategoryProvider>(context, listen: false).categoryList[cIndex].name}',
+
+
+                )
+              ]
+          ),
           isBrand: false,
           id: id.toString(),
           name: '${Provider.of<CategoryProvider>(context, listen: false).categoryList[cIndex].name}',
@@ -57,6 +73,20 @@ class SecondSectionBannersView extends StatelessWidget {
 
       subCategory!=null?   Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+              attribute:    Attribute(
+                  id: int.parse(
+                      AppConstants.categoryId),
+                  name: "",
+                  childes: [
+
+                    Child(
+                      id:id.toString(),
+                        name:subCategory.name
+
+
+                    )
+                  ]
+              ),
               isBrand: false,
               subSubCategory:subCategory.subSubCategories,
               id:id.toString(),
@@ -65,6 +95,20 @@ class SecondSectionBannersView extends StatelessWidget {
 
       )):Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+            attribute:    Attribute(
+                id: int.parse(
+                    AppConstants.categoryId),
+                name: "",
+                childes: [
+
+                  Child(
+                      id:id.toString(),
+                    name: '',
+
+
+                  )
+                ]
+            ),
             isBrand: false,
             id:id.toString(),
             name: '',
@@ -93,6 +137,20 @@ class SecondSectionBannersView extends StatelessWidget {
 
       subCategory!=null?   Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+              attribute:    Attribute(
+                  id: int.parse(
+                      AppConstants.categoryId),
+                  name: "",
+                  childes: [
+
+                    Child(
+                        id:id.toString(),
+                        name:subCategory.name
+
+
+                    )
+                  ]
+              ),
               isBrand: false,
               id:id.toString(),
               name:subCategory.name
@@ -100,6 +158,20 @@ class SecondSectionBannersView extends StatelessWidget {
 
       )):Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+            attribute:    Attribute(
+                id: int.parse(
+                    AppConstants.categoryId),
+                name: "",
+                childes: [
+
+                  Child(
+                      id:id.toString(),
+                      name:''
+
+
+                  )
+                ]
+            ),
             isBrand: false,
             id:id.toString(),
             name: '',
@@ -120,6 +192,19 @@ class SecondSectionBannersView extends StatelessWidget {
     else if(type == 'brand'){
       if(Provider.of<BrandProvider>(context, listen: false).brandList[bIndex].name != null){
         Navigator.push(context, CupertinoPageRoute(builder: (_) => BrandAndCategoryProductScreen(
+          attribute:    Attribute(
+              id: int.parse(
+                  AppConstants.categoryId),
+              name: "",
+              childes: [
+
+                Child(
+                    id:id.toString(),
+                  name: '${Provider.of<BrandProvider>(context, listen: false).brandList[bIndex].name}',
+
+                )
+              ]
+          ),
           isBrand: true,
           id: id.toString(),
           name: '${Provider.of<BrandProvider>(context, listen: false).brandList[bIndex].name}',

@@ -1,5 +1,6 @@
 // import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -8,12 +9,15 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_Aosan_ecommerce/data/model/response/product_model.dart';
 import 'package:flutter_Aosan_ecommerce/provider/attributes_provider.dart';
+import 'package:flutter_Aosan_ecommerce/provider/brand_pro_provider.dart';
 import 'package:flutter_Aosan_ecommerce/provider/change_notifier_base.dart';
 import 'package:flutter_Aosan_ecommerce/provider/filter_provider.dart';
 import 'package:flutter_Aosan_ecommerce/provider/remote_config_service.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/cart/cart_screen.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/product/brand_and_category_product_screen.dart';
+import 'package:flutter_Aosan_ecommerce/view/screen/product/product_details_screen.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/profile/profile_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -55,6 +59,7 @@ import 'theme/light_theme.dart';
 import 'utill/app_constants.dart';
 import 'view/screen/order/order_details_screen.dart';
 import 'view/screen/splash/splash_screen.dart';
+import 'package:uni_links/uni_links.dart';
 
 
 
@@ -66,9 +71,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   HttpOverrides.global = new MyHttpOverrides();
 
-  print('the baseurl before is : ' + AppConstants.BASE_URL);
-  print('the categoryType before is : ' + AppConstants.categoryType.toString());
-  print('the showBrandType before is : ' + AppConstants.brandShowType.toString());
+
 
   try {
     await RemoteConfigService.init().timeout(Duration(seconds: 10));
@@ -76,8 +79,6 @@ Future<void> main() async {
     print('Failed to fetch remote config: $e');
     // Handle network errors here.
   }
-  print('the brandShowType after is : ' + AppConstants.showBrand.toString());
-  print('the baseurl after is : ' + AppConstants.BASE_URL);
 
 
 
@@ -101,9 +102,9 @@ Future<void> main() async {
       if (notification != null && android != null) {
 
 
-        // Extract the variables from the message and perform navigation based on them
-        String pageToNavigate = message.data['page']; // Replace 'page' with the key for your specific variable
-        String id = message.data['id']; // Replace 'page' with the key for your specific variable
+
+        String pageToNavigate = message.data['page'];
+        String id = message.data['id'];
         if (id != null) {
           print("myID: " + id);
           Navigator.of(MyApp.navigatorKey.currentContext).push(
@@ -118,6 +119,7 @@ Future<void> main() async {
 
         }
         else if (pageToNavigate == 'page2') {
+
         }
         else   if (pageToNavigate == 'page1') {
           Navigator.of(MyApp.navigatorKey.currentContext).push(
@@ -183,6 +185,7 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (context) => di.sl<WalletTransactionProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<FilterCategoryProvider>()),
           ChangeNotifierProvider(create: (context) => di.sl<AttributeProvider>()),
+          ChangeNotifierProvider(create: (context) => di.sl<BrandProProvider>()),
         ],
         child: MyApp(orderId: _orderID),
       ),
@@ -193,41 +196,6 @@ Future<void> main() async {
 }
 
 
-///the old main before the
-/*class MyApp extends StatelessWidget {
-  final int orderId;
-  MyApp({@required this.orderId});
-
-  static final navigatorKey = new GlobalKey<NavigatorState>();
-
-  @override
-  Widget build(BuildContext context) {
-    List<Locale> _locals = [];
-    AppConstants.languages.forEach((language) {
-      _locals.add(Locale(language.languageCode, language.countryCode));
-    });
-    return MaterialApp(
-      title: AppConstants.APP_NAME,
-      navigatorKey: navigatorKey,
-      debugShowCheckedModeBanner: false,
-      theme: Provider.of<ThemeProvider>(context).darkTheme ? dark : light,
-      locale: Provider.of<LocalizationProvider>(context).locale,
-      localizationsDelegates: [
-        AppLocalization.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        FallbackLocalizationDelegate()
-      ],
-      supportedLocales: _locals,
-      home: orderId == null ? SplashScreen() : OrderDetailsScreen(orderModel: null,
-        orderId: orderId,orderType: 'default_type',),
-
-
-
-    );
-  }
-}*/
 class MyApp extends StatefulWidget {
   final int orderId;
 
@@ -241,16 +209,57 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   AppLifecycleState _appLifecycleState;
+  StreamSubscription _deepLinkSubscription;
+
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _initDeepLinkListener();
+
+
   }
 
+  void _initDeepLinkListener() async {
+    // Check if the app was launched by a deep link
+    try {
+      String initialLink = await getInitialLink();
+      if (initialLink != null) {
+        _handleDeepLink(initialLink);
+      }
+    } catch (e) {
+      // Handle exception if needed
+    }
+
+    // Listen for deep links while app is running
+    _deepLinkSubscription = getLinksStream().listen((String link) {
+      if (link != null) {
+        _handleDeepLink(link);
+      }
+    }, onError: (err) {
+      // Handle exceptions if needed
+    });
+  }
+
+  void _handleDeepLink(String link) {
+    // TODO: Process your deep link.
+    // For example, if your link is "myapp://productdetails", you might do something like:
+    if (link == 'https://aosan.co/product/fstan-hnady-q3DMe0') {
+      print('deeplink is working !');
+      Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: Duration(seconds: 10),
+          pageBuilder: (context, anim1, anim2) => ProductDetails(product: Product()),
+        ),
+      );
+    }
+  }
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _deepLinkSubscription?.cancel();
     super.dispose();
   }
 
@@ -263,12 +272,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
 
     if (state == AppLifecycleState.paused) {
-      // App is going into the background (Home button pressed)
-      // Save current state or perform necessary actions
+
       print('App paused');
     } else if (state == AppLifecycleState.resumed) {
-      // App is coming into the foreground (App is resumed)
-      // Update state or perform necessary actions
+
       print('App resumed');
     }
   }
@@ -281,6 +288,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     });
 
     return MaterialApp(
+
       title: AppConstants.APP_NAME,
       navigatorKey: MyApp.navigatorKey,
       debugShowCheckedModeBanner: false,

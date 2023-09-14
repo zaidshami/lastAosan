@@ -33,7 +33,7 @@ class OptionsItemWidget extends ItemWidget{
 
               return InkWell(
                 onTap: (){
-                  Provider.of<SearchProvider>(context, listen: false).change_options_search_list(tId,item);
+                  // Provider.of<SearchProvider>(context, listen: false).change_options_search_list(tId,item);
                 },
                 child: Container(
                     decoration:BoxDecoration(

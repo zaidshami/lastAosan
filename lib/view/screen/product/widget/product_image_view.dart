@@ -7,6 +7,7 @@ import '../../../../data/model/response/product_model.dart';
 import '../../../../helper/price_converter.dart';
 import '../../../../provider/cart_provider.dart';
 import '../../../../provider/product_details_provider.dart';
+import '../../../../provider/profile_provider.dart';
 import '../../../../provider/splash_provider.dart';
 import '../../../../provider/theme_provider.dart';
 import '../../../../provider/wishlist_provider.dart';
@@ -216,7 +217,37 @@ class ProductImageView extends StatelessWidget {
                                       children: _indicators(context),
                                     ),
                                     Spacer(),
-                                    Provider.of<ProductDetailsProvider>(context)
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left:  Dimensions
+                                            .PADDING_SIZE_SMALL,
+                                          right: Dimensions
+                                              .PADDING_SIZE_DEFAULT,
+                                      ),
+                                      child:       InkWell(
+                                        onTap: () => Navigator.pop(context),
+                                        child: Container(
+
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey.withOpacity(.2),
+                                                borderRadius:
+                                                BorderRadius.circular(50)),
+                                            //color: Colors.grey.withOpacity(.5),
+                                            child:Row(children: [
+                                              FavouriteButton(
+                                                isDetails: true,
+                                                backgroundColor:
+                                                ColorResources.getImageBg(context),
+                                                favColor: Colors.redAccent,
+                                                product: productModel,
+                                              ),
+                                            ],)
+                                        ),
+                                      ),
+                                    ),
+
+                          ///the index with the range or the cuurrnt
+                     /*               Provider.of<ProductDetailsProvider>(context)
                                                 .imageSliderIndex !=
                                             null
                                         ? Padding(
@@ -230,7 +261,7 @@ class ProductImageView extends StatelessWidget {
                                                     '/' +
                                                     '${imagesList.length.toString()}'),
                                           )
-                                        : SizedBox(),
+                                        : SizedBox(),*/
                                   ],
                                 ),
                               ),
@@ -371,9 +402,9 @@ class ProductImageView extends StatelessWidget {
                                       ),
                                     )
                                   : SizedBox.shrink(),
-                              SizedBox.shrink(),
 
-                              Positioned(
+
+                         /*     Positioned(
                                 bottom: 30,
                                 right: 16,
                                 child: InkWell(
@@ -394,6 +425,38 @@ class ProductImageView extends StatelessWidget {
                                         product: productModel,
                                       ),
                                     ],)
+                                  ),
+                                ),
+                              ),*/
+         Positioned(
+                                bottom: 30,
+                                right: 16,
+                                child:   InkWell(
+                                  onTap: () {
+                                    // Navigator.push(context, CupertinoPageRoute(builder: (_) =>  WebViewScreen(title:
+                                    // getTranslated('contact_us', context)),));
+                                    Provider.of<ProfileProvider>(context,listen: false).openWhatsapp(context: context, text:
+
+                                    // '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${widget.product.productFrontImage[0]/*imagesList[itemIndex]*/}',
+                                    '${Provider.of<
+                                        ProductDetailsProvider>(
+                                        context,
+                                        listen: false)
+                                        .sharableLink}',
+
+                                        number: '+967779922883');
+
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+
+
+
+                                      Image.asset(Images.whatsapp,height: 30,),
+
+
+                                    ],
                                   ),
                                 ),
                               ),

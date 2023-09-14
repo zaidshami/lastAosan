@@ -37,7 +37,7 @@ class CustomAppBar extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios, size: 20,
                 color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.white : Colors.black),
             onPressed: () {
-              print('the back was pressed');
+
               Navigator.of(context).pop();
             },
           ) : SizedBox.shrink(),
@@ -86,7 +86,7 @@ class CustomAppBarIos extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios, size: 20,
                 color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.white : Colors.black),
             onPressed: () {
-              print('the back was pressed');
+
               Navigator.of(context).pop();
             },
           ) : SizedBox.shrink(),

@@ -16,6 +16,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../../../basewidget/get_loading.dart';
 import '../../../basewidget/product_widget_new.dart';
+import '../../home/widget/attribute_view.dart';
 import 'search_sortby_bottom_sheet.dart';
 
 class SearchProductWidget extends StatefulWidget {
@@ -40,7 +41,7 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
     String seearchText = Provider.of<SearchProvider>(context, listen: false).searchController.text.toString();
 
     super.initState();
-    Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter=false;
+
 
     Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,'176');
 
@@ -68,10 +69,10 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
         widget.isCategory?
      SizedBox():
         Container(
-          padding: getPadding(),
+          padding: getPadding(right: 6,left: 6,top: 7,bottom: 7),
           decoration: BoxDecoration(
-            color:Colors.black,
-            borderRadius: BorderRadius.circular(20),
+            color:Colors.black.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(10),
           ),
           width: MediaQuery.of(context).size.width*0.5,
 
@@ -82,14 +83,16 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Expanded(child: Text('${getTranslated('products', context)}',style: robotoBold,)),
-                ///التصفية
+
                 Expanded(child: InkWell(
                     onTap: (){
+                      Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter=false;
+                      bool isCategoryFilter =      Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter;
                       showModalBottomSheet(context: context,
                           isScrollControlled: true,
                           backgroundColor: Colors.white,
                           //   useSafeArea:  false,
-                          builder: (c) => SearchSortByBottomSheet(widget.searchAttribute,'176k',false));
+                          builder: (c) => SearchSortByBottomSheet(widget.searchAttribute,'176k',isCategoryFilter));
 
                     },
                     child: Center(child: _ItemWidget(getTranslated("sort_and_filters",context),Icons.sort)))),
@@ -101,7 +104,7 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
                     onTap: (){
                       showModalBottomSheet(context: context,
                           isScrollControlled: true, backgroundColor: Colors.transparent,
-                          builder: (c) => SearchFilterBottomSheet());
+                          builder: (c) => SearchFilterBottomSheet(isSearch: true,));
                     },
                     child: Center(child: _ItemWidget(getTranslated("sort_by",context),Icons.filter_alt)))),
 
@@ -133,17 +136,51 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
         ),),
 
         SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-        //'alsdk
-        Expanded(child: StaggeredGridView.countBuilder(
+        // Expanded(flex:2,child: AttributesView()),
+
+        Expanded(flex:18,child:
+
+        StaggeredGridView.countBuilder(
           controller: _scrollController,
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.all(0),
           crossAxisCount: 2,
-          crossAxisSpacing: 0,
-          itemCount: widget.products.length,
-          staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
+          // Adding extra rows for each attribute after every 10 products
+          itemCount: widget.products.length + (widget.products.length ~/ 10),
+          staggeredTileBuilder: (int index) {
+            // If this is an attribute row, make it span 2 columns
+            if ((index + 1) % 11 == 0) {
+              return StaggeredTile.fit(2);
+            }
+            // Otherwise, fit only one column for a product
+            return StaggeredTile.fit(1);
+          },
           itemBuilder: (BuildContext context, int index) {
-            return ProductWidgetNew(productModel: widget.products[index]);},
+            // Determine if this index is for an attribute or a product
+            if ((index + 1) % 11 == 0) {
+              // Calculate the attribute index (every 11th index will show an attribute)
+              int attributeIndex = index ~/ 11;
+
+              // Option 1: Start over after reaching the end
+              attributeIndex = attributeIndex % Provider.of<AttributeProvider>(context, listen: false).attributes.length;
+
+              // Option 2: Stop showing anything after reaching the end
+              // if (attributeIndex >= Provider.of<AttributeProvider>(context, listen: false).attributes.length) {
+              //   return SizedBox.shrink(); // or return a Divider, Spacer, etc.
+              // }
+
+              return SizedBox(
+                height: 60,
+                width: MediaQuery.of(context).size.width, // Full width
+                child: AttributesView(index: attributeIndex),
+              );
+            } else {
+              // Calculate the product index
+              int productIndex = index - (index ~/ 11);
+              return ProductWidgetNew(productModel: widget.products[productIndex]);
+            }
+          },
+
         ),
 
         ),
@@ -151,13 +188,12 @@ class _SearchProductWidgetState extends State<SearchProductWidget> {
       ],
     );
   }
-
   Widget _ItemWidget(String title,IconData iconData){
     return Row(children: [
       Spacer(),
       Text('${title}',style: robotoBold.copyWith(fontSize: 11,color: Colors.white),),
       Spacer(),
-      Icon(iconData,size: 25,color: Colors.white),
+      Icon(iconData,size: 15,color: Colors.white),
       Spacer(),
 
     ],);

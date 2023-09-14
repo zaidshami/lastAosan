@@ -11,6 +11,7 @@ import '../../localization/language_constrants.dart';
 import '../../provider/product_provider.dart';
 import '../../provider/search_provider.dart';
 import '../../utill/dimensions.dart';
+import '../../utill/images.dart';
 import '../../utill/math_utils.dart';
 
 class NewProductAttributeList extends StatefulWidget {
@@ -36,6 +37,7 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
     Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter?seearchText = '' :null;
     Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter? Provider.of<SearchProvider>(context, listen: false).searchController.text = '' :null;
     future = Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,widget.catId);
+    Provider.of<AttributeProvider>(context, listen: false).selectParent(1);
   }
 
   @override
@@ -53,10 +55,8 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
               } else {
 
                 var selectedAttributes=Provider.of<SearchProvider>(context).selectedAttributes;
-
                 return Consumer<AttributeProvider>(
                   builder: (context, provider, child) {
-
                     print("selectedAttributes klength ${selectedAttributes.keys.toList().length}");
                     print("attributes klength ${provider.attributes.length}");
                     //   if(provider.attributes.length>selectedAttributes.keys.toList().length) {
@@ -65,8 +65,7 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                       provider.attributes.forEach((element) =>
                       selectedAttributes[element.id.toString()] = []);
                       if(widget.searchAttribute!=Attribute.nonAttribute()){
-
-                       try{ selectedAttributes[widget.searchAttribute.id.toString()] =widget.searchAttribute.getChildIds;}catch(e){}
+                        try{ selectedAttributes[widget.searchAttribute.id.toString()] =widget.searchAttribute.getChildIds;}catch(e){}
 
                       }
                     }
@@ -98,20 +97,21 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
 
 
                                   }
-                                  //,icon: Text(getTranslated('remove_all', context))),
-                                  ,icon: Text('remove_all')),
+                                  ,icon: Text(getTranslated('remove_all', context))),
                             ),
 
                           ],
 
                          ),
+
                         ///the name of the search text
                         Provider.of<SearchProvider>(context,listen: false).searchController.text!=null &&Provider.of<SearchProvider>(context,listen: false).searchController.text.isNotEmpty?
+
                           Center(
                             child:  Text('${Provider.of<SearchProvider>(context,listen: false).searchController.text}',style: robotoBold,)) :SizedBox(),
 
                         Padding(
-                         padding: getPadding(top: 20),
+                         padding: getPadding(top: 0),
                          child: Wrap(
 
                             spacing: 8,
@@ -152,7 +152,6 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                             }).toList(),
                           ),
                        ),
-
                         Expanded(
                           flex: 9,
                           child: Row(
@@ -173,6 +172,7 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                                       ),
                                       onTap: () {
                                         provider.selectParent(item.id);
+
                                         provider.fetchCategoryFilterListCatAgain(   Provider.of<SearchProvider>(context, listen: false).searchText, Provider.of<SearchProvider>(context, listen: false).filterEncode());
 
                                         } ,
@@ -186,8 +186,9 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                                 child: Builder(
                                     builder: (_) {
                                       var searchProvider = Provider.of<SearchProvider>(context, listen: false);
+
                                       int parentType =
-                                       provider.attributes.firstWhere((element) => element.id == provider.selectedParentIndex).type;
+                                          provider.attributes.firstWhere((element) => element.id == provider.selectedParentIndex).type;
                                       var val = searchProvider.selectedAttributes[provider.selectedParentIndex.toString()];
                                       List<Child> childList = [];
 
@@ -206,7 +207,9 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                             ],
                           ),
                         ),
-                      provider.isCategoryFilter? Padding(
+
+                    /*  provider.isCategoryFilter?*/
+                      Padding(
                           padding:getPadding(bottom: 20,left: 16,right: 16),
                           child: ElevatedButton(
                             style: ButtonStyle(
@@ -220,74 +223,31 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
 
                               Provider.of<ProductProvider>(context,listen: false).isFiltring = true;
                               Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
-                              await   Provider.of<SearchProvider>(context, listen: false).search(context);
-                              Provider.of<ProductProvider>(context,listen: false).selectedSub= null;
+
+                              await   Provider.of<SearchProvider>(context, listen: false).search(context,reload: true);
+
+                             // Provider.of<ProductProvider>(context,listen: false).selectedSub= null;
                               Provider.of<ProductProvider>(context,listen: false).clearOurList();
                               Navigator.pop(context);
-                              // provider.originalAttributes.isNotEmpty || provider.originalAttributes == null?
-                              //         Fluttertoast.showToast(
-                              //                                 msg:
-                              //                                     'يرجى اختيار خصائص ',
-                              //                                 toastLength: Toast
-                              //                                     .LENGTH_SHORT,
-                              //                                 gravity:
-                              //                                     ToastGravity
-                              //                                         .BOTTOM,
-                              //                                 timeInSecForIosWeb:
-                              //                                     1,
-                              //                                 backgroundColor:
-                              //                                     Colors.red,
-                              //                                 textColor:
-                              //                                     Colors.white,
-                              //                                 fontSize: 16.0):null;
-
-
 
                             },
-                            child: Center(child:     Text(
-                              // getTranslated('apply_changes', context),
-                              'getTranslated(''apply_changes'', context)'+provider.mainAttribute.count.toString(),
-                            ))
+                            child: Center(
+                            child:     Row(
+                              children: [
+                                Spacer(),
+                                Text(
+                                  getTranslated('show_results', context),
+                                ),
+                                provider.selectedCount!=0 &&    provider.selectedCount!= null?
+                                Text(
+                                  provider.selectedCount.toString(),
+                                ):SizedBox(),
+Spacer()
+                              ],
+                            )
+                            )
                           ),
-                        ):
-                      Padding(
-                    padding:getPadding(bottom: 20,left: 16,right: 16),
-                    child: ElevatedButton(
-                    style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black), // Set background color to black
-                    alignment: Alignment.center,
-
-                    minimumSize: MaterialStateProperty.all<Size>(Size(MediaQuery.of(context).size.width, 50)), // Set width to 200 and height to 50
-                    ),
-                    onPressed: () async {
-                      Provider.of<ProductProvider>(context,listen:false).isFiltring=true;
-
-                      Provider.of<ProductProvider>(context,listen: false).isFiltring = true;
-                    Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
-                    await   Provider.of<SearchProvider>(context, listen: false).search(context);
-                    Provider.of<ProductProvider>(context,listen: false).selectedSub= null;
-                    Provider.of<ProductProvider>(context,listen: false).clearOurList();
-                    Navigator.pop(context);
-
-                    },
-                    child: Row(
-                      children: [
-                    Spacer(),
-                    Text(
-                   // getTranslated('show_results', context),
-                    'getTranslated(''show_results'', context)',
-                    ),
-                    Spacer(),
-       /*             provider.selectedCount>0?
-                    Text(
-
-                    provider.selectedCount.toString(),
-                    ):SizedBox(),
-                    Spacer(),*/
-                    ],
-                    ),
-                    ),
-                    ),
+                        )
 
 
                       ],
@@ -307,14 +267,40 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
 
 
 
-Widget buildChildWidgets(Child child, String parentId, List<String> val, SearchProvider searchProvider,int type,AttributeProvider attributeProvider) {
+Widget buildChildWidgets(
+    Child child,
+    String parentId,
+    List<String> val,
+    SearchProvider searchProvider,
+    int type,
+    AttributeProvider attributeProvider,
+    ) {
   return child.childes == null || child.childes.isEmpty
-      ? CheckboxListTile(
-
+      ?
+  CheckboxListTile(
+    enabled: child.count != 0,
     activeColor: Colors.black,
+
     title: type == 4
         ? Row(
       children: [
+        child.name=='متعدد الوان'?
+        Container(
+          width: 28,
+          height: 28,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.amber,
+          ),
+          child: ClipOval(
+            child: Image.asset(
+              Images.multi_color,
+              fit: BoxFit.cover,
+            ),
+          ),
+        )
+
+            :
         Container(
           width: 28,
           height: 28,
@@ -329,12 +315,11 @@ Widget buildChildWidgets(Child child, String parentId, List<String> val, SearchP
           style: robotoRegular,
         ),
         Spacer(),
-/*        Text(
+        Text(
           child.count.toString(),
-          style: robotoRegular.copyWith(color:Colors.grey),
+          style: robotoRegular.copyWith(color: Colors.grey),
         ),
-        Spacer()*/
-
+        Spacer()
       ],
     )
         : Row(
@@ -344,25 +329,25 @@ Widget buildChildWidgets(Child child, String parentId, List<String> val, SearchP
           style: robotoRegular,
         ),
         Spacer(),
-/*        Text(
+        Text(
           child.count.toString(),
-          style: robotoRegular.copyWith(color:Colors.grey),
+          style: robotoRegular.copyWith(color: Colors.grey),
         ),
-        Spacer()*/
+        Spacer()
       ],
     ),
-
     value: val.where((element) => element == child.id).isNotEmpty,
     onChanged: (bool value) {
       // attributeProvider.fetchCategoryFilterListCatAgain(  searchProvider.searchText,searchProvider.filterEncode());
       if (value) {
+
         searchProvider.selectAttribute(parentId, child.id);
+        print('the parent is :'+ parentId);
+        print('the child is :'+ child.id);
         attributeProvider.selectedCountIncrement(child.count);
         print('selected item count is :'+ child.count.toString());
 
       } else {
-
-
         searchProvider.deselectAttribute(parentId, child.id);
         attributeProvider.selectedCountDecrement(child.count);
       }
@@ -371,26 +356,43 @@ Widget buildChildWidgets(Child child, String parentId, List<String> val, SearchP
       : ExpansionTile(
     iconColor: Colors.grey,
     textColor: Colors.grey,
-
     collapsedIconColor: Colors.black,
-
     title: Row(
       children: [
+
         Text(child.name),
         Spacer(),
-      /*  Text(
+        Text(
           child.count.toString(),
           style: robotoRegular,
-        ),*/
+        ),
+        Checkbox(
+             activeColor: Colors.black,
+
+          value: val.where((element) => element == child.id).isNotEmpty,
+          onChanged: (bool value) {
+            // attributeProvider.fetchCategoryFilterListCatAgain(  searchProvider.searchText,searchProvider.filterEncode());
+            if (value) {
+              searchProvider.selectAttribute(parentId, child.id);
+              // print('the parent is :' + parentId);
+              // print('the child is :' + child.id);
+              attributeProvider.selectedCountIncrement(child.count);
+              // print('selected item count is :' + child.count.toString());
+            } else {
+              searchProvider.deselectAttribute(parentId, child.id);
+              attributeProvider.selectedCountDecrement(child.count);
+            }
+          },
+        ),
       ],
     ),
     children: child.childes.map((subChild) {
-      return buildChildWidgets(subChild, parentId, val, searchProvider,type,attributeProvider);
+      return buildChildWidgets(subChild, parentId, val, searchProvider, type, attributeProvider);
     }).toList(),
   );
 }
 
-// Define a recursive function to get child name by its id
+
 String getChildNameById(List<Child> children, String childId) {
   for (var child in children) {
     if (child.id == childId) {
@@ -405,12 +407,11 @@ String getChildNameById(List<Child> children, String childId) {
   }
   return null;
 }
-// Define a function to group selected children by attribute id
+
 Map<String, List<String>> groupChildrenByAttribute(List<String> selectedChildIds, List<Attribute> attributes) {
   Map<String, List<String>> grouped = {};
   for (var childId in selectedChildIds) {
     for (var attribute in attributes) {
-
       var childName = getChildNameById(attribute.childes, childId);
       if (childName != null) {
         if (!grouped.containsKey(attribute.name)) {

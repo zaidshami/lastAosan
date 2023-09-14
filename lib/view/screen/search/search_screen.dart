@@ -21,7 +21,7 @@ import '../../../provider/category_provider.dart';
 
 class SearchScreen extends StatefulWidget {
   Attribute searchAttribute;
-  SearchScreen(this.searchAttribute);
+  SearchScreen({this.searchAttribute});
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
@@ -35,11 +35,11 @@ class _SearchScreenState extends State<SearchScreen> {
 
       Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
       Provider.of<SearchProvider>(context, listen: false).initHistoryList();
-      Provider.of<SearchProvider>(context, listen: false).init_lists(
+/*      Provider.of<SearchProvider>(context, listen: false).init_lists(
         Provider.of<CategoryProvider>(context, listen: false)
             .searchcategoryList,
         Provider.of<BrandProvider>(context, listen: false).searchbrandList,
-      );
+      );*/
     });
   }
   @override
@@ -151,7 +151,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 Provider.of<AttributeProvider>(context, listen: false).attributes.clear();
                                    Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,'177');
                                 Provider.of<SearchProvider>(context, listen: false).saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
-
+                                Provider.of<SearchProvider>(context, listen: false).filterIndex= 1 ;
                                 Provider.of<SearchProvider>(context, listen: false).search(context,reload: true);
 
                                 // Provider.of<AttributeProvider>(context, listen: false).initialized= false;
@@ -169,6 +169,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
 
                             },
+
                             onClearPressed: () async {
                               Provider.of<SearchProvider>(context, listen: false).clearFilters();
                               await Provider.of<SearchProvider>(context, listen: false).cleanSearchProduct();
@@ -298,9 +299,11 @@ class _SearchScreenState extends State<SearchScreen> {
                                                   fontSize: 16.0);
                                             }
                                             else {
+
                                               Provider.of<AttributeProvider>(context, listen: false).attributes.clear();
                                               Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,'177');
                                               searchProvider.saveSearchAddress( Provider.of<SearchProvider>(context, listen: false).searchController.text.toString());
+                                              searchProvider.filterIndex= 1 ;
                                               searchProvider.search(context,reload: true);
 
                                               Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter=false;

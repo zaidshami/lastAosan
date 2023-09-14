@@ -4,31 +4,31 @@ import 'package:flutter/material.dart';
 import '../../../../data/model/response/language_model.dart';
 import '../data/model/response/product_model.dart';
 import 'dimensions.dart';
-///mine
+
 class AppConstants {
 
 
   static const String APP_NAME = 'Aosan online';
   // static const String BASE_URL = 'http://192.168.1.134/Admin';
   static const String TOPIC = 'Jwaher';
+  static  String BASE_URL = 'http://s955305333.onlinehome.us';
   // static  String BASE_URL = 'https://aosan.co';
+  // static const String BASE_URL = 'http://localhost:8080:Aosan.Web';
   // static  String BASE_URL = 'https://jwaher.co';
   // static  String BASE_URL = 'http://192.168.228.93/last';
   // static  String BASE_URL -= 'https://aosantest.info/';
-  static  String BASE_URL = 'http://s955305333.onlinehome.us';
-
   static const String USER_ID = 'userId';
+
   static const String NAME = 'name';
   static const String CATEGORIES_URI = '/api/v1/categories';
   static const String Filter_CATEGORIES_URI = '/api/v1/attributes';
   static const String ATTRBUITES_CATEGORIES_URI = '/api/v1/products/attrbuites?name=';
   static const String ATTRBUITES_CATEGORIES_URI_WITH_SEARCH = '/api/v1/products/attrbuites';
   static const String ATTRBUITES_CATEGORIES_URI_CATEGORY = '/api/v1/products/attrbuites';
-
-
-
   static const String BRANDS_URI = '/api/v1/brands?category_id=';
-  static const String BRAND_PRODUCT_URI = '/api/v1/brands/products/';
+  static const String BRANDS_PRO_URI = '/api/v1/brandsPro?category_id=';
+  static const String CATEGORIES_SECTION   = '/api/v1/categories/sections/';
+  static const String BRAND_PRODUCT_URI = '/api/v1/brandsPro/products/';
   static const String CATEGORY_PRODUCT_URI = '/api/v1/categories/products/';
   static const String REGISTRATION_URI = '/api/v1/auth/register';
   static const String LOGIN_URI = '/api/v1/auth/login';
@@ -75,6 +75,7 @@ class AppConstants {
   static const String FLASH_DEAL_PRODUCT_URI = '/api/v1/flash-deals/products/';
   static const String COUNTER_URI = '/api/v1/products/counter/';
   static const String SOCIAL_LINK_URI = '/api/v1/products/social-share-link/';
+
   static const String SHIPPING_URI = '/api/v1/products/shipping-methods';
   static const String CHOSEN_SHIPPING_URI = '/api/v1/shipping-method/chosen';
   static const String COUPON_URI = '/api/v1/coupon/apply?code=';
@@ -146,9 +147,7 @@ class AppConstants {
 
   static const String USER_ADDRESS = 'user_address';
 
-
   static const String categoryId = '1';
-  static const String brandsId = '77';
   static const String sesonsId = '78';
   static const String ocasionsId = '80';
   static const String sizeId = '81';
@@ -157,12 +156,16 @@ class AppConstants {
   static const String shaklId = '86';
   static const String colorsId = '0';
 
-
   //RemoteConfig
   static  bool showLogin = true;
+  static  bool showAndHideSocialApple = true;
+  static  bool showAndHideSocial = true;
+  static  bool showAndHideSocialAppleInside = true;
   static  bool showBrand = false;
-  static  bool brandShowType = false;
-  static  bool showTopSeller = false;
+  static  bool showBrandPro = true;
+  static  bool brandShowType = true;
+  static  bool showTopSeller = true;
+  static  bool showSellerInfo = false;
   static  bool showFeaturedProducts = true;
   static  bool showFeaturedDeals = true;
   static  String categoryType1 = 'true';
@@ -175,6 +178,24 @@ class AppConstants {
   static  bool showLoginAppleInside = true;
   static double textScaleFactior = 1.0 ;
 
+
+  // Colors List
+  static List<Color> evenColors =[//zoji // white font
+    Color(0xFF000080),
+
+    Color(0xFFe4b4c0),
+    Color(0xFF9dcfc3),
+
+
+
+  ];
+  static List<Color> oddColors =[//fardi black font
+    Colors.amberAccent.shade100,
+    Color(0xFFf5ebe1),
+
+
+  ];
+//remote variables
 
 
   static List<LanguageModel> languages = [
@@ -213,7 +234,7 @@ var shopWithUsDecoration =
 
 BoxDecoration(
   border: Border.all(
-    color: Colors.green.withOpacity(0.4),
+    color: Colors.grey.withOpacity(0.4),
     width:0.5 ,
   ),
 );
@@ -226,4 +247,3 @@ BoxDecoration(
     ],
 
     borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL));
-

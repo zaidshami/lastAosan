@@ -9,6 +9,7 @@ class Images {
   static const String new_wishlist_image_filled = 'assets/images/Wishlist_Fill.png';static const String new_wishlist_image = 'assets/images/Wishlist.png';
 
   static const String apple = 'assets/images/apple.png';
+  static const String multi_color = 'assets/images/multi_color.jpeg';
   static const String instagram = 'assets/images/instagram.png';
   static const String directions_bus = 'assets/images/directions_bus.png';
   static const String location_city = 'assets/images/location_city.png';

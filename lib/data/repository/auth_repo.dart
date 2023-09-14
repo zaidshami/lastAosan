@@ -111,7 +111,7 @@ class AuthRepo {
       FirebaseMessaging.instance.subscribeToTopic(AppConstants.TOPIC);
       // Retrieve the FCM token using the APNS device token
       final headers = {
-        'apns-topic': '<com.aosan1.online>',
+        'apns-topic': '<com.aosan2.online>',
       };
       final endpoint = 'https://iid.googleapis.com/iid/v1/$_deviceToken/rel/topics/<Jwaher>';
       final request = {

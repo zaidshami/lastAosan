@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utill/app_constants.dart';
 
 
-class MainAttribute {
+class   MainAttribute {
   List<Attribute> data;
   int count;
 
@@ -50,6 +50,9 @@ class Attribute {
     }if(id.toString()==AppConstants.colorsId){
       _temp=3;
     }
+    if(id.toString()==AppConstants.ocasionsId){
+      _temp=6;
+    }
     if(name=='الألوان'){
       _temp=4;
     }
@@ -69,25 +72,31 @@ class Attribute {
 
     );
   }
-
   factory Attribute.fromJson(Map<String, dynamic> json) {
+    List<Child> childesList = [];
+    if (json['childes'] != null) {
+      childesList = (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [];
+    }
+
     return Attribute(
-      id: json['id'],
-      name: json['name'],
-      childes: (json['childes'] as List).map((i) => Child.fromJson(i)).toList(),
-      count: json['count']
+        id: json['id'],
+        name: json['name'],
+        childes: childesList,
+        count: json['count']
     );
   }
+
 }
 
 class Child {
   String id;
   String name;
   String code;
+  String icon ;
   int count ;
   List<Child> childes = [];
 
-  Child({@required this.id, @required this.name, this.code, this.childes, this.count});
+  Child({@required this.id, @required this.name, this.code, this.childes, this.count, this.icon});
 
   factory Child.fromJson(Map<String, dynamic> json) {
     return Child(
@@ -95,6 +104,7 @@ class Child {
       name: json['name'],
       code: json['code'],
       count: json['count'],
+      icon: json['icon'],
       childes: (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [],
     );
   }

@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_Aosan_ecommerce/data/model/response/filter_category_1.dart';
 import 'package:flutter_Aosan_ecommerce/provider/notification_provider.dart';
 import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
+import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/attribute_view.dart';
+import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/brand_pro_view.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/brand_view.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/category_view_main.dart';
+import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/featured_product_view.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/home_category_product_view.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/home_products_view.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/main_section_banner.dart';
@@ -14,10 +17,12 @@ import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/recomended_produ
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/second_section_banner.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/home/widget/top_seller_view.dart';
 import 'package:provider/provider.dart';
+import '../../../data/model/response/category.dart';
 import '../../../helper/product_type.dart';
 import '../../../localization/language_constrants.dart';
 import '../../../provider/auth_provider.dart';
 import '../../../provider/banner_provider.dart';
+import '../../../provider/brand_pro_provider.dart';
 import '../../../provider/brand_provider.dart';
 import '../../../provider/category_provider.dart';
 import '../../../provider/featured_deal_provider.dart';
@@ -35,8 +40,14 @@ import '../../../utill/custom_themes.dart';
 import '../../../utill/dimensions.dart';
 import '../../../utill/images.dart';
 import '../../basewidget/category_shimmer.dart';
+import '../../basewidget/collapsing_list.dart';
+import '../../basewidget/not_loggedin_widget.dart';
 import '../../basewidget/title_row.dart';
 import '../brand/all_brand_screen.dart';
+import '../brand_pro/all_brand_pro_screen.dart';
+import '../category/all_category_screen.dart';
+import '../category/widgets/category_list.dart';
+import '../category/widgets/sub_category_list.dart';
 import '../featureddeal/featured_deal_screen.dart';
 import '../notification/notification_screen.dart';
 import '../product/product_details_screen.dart';
@@ -46,7 +57,6 @@ import 'widget/announcement.dart';
 import 'widget/banners_view.dart';
 import 'widget/category_view.dart';
 import 'widget/featured_deal_view.dart';
-import 'widget/featured_product_view.dart';
 import 'widget/flash_deals_view.dart';
 import 'widget/footer_banner.dart';
 
@@ -103,7 +113,6 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
 
     ///new
   }
-
   void passData(int index, String title) {
     index = index;
     title = title;
@@ -123,6 +132,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
         "single";
     Provider.of<NotificationProvider>(context, listen: false)
         .initNotificationList(context);
+     Provider.of<CategoryProvider>(context, listen: false).fetchIndices(0);
     _loadData(context, false);
     // _remoteConfigFetchFuture = _fetchRemoteConfig();
   }
@@ -143,6 +153,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
         .secondSectionBannerList
         .clear();
     Provider.of<BrandProvider>(context, listen: false).brandList.clear();
+    Provider.of<BrandProProvider>(context, listen: false).brandProList.clear();
     try {
       Provider.of<CategoryProvider>(context, listen: false)
           .categoryList[categoryProvider.categoryList[value].id]
@@ -206,6 +217,8 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
 
     await Provider.of<BrandProvider>(context, listen: false)
         .getBrandList(categoryProvider.categoryList[value].id, true, context);
+    await Provider.of<BrandProProvider>(context, listen: false)
+        .getBrandList(categoryProvider.categoryList[value].id, true, context);
   }
 
   @override
@@ -251,11 +264,15 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
       ///end new
       Provider.of<ProductProvider>(context, listen: false)
           .getFeaturedProductList(x, '1', context, reload: true);
-      Provider.of<FeaturedDealProvider>(context, listen: false)
-          .getFeaturedDealList(x, true, context);
+      Provider.of<FeaturedDealProvider>(context, listen: false).getFeaturedDealList(x, true, context);
+
+     // Provider.of<CategoryProvider>(context, listen: false).fetchIndices(0);
+
       Provider.of<ProductProvider>(context, listen: false)
           .getLProductList(x, '1', context, reload: true);
       Provider.of<BrandProvider>(context, listen: false)
+          .getBrandList(x, true, context);
+      Provider.of<BrandProProvider>(context, listen: false)
           .getBrandList(x, true, context);
       Provider.of<FlashDealProvider>(context, listen: false)
           .getMegaDealList(x, true, context, true);
@@ -332,6 +349,8 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
             Provider.of<ProductProvider>(context, listen: false)
                 .getLProductList(x, '1', context, reload: true);
             Provider.of<BrandProvider>(context, listen: false)
+                .getBrandList(x, true, context);
+            Provider.of<BrandProProvider>(context, listen: false)
                 .getBrandList(x, true, context);
             Provider.of<FlashDealProvider>(context, listen: false)
                 .getMegaDealList(x, true, context, true);
@@ -475,6 +494,10 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                                   onTap: (value)
                                                   //todo: here add the word async
                                                   {
+
+                                                     // categoryProvider.fetchIndices(value);
+                                                    //  categoryProvider.fetchCategorySections(value);
+                                                      categoryProvider.fetchIndices(value);
                                                     _scrollController.animateTo(
                                                       0,
                                                       duration: Duration(
@@ -536,7 +559,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                   context,
                                   CupertinoPageRoute(
                                       builder: (_) => SearchScreen(
-                                          Attribute(
+                                         searchAttribute:  Attribute(
                                               id: int.parse(
                                                   AppConstants.categoryId),
                                               name: "",
@@ -605,6 +628,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                     CupertinoPageRoute(
                                         builder: (_) => NotificationScreen()));
                               },
+
                               icon: Stack(children: <Widget>[
                                 Image.asset(
                                   Images.notification,
@@ -616,6 +640,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                                 listen: false)
                                             .notificationList
                                             .length
+
                                             .toString() ==
                                         '0'
                                     ? SizedBox()
@@ -651,7 +676,9 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                             ]),*/
                               ),
                         ],
-                      ), // search bar
+                      ),
+
+                      // search bar
                       SliverToBoxAdapter(
                         child: Column(
                           children: [
@@ -663,7 +690,16 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                       Dimensions.PADDING_SIZE_EXTRA_SMALL),
                             ),
 
+                            /// the subCategories and the categories
+                            Container(
+                                height:( MediaQuery.of(context).size.width/1.65)*Provider.of<CategoryProvider>(context, listen: false).getSubSelectedIndices().length,
+                                child: SubCategoryList(showMainCategories: false,)),
 
+                            Container(
+                                padding: getPadding(bottom: 0),
+                                height:( MediaQuery.of(context).size.width/1.6)*Provider.of<CategoryProvider>(context, listen: false).getCatSelectedIndices().length,
+                                child: CategoryList(showMainCategories: false,)),
+                            SizedBox(height: 15,),
 
 
                             /// categories and second
@@ -671,7 +707,10 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                               children: [
                                 if (bannerFirst) SecondSectionBannersView(index: 0),
                                 SizedBox(height: Dimensions.HOME_PAGE_PADDING / 2),
-                                if (shouldShowCategory) CategoryView(isHomePage: true),
+                                if (shouldShowCategory) Padding(
+                                  padding:getPadding(bottom: 10),
+                                  child: CategoryView(isHomePage: true),
+                                ),
                                 if (!bannerFirst) SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                 if (shouldShowBannersView)
                                   BannersView(
@@ -683,12 +722,16 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                               ],
                             ),
 
-
+                            HomeProductView(
+                                isHomePage: true,
+                                productType: ProductType.SELLER_PRODUCT,
+                                scrollController: _scrollController),
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
-                            ///flash deal  solved in all sections
-                            // Mega Deal
+                            // AttributesView(),
 
+
+                            // Mega Deal
                             Provider.of<FlashDealProvider>(context,
                                             listen: false)
                                         .flashDealList !=
@@ -699,7 +742,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                               flashDeal.flashDealList != null &&
                                               flashDeal.flashDealList.length >
                                                   0)
-                                      //it he saw the flashDeal
+
 
                                           ? Container(
                                               padding: EdgeInsets.only(
@@ -781,6 +824,45 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                   )
                                 : SizedBox(),
 
+                            ///Brand pro
+                            AppConstants.showBrandPro
+                                ? Consumer<BrandProProvider>(
+                              builder: (context, brandProProvider, child) {
+                                return brandProProvider.brandProList.length > 0
+                                    ? Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets
+                                          .only(
+                                          left: Dimensions
+                                              .PADDING_SIZE_EXTRA_SMALL,
+                                          right: Dimensions
+                                              .PADDING_SIZE_EXTRA_SMALL,
+                                          bottom: Dimensions
+                                              .PADDING_SIZE_EXTRA_SMALL),
+                                      child: TitleRow(
+                                          title: getTranslated(
+                                              'brand', context),
+                                          //
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        AllBrandProScreen()));
+                                          }),
+                                    ),
+                                    SizedBox(
+                                        height: Dimensions
+                                            .PADDING_SIZE_SMALL),
+                                    BrandProView(isHomePage: true),
+                                  ],
+                                )
+                                    : SizedBox();
+                              },
+                            )
+                                : SizedBox(),
+
                             /// top seller num3
                             AppConstants.showTopSeller
                                 ? Column(
@@ -821,7 +903,8 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
                             /// Featured Products
-                           AppConstants.showFeaturedProducts? Padding(
+                           AppConstants.showFeaturedProducts?
+                           Padding(
                               padding: const EdgeInsets.only(
                                   bottom: Dimensions.HOME_PAGE_PADDING),
                               child: FeaturedProductView(
@@ -886,7 +969,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                               ],
                             ):SizedBox(),
 
-                            ///recomended product num4
+
 
                             //new recomended fixed
                             Provider.of<ProductProvider>(context, listen: false).recommendedProduct != null ? InkWell(
@@ -913,9 +996,9 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                             /// Latest Products
                             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
-                            ///footer banner list sosan so that no one can say anything for me mother fuckers
 
-                            //
+
+
                             AppConstants.showFooterBanner?
                             SingleChildScrollView(
                               child: Consumer<BannerProvider>(builder:
@@ -951,7 +1034,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                             ):SizedBox(),
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
-                            //fuck zaid and my uncle jehad
+
 
 
                             /// Category Filter horizontal num5
@@ -988,6 +1071,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                 productType: ProductType.TOP_PRODUCT,
                                 scrollController: _scrollController),
 
+
                             SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
                             Consumer<BannerProvider>(builder:
@@ -1012,14 +1096,10 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                             HomeCategoryProductView(isHomePage: true),
                             // SizedBox(height: Dimensions.HOME_PAGE_PADDING),
 
-                            /// the widget of احدث المنتجات num9
-
-                            /// this is the widget that shows the products horizontally without title row num10
 
 
-
-                            ///category filter very new vertical and horizntal num11
-                            Consumer<CategoryProvider>(
+///main attribute view
+                       /*     Consumer<CategoryProvider>(
 
                               builder: (context,categoryProvider, child) =>
                                   StatefulBuilder(
@@ -1066,9 +1146,21 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
                                             scrollController: _scrollController,
                                           )
                                   ),
-                            ),
+                            ),*/
+                            /// the subCategories and the categories
+                            Container(
+                                height:( MediaQuery.of(context).size.width/1.65)*Provider.of<CategoryProvider>(context, listen: false).getSubSelectedIndices().length,
+                                child: SubCategoryList(showMainCategories: false,)),
+
+                            Container(
+                              padding: getPadding(bottom: 0),
+                                height:( MediaQuery.of(context).size.width/1.6)*Provider.of<CategoryProvider>(context, listen: false).getCatSelectedIndices().length,
+                                child: CategoryList(showMainCategories: false,)),
+                            SizedBox(height: 15,),
 
 
+                            WhyShoppingWithUs(),
+                            ///category filter very new vertical and horizntal num11
 /*
                             /// Category Filter
                             Column(

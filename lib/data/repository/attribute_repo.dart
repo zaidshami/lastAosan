@@ -45,26 +45,26 @@ class AttributeRepo {
   Future<ApiResponse> getCategoryFilterListCategory(String catId) async {
     try {
       final response = await dioClient.get(AppConstants.ATTRBUITES_CATEGORIES_URI_CATEGORY+(catId.isNotEmpty?("/$catId"):""));
-
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-  Future<ApiResponse> getCategoryFilterListCategoryAgain(String catId, List<Selected> atts,) async {
+/*  Future<ApiResponse> getCategoryFilterListCategoryAgain(String catId, List<Selected> atts,) async {
     try {
       final response = await dioClient.get(AppConstants.ATTRBUITES_CATEGORIES_URI_CATEGORY+(catId.isNotEmpty?("/$catId"):""));
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
-  }
+  }*/
 
   Future<ApiResponse> getCategoryFilterListCategoryAgain1({
     String name,
     List<Selected> atts,
-
   }) async {
+
+
     print("cczzzz ${test(atts)}");
     try {
       // We're taking all the Selected objects from atts and converting them to JSON.
@@ -77,7 +77,6 @@ class AttributeRepo {
 
       };
       logger.d('mxxx: $queryParameters');
-
       //[{"id":"1","selected":["176","179"]},{"id":"3","selected":["9"]},{"id":"81","selected":["XL"]},{"id":"0","selected":["Olive"]}]
       //[{"id":"77","selected":[]},{"id":"78","selected":[]},{"id":"80","selected":[]},{"id":"81","selected":[]},{"id":"83","selected":[]},{"id":"85","selected":[]},{"id":"86","selected":[]},{"id":"0","selected":[]},{"id":"1","selected":["177"]},{"id":"2","selected":[]},{"id":"3","selected":[]},{"id":"4","selected":[]}]
       final response = await dioClient.get(

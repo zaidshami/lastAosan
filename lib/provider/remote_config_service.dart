@@ -17,9 +17,9 @@ class RemoteConfigService {
 
     await remoteConfig.setDefaults(<String, dynamic>{
       'baseUrlZ': AppConstants.BASE_URL,
-      'showAndHideSocial': true,
-      'showAndHideSocialApple': true,
-      'showAndHideSocialAppleInside': true,
+      'showAndHideSocial':  AppConstants.showAndHideSocial,
+      'showAndHideSocialApple': AppConstants.showAndHideSocialApple,
+      'showAndHideSocialAppleInside': AppConstants.showAndHideSocialAppleInside,
       'textScaleFactor' : 1.0,
       'categoryType' :   AppConstants.categoryType,
       'categoryType1' :   AppConstants.categoryType1,
@@ -28,7 +28,9 @@ class RemoteConfigService {
       'bannersView': AppConstants.bannersView,
       'showBrand': AppConstants.showBrand,
       'brandShowType': AppConstants.brandShowType,
-      'showTopSeller': AppConstants.showTopSeller,
+      'showBrandPro': AppConstants.showBrandPro,
+      'showTopSeller':  AppConstants.showTopSeller,
+      'showSellerInfo':  AppConstants.showSellerInfo,
       'showNewArrival': AppConstants.showNewArrival,
       'showFeaturedProducts':AppConstants.showFeaturedProducts,
       'showFeaturedDeals':AppConstants.showFeaturedDeals,
@@ -41,7 +43,9 @@ class RemoteConfigService {
     AppConstants.showLogin = remoteConfig.getBool('showAndHideSocial');
     AppConstants.showBrand = remoteConfig.getBool('showBrand');
     AppConstants.brandShowType = remoteConfig.getBool('brandShowType');
+    AppConstants.showBrandPro = remoteConfig.getBool('showBrandPro');
     AppConstants.showTopSeller = remoteConfig.getBool('showTopSeller');
+    AppConstants.showSellerInfo = remoteConfig.getBool('showSellerInfo');
     AppConstants.showLoginApple = remoteConfig.getBool('showAndHideSocialApple');
     AppConstants.showNewArrival = remoteConfig.getBool('showNewArrival');
     AppConstants.showFeaturedProducts = remoteConfig.getBool('showFeaturedProducts');

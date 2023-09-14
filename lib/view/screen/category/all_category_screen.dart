@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_Aosan_ecommerce/utill/math_utils.dart';
+import 'package:flutter_Aosan_ecommerce/view/screen/category/widgets/sub_category_list.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/response/category.dart';
 import '../../../provider/category_provider.dart';
@@ -23,238 +24,66 @@ class _AllCategoryScreenState extends State<AllCategoryScreen>
   @override
   Widget build(BuildContext context) {
     return
-    SafeArea(
-      child: Scaffold(
+      SafeArea(
+        child: Scaffold(
 
-        backgroundColor: ColorResources.getIconBg(context),
-        // todo: here is the reason of the distance i want to remove in the all category screen the text scale factor
+          backgroundColor: ColorResources.getIconBg(context),
+          // todo: here is the reason of the distance i want to remove in the all category screen the text scale factor
 
-        body: Container(
+          body: Container(
 
 
-          child: Column(
-            children: [
-              ///the tab bar in the top
-              MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaleFactor: AppConstants.textScaleFactior),
+            child: Column(
+              children: [
+                ///the tab bar in the top
+                MediaQuery(
+                  data: MediaQuery.of(context).copyWith(textScaleFactor: AppConstants.textScaleFactior),
 
-                child: Consumer<CategoryProvider>(
-                  builder: (context, categoryProvider, child) {
-                    return DefaultTabController(
-                      initialIndex:        categoryProvider.categorySelectedIndex,
-                        length: categoryProvider.categoryList.length,
-                        child: TabBar(
+                  child: Consumer<CategoryProvider>(
+                    builder: (context, categoryProvider, child) {
+                      return DefaultTabController(
+                          initialIndex:        categoryProvider.categorySelectedIndex,
+                          length: categoryProvider.categoryList.length,
+                          child: TabBar(
 
-                          onTap: (value) {
-                            // categoryProvider.changeSelectedIndex1(value); mohd
-                            categoryProvider.changeSelectedIndex(value);
-                            categoryProvider.changeSubSelectedIndex(0);
-                          },
-                          labelColor: Colors.redAccent,
-                          unselectedLabelColor: Colors.black,
-                          indicatorColor:  Theme.of(context).primaryColor,
-                          indicatorWeight: 2.0,
-                          tabs: categoryProvider.categoryList
-                              .map((e) => Tab(
-                                    text: e.name,
-                                  ))
-                              .toList(),
-                          isScrollable: true,
-                          labelStyle: robotoBold.copyWith(
-                              overflow: TextOverflow.ellipsis,
-                              fontSize: 13,
-                              color: ColorResources
-                                  .getReviewRattingColor(context)),
-                        )
-                    );
-                  },
+                            onTap: (value) {
+                              // categoryProvider.changeSelectedIndex1(value); mohd
+                              categoryProvider.changeSelectedIndex(value);
+                              categoryProvider.changeSubSelectedIndex(0);
+                            },
+                            labelColor: Colors.redAccent,
+                            unselectedLabelColor: Colors.black,
+                            indicatorColor:  Theme.of(context).primaryColor,
+                            indicatorWeight: 2.0,
+                            tabs: categoryProvider.categoryList
+                                .map((e) => Tab(
+                              text: e.name,
+                            ))
+                                .toList(),
+                            isScrollable: true,
+                            labelStyle: robotoBold.copyWith(
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 13,
+                                color: ColorResources
+                                    .getReviewRattingColor(context)),
+                          )
+                      );
+                    },
+                  ),
                 ),
-              ),
-            /// the categories and the categories pic
+                /// the categories and the categories pic
 
-              Expanded(child:
-              Consumer<CategoryProvider>(
-                builder: (context, categoryProvider, child) {
-                  // bool colorSelection= false ;
-                  return categoryProvider
-                              .categoryList[
-                                  categoryProvider.categorySelectedIndex]
-                              .subCategorieswithoutall
-                              .length !=
-                          0
-                      ? Row(
+                Expanded(child: SubCategoryList(showMainCategories: true,))
 
-
-
-                      children: [
-                        /// the  categories
-                        MediaQuery(
-                          data: MediaQuery.of(context).copyWith(textScaleFactor: AppConstants.textScaleFactior),
-
-                          child: Expanded(
-                              flex:3,
-                              child: Container(
-                                color: Colors.grey.withOpacity(0.2),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: ListView.builder(
-                                        physics: BouncingScrollPhysics(),
-                                        itemCount: categoryProvider
-                                            .categoryList[
-                                                categoryProvider.categorySelectedIndex]
-                                            .subCategorieswithoutall
-                                            .length,
-                                        itemBuilder: (context, index) {
-                                          SubCategory _category = categoryProvider
-                                              .categoryList[
-                                                  categoryProvider.categorySelectedIndex]
-                                              .subCategorieswithoutall[index];
-                                          return InkWell(
-                                            onTap: () {
-                                              // categoryProvider.categorySubSelectedIndex== index? colorSelection= false:colorSelection=true;
-                                              Provider.of<CategoryProvider>(
-                                                  context,
-                                                  listen: false).changeSubSelectedIndex(
-                                                  index);
-                                              // print(colorSelection.toString());
-                                              //
-                                              // print(categoryProvider.categorySubSelectedIndex.toString());
-                                              // print(index.toString());
-                                            },
-                                            child: CategoryItem(
-                                              title: _category.name,
-                                              icon: _category.icon,
-                                              isSelected: categoryProvider
-                                                      .categorySubSelectedIndex ==
-                                                  index,
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                    // Expanded(
-                                    //   child: ListView.builder(
-                                    //     physics: BouncingScrollPhysics(),
-                                    //     itemCount: categoryProvider
-                                    //         .categoryList[
-                                    //             categoryProvider.categorySelectedIndex]
-                                    //         .subCategorieswithoutall
-                                    //         .length,
-                                    //     itemBuilder: (context, index) {
-                                    //       SubCategory _category = categoryProvider
-                                    //           .categoryList[
-                                    //               categoryProvider.categorySelectedIndex]
-                                    //           .subCategorieswithoutall[index];
-                                    //       return InkWell(
-                                    //         onTap: () {
-                                    //           // categoryProvider.categorySubSelectedIndex== index? colorSelection= false:colorSelection=true;
-                                    //           Provider.of<CategoryProvider>(
-                                    //               context,
-                                    //               listen: false).changeSubSelectedIndex(
-                                    //               index);
-                                    //           // print(colorSelection.toString());
-                                    //           //
-                                    //           // print(categoryProvider.categorySubSelectedIndex.toString());
-                                    //           // print(index.toString());
-                                    //         },
-                                    //         child: CategoryItem(
-                                    //           title: _category.name,
-                                    //           icon: _category.icon,
-                                    //           isSelected: categoryProvider
-                                    //                   .categorySubSelectedIndex ==
-                                    //               index,
-                                    //         ),
-                                    //       );
-                                    //     },
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                        ),
-                        /// the pic of the subcategorties
-                        MediaQuery(
-                          data: MediaQuery.of(context).copyWith(textScaleFactor: AppConstants.textScaleFactior),
-
-                          child: Expanded(
-                              flex:7,
-                              child: Padding(
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          mainAxisExtent: 200,
-                                          crossAxisSpacing: 3
-                                          ),
-                                  itemBuilder: (context, index) {
-                                    SubSubCategory _subCategory;
-
-                                    _subCategory = categoryProvider
-                                        .categoryList[
-                                            categoryProvider.categorySelectedIndex]
-                                        .subCategorieswithoutall[categoryProvider
-                                            .categorySubSelectedIndex]
-                                        .subSubCategories[index];
-                                    return InkWell(
-                                      onTap: () => Navigator.push(
-                                          context,
-                                          CupertinoPageRoute(
-                                              builder: (context) =>
-                                                  BrandAndCategoryProductScreen(
-                                                    isBacButtonExist: true,
-                                                    isBrand: false,
-                                                    name: categoryProvider
-                                                        .categoryList[categoryProvider
-                                                            .categorySelectedIndex]
-                                                        .subCategorieswithoutall[categoryProvider
-                                                            .categorySubSelectedIndex]
-                                                        .name,
-                                                    id: _subCategory.id.toString(),
-                                                    subSubCategory: categoryProvider
-                                                        .categoryList[categoryProvider
-                                                            .categorySelectedIndex]
-                                                        .subCategorieswithoutall[categoryProvider
-                                                            .categorySubSelectedIndex]
-                                                        .subSubCategories,
-                                                  ))),
-                                      child: Container(
-                                        child: CategoryItem1(
-                                            title: _subCategory.name,
-                                            icon: _subCategory.icon,
-                                            isSelected: false),
-                                      ),
-                                    );
-                                  },
-                                  itemCount: categoryProvider
-                                      .categoryList[
-                                          categoryProvider.categorySelectedIndex]
-                                      .subCategorieswithoutall[
-                                          categoryProvider.categorySubSelectedIndex]
-                                      .subSubCategories
-                                      .length,
-                                ),
-                                padding: EdgeInsets.only(top: 10),
-                              ),
-                            ),
-                        ),
-                        ])
-                      : Center(
-                      child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Theme.of(context).primaryColor)));
-                },
-              ),
-              )
-
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
+
+
 
 class CategoryItem extends StatelessWidget {
   final String title;
@@ -282,12 +111,12 @@ class CategoryItem extends StatelessWidget {
             padding: EdgeInsets.symmetric(
                 horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
             child: Text(title,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: titleHeader.copyWith(
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: titleHeader.copyWith(
                   color: isSelected ? Colors.white : Colors.black.withOpacity(0.7)
-                ),),
+              ),),
           ),
         ),
       ),
@@ -309,21 +138,21 @@ class CategoryItem1 extends StatelessWidget {
       margin: EdgeInsets.only(top: 10,right: 3 ),
       child: Center(
         child:
-            Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           Expanded(
             child: Container(
               child:CachedNetworkImage(
                 errorWidget: (context, url, error) => Image.asset(Images.placeholder, fit: BoxFit.cover,),
                 placeholder: (context, url) => Image.asset(
-        Images
-        .placeholder,
-        fit: BoxFit
-            .contain,
+                  Images
+                      .placeholder,
+                  fit: BoxFit
+                      .contain,
 
-      ),
+                ),
                 fit: BoxFit.cover,
                 imageUrl:
-                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls.categoryImageUrl}/$icon',
+                '${Provider.of<SplashProvider>(context, listen: false).baseUrls.categoryImageUrl}/$icon',
 
               ),
             ),
@@ -341,6 +170,72 @@ class CategoryItem1 extends StatelessWidget {
                 color: isSelected ? Colors.black : Colors.black,
               )),
         ]),
+      ),
+    );
+  }
+}
+
+
+
+class CategoryItem3 extends StatelessWidget {
+  final String title;
+  final String icon;
+  final bool isSelected;
+  final Color color;
+
+  const CategoryItem3({this.color, this.title, this.icon, this.isSelected});
+
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 0, right: 0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              flex: 14,
+              child: Container(
+                child: CachedNetworkImage(
+                  errorWidget: (context, url, error) =>
+                      Image.asset(Images.placeholder_3x1, fit: BoxFit.cover),
+                  placeholder: (context, url) =>
+                      Image.asset(Images.placeholder_3x1, fit: BoxFit.cover),
+                  fit: BoxFit.cover,
+                  imageUrl:
+                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls.categoryImageUrl}/$icon',
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center, // Center row content horizontally
+                  children: [
+                    Flexible(
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: titilliumSemiBold.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: color,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 5), // You can adjust the spacing as needed
+                    Icon(
+                      Icons.arrow_forward,
+                      color: color,
+                      size: 16, // You can adjust the size as needed
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

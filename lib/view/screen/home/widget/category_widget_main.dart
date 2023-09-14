@@ -10,25 +10,34 @@ import '../../../../utill/dimensions.dart';
 import '../../../../utill/images.dart';
 import 'package:provider/provider.dart';
 
-class CategoryWidget extends StatelessWidget {
-  final SubCategory category;
-final double height ;
-final double width;
-  const CategoryWidget({Key key, @required this.category , this.height=70, this.width= 70}) : super(key: key);
+class MainCategoryWidget extends StatelessWidget {
+  final Category category;
+  final double height ;
+  final double width;
+  final int index;
+  const MainCategoryWidget({Key key,this.index=1, @required this.category , this.height=70, this.width}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
 
-    return Column(
+    return index ==1? Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Container(
-
+          // decoration: BoxDecoration(
+          //   border: Border.all(width: 1),
+          //     borderRadius:BorderRadius.circular(25),
+          //     boxShadow: [
+          //                      // BoxShadow(color: Colors.black.withOpacity(0.2),
+          //                      //     spreadRadius: 1,
+          //                      //     blurRadius: 5)
+          //                    ],
+          // ),
           padding: getPadding(bottom: 3),
           height: height,
           width: width,
-          margin: const EdgeInsets.only(right: 10.0, left: 10.0),
+          margin: const EdgeInsets.only(right: 0.0, left: 10.0),
           child: ClipRRect(
 
             borderRadius: BorderRadius.circular(10),
@@ -65,10 +74,6 @@ final double width;
           ),
         ),
       ],
-    );
+    ):SizedBox();
   }
 }
-
-
-
-

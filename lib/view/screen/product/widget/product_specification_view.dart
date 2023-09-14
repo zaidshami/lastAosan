@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_Aosan_ecommerce/view/screen/product/widget/product_specifications_expandable.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_html_table/flutter_html_table.dart';
-// import 'package:getwidget/components/accordion/gf_accordion.dart';
+import 'package:getwidget/components/accordion/gf_accordion.dart';
 import '../../../../localization/language_constrants.dart';
 import '../../../../utill/custom_themes.dart';
 import '../../../../utill/dimensions.dart';

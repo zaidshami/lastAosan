@@ -10,11 +10,11 @@ import '../../../../utill/dimensions.dart';
 import '../../../../utill/images.dart';
 import 'package:provider/provider.dart';
 
-class CategoryWidget extends StatelessWidget {
-  final SubCategory category;
-final double height ;
-final double width;
-  const CategoryWidget({Key key, @required this.category , this.height=70, this.width= 70}) : super(key: key);
+class AttributeWidget extends StatelessWidget {
+  final Child attribute;
+  final double height ;
+  final double width;
+  const AttributeWidget({Key key, @required this.attribute , this.height=70, this.width= 70}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,16 +44,28 @@ final double width;
                   Images.placeholder,
                   fit: BoxFit.fill,
                 ),
-                imageUrl:
-                '${Provider.of<SplashProvider>(context, listen: false).baseUrls.categoryImageUrl}'
-                    '/${category.icon}',
+                imageUrl:''
+                // '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${attribute.icon}',
               ),
             ),
           ),
         ),
         Flexible( // Wrap the Text widget with a Flexible widget
           child: Text(
-            category.name,
+            attribute.name,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            // Apply the text scale factor to the font size
+            style: titilliumRegular.copyWith(
+              fontSize: Dimensions.FONT_SIZE_SMALL ,
+              color: ColorResources.getTextTitle(context),
+            ),
+          ),
+        ),
+        Flexible( // Wrap the Text widget with a Flexible widget
+          child: Text(
+         "   attribute.icon,",
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -68,7 +80,3 @@ final double width;
     );
   }
 }
-
-
-
-

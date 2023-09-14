@@ -25,26 +25,27 @@ class SearchRepo {
   final Logger logger = Logger();
 
   SearchRepo({@required this.dioClient, @required this.sharedPreferences});
-
   Future<ApiResponse> getSearchProductList({
     String name,
-    List<String> option,
     List<Selected> atts,
     int offset,
+    int sort,
   }) async {
     print("cczzzz ${test(atts)}");
     try {
       // We're taking all the Selected objects from atts and converting them to JSON.
       // List jsonList = atts.map((item) => item.tojson()).toList();
-
+// We're taking all the Slec
       final Map<String, dynamic> queryParameters = {
         'name': jsonEncode(name??''),
         'filter':  jsonEncode(test(atts)),
         'offset': offset ?? 1,
-        'limit': 10
+        'limit': 10,
+        'sort':sort??1,
       };
-      logger.d('zxxx: $queryParameters');
 
+
+      logger.d('zxxx: $queryParameters');
       //[{"id":"1","selected":["176","179"]},{"id":"3","selected":["9"]},{"id":"81","selected":["XL"]},{"id":"0","selected":["Olive"]}]
       //[{"id":"77","selected":[]},{"id":"78","selected":[]},{"id":"80","selected":[]},{"id":"81","selected":[]},{"id":"83","selected":[]},{"id":"85","selected":[]},{"id":"86","selected":[]},{"id":"0","selected":[]},{"id":"1","selected":["177"]},{"id":"2","selected":[]},{"id":"3","selected":[]},{"id":"4","selected":[]}]
       final response = await dioClient.post(

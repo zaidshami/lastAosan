@@ -13,8 +13,10 @@ class SearchSortByBottomSheet extends StatelessWidget {
   SearchSortByBottomSheet(this.searchAttribute ,this.catId,this.isCategory);
   @override
   Widget build(BuildContext context) {
-    return    Padding(
-      padding: getPadding(top: 30, bottom:10,left: 10,right: 10),
+    return    Container(
+      height: MediaQuery.of(context).size.height*0.7,
+      padding: getPadding(top: 0, bottom:10,left: 10,right: 10),
+
 
       child: NewProductAttributeList(searchAttribute,catId,isCategory: isCategory,),);
   }

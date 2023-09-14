@@ -137,7 +137,7 @@ class CategoryShimmerList extends StatelessWidget {
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
-          return CategoryShimmer(height: 70, width: 70);
+          return CategoryShimmer(height: 80, width: 80);
         },
       ),
     );

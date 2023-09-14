@@ -20,6 +20,8 @@ import '../../../../view/screen/chat/chat_screen.dart';
 import '../../../../view/screen/home/widget/products_view.dart';
 import 'package:provider/provider.dart';
 
+import '../home/widget/products_view_1.dart';
+
 class SellerScreen extends StatefulWidget {
   final SellerModel seller;
   SellerScreen({@required this.seller});
@@ -162,7 +164,7 @@ class _SellerScreenState extends State<SellerScreen> {
 
                 Padding(
                   padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  child: ProductView(isHomePage: false, productType: ProductType.SELLER_PRODUCT, scrollController: _scrollController, sellerId: widget.seller.seller.id.toString()),
+                  child: ProductView1(isHomePage: false, productType: ProductType.SELLER_PRODUCT, scrollController: _scrollController, sellerId: widget.seller.seller.id.toString()),
                 ),
 
               ],

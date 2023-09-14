@@ -122,7 +122,7 @@ class ProductRepo {
   Future<ApiResponse> getBrandOrCategoryProductList(bool isBrand, String id,int offset  ) async {
     try {
       String uri;
-      Map<String,dynamic> test= { "id": id , "limit":10,"offset":offset};
+      Map<String,dynamic> test= { "id": id , "limit":12,"offset":offset};
       if(isBrand){
         uri = '${AppConstants.BRAND_PRODUCT_URI}$id';
       }else {
@@ -138,7 +138,8 @@ class ProductRepo {
   }
 
 
-  //function i seperated
+
+
   Future<ApiResponse> getCategoryProductList(String id) async {
     try {
       String uri;

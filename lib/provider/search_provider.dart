@@ -21,9 +21,14 @@ class SearchProvider with ChangeNotifier {
   List<String> _historyList = [];
 
   int get filterIndex => _filterIndex;
+
+  set filterIndex(int value) {
+    _filterIndex = value;
+  }
+
   List<String> get historyList => _historyList;
 
-  // List<Product> _filterProductList = [];
+
 
   List<CategorySearchListModel> _category_search_list = [];
   List<CategorySearchListModel> get category_search_list =>
@@ -34,46 +39,7 @@ class SearchProvider with ChangeNotifier {
 
   List<OptionsSearchListModel<OptionsSearch>> OptionsList = [];
 
-  int get _selected_brand =>
-      brand_search_list.where((element) => element.is_selected).first.id;
-  int get _selected_category =>
-      category_search_list.where((element) => element.is_selected).first.id;
-  List<int> _selectedOptions = [];
 
-  void init_lists(
-      List<CatageorySearch> catList, List<BrandSearch> brandList) {
-    add_to_search_list(CategorySearchListModel<CatageorySearch>(),
-        _category_search_list, catList);
-    add_to_search_list(
-        BrandSearchListModel<BrandSearch>(), _brand_search_list, brandList);
-  }
-
-  void insert_catagory_list(List<CatageorySearch> list) {}
-
-  void insert_brand_list(List<BrandSearch> list) {}
-
-  void add_to_search_list(MainSearchModel mainSearchModel,
-      List<MainSearchModel> searchList, List<SearchRequerments> typelist) {
-    if (mainSearchModel.insert_to_list(typelist, searchList)) {
-      notifyListeners();
-    }
-  }
-
-  change_search_list(MainSearchModel mainSearchModel) {
-    mainSearchModel.set_selected(
-        getlist_type(mainSearchModel), mainSearchModel.id);
-
-    notifyListeners();
-  }
-
-  change_options_search_list(
-      int id, OptionsSearchListModel optionsSearchListModel) {
-    optionsSearchListModel.set_selected(
-        OptionsList.where((element) => element.id == id).first.item.ttlist,
-        optionsSearchListModel.id);
-
-    notifyListeners();
-  }
 
   List<MainSearchModel> getlist_type(MainSearchModel mainSearchModel) {
     switch (mainSearchModel.runtimeType) {
@@ -95,96 +61,7 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void sortSearchList(double startingPrice, double endingPrice,
-      {bool isPrice = true}) {
-    _searchProductList = [];
-    if (isPrice && startingPrice > 0 && endingPrice > startingPrice) {
-      _searchProductList.addAll(_filterProductList
-          .where((product) =>
-      (product.unitPrice) > startingPrice &&
-          (product.unitPrice) < endingPrice)
-          .toList());
-    } else {
-      _searchProductList.addAll(_filterProductList);
-    }
 
-    if (_filterIndex == 0) {
-    } else if (_filterIndex == 1) {
-      _searchProductList
-          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-    } else if (_filterIndex == 2) {
-      _searchProductList
-          .sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      Iterable iterable = _searchProductList.reversed;
-      _searchProductList = iterable.toList();
-    } else if (_filterIndex == 3) {
-      _searchProductList.sort((a, b) => a.unitPrice.compareTo(b.unitPrice));
-    } else if (_filterIndex == 4) {
-      _searchProductList.sort((a, b) => a.unitPrice.compareTo(b.unitPrice));
-      Iterable iterable = _searchProductList.reversed;
-      _searchProductList = iterable.toList();
-    }
-
-    // List<int> ju=[];
-    _selectedOptions.clear();
-    OptionsList.forEach((element) {
-      element.item.ttlist
-          .forEach((element2) => _selectedOptions.add(element2.id));
-    });
-
-    //  _selectedOptions=ju;
-
-    if (_selectedOptions.where((element) => element != 0).isNotEmpty) {
-      _searchProductList = _searchProductList.where((element) {
-        bool ifFound = false;
-        element.choiceOptions.forEach((element2) {
-          OptionsList.firstWhere(
-                  (element) => element.name.trim() == element2.title)
-              .item
-              .ttlist
-              .forEach((chosenelement) {
-            if (chosenelement.is_selected) {
-              if (chosenelement.id != 0) {
-                element2.options.forEach((optionselement) {
-                  if (optionselement.trim() == chosenelement.name.trim()) {
-                    ifFound = true;
-                  }
-                });
-              } else {
-                ifFound = true;
-              }
-            }
-          });
-        });
-
-        return ifFound;
-      }).toList();
-    }
-
-    if (_selected_category != 0) {
-      _searchProductList = _searchProductList.where((element) {
-        bool ifFound = true;
-
-        element.categoryIds.forEach((element) {
-          if (element.id == _selected_category) {
-            ifFound = true;
-          }
-        });
-        return ifFound;
-      }).toList();
-    }
-    if (_selected_brand != 0) {
-      _searchProductList = _searchProductList.where((element) {
-        bool ifFound = true;
-        if (element.brand_id == _selected_brand) {
-          ifFound = true;
-        }
-        return ifFound;
-      }).toList();
-    }
-
-    notifyListeners();
-  }
 
   List<Product> _searchProductList;
   List<Product> _filterProductList = [];
@@ -192,7 +69,6 @@ class SearchProvider with ChangeNotifier {
   int offset = 1;
   String _searchText = '';
   List<Product> get searchProductList => _searchProductList;
-  List<Product> get filterProductList => _filterProductList;
   bool get isClear => _isClear;
   String get searchText => _searchText;
 
@@ -202,20 +78,8 @@ class SearchProvider with ChangeNotifier {
 
   int foundSize = 0;
 
-  void setSearchText(String text) {
-    _searchText = text;
-    notifyListeners();
-  }
 
   void cleanSearchProduct() {
-    _searchProductList = [];
-    _filterProductList = [];
-    _isClear = true;
-    _searchText = '';
-    notifyListeners();
-  }
-
-  void cleanBroduct() {
     _searchProductList = [];
     _filterProductList = [];
     _isClear = true;
@@ -258,7 +122,8 @@ class SearchProvider with ChangeNotifier {
     ApiResponse apiResponse = await searchRepo.getSearchProductList(
         name: _searchText,
         atts: filteredAttributes,
-        offset: offset);
+        offset: offset,
+    sort: _filterIndex);
 
 
     print("sssss"+apiResponse.response.toString());
@@ -299,6 +164,18 @@ class SearchProvider with ChangeNotifier {
 
   Map<String, List<String>> get selectedAttributes => _selectedAttributes;
 
+  void selectAttribute1(String category, String attribute) {
+    if (_selectedAttributes[category].contains(attribute)) {
+      // If the attribute is already selected, deselect it
+      _selectedAttributes[category].remove(attribute);
+    } else {
+      // If the attribute is not selected, select it and deselect its parent
+      _selectedAttributes[category] = [attribute];
+      // You can add logic here to deselect the parent if necessary
+    }
+    notifyListeners();
+  }
+
   void selectAttribute(String category, String attribute) {
 
 
@@ -318,6 +195,10 @@ class SearchProvider with ChangeNotifier {
 
   }
 
+  void removeAllAttributes() {
+    _selectedAttributes.clear();
+    notifyListeners();
+  }
 
   void fetchMore(BuildContext context, {Function onNoMoreProducts}) async {
     offset += 1;
@@ -327,27 +208,15 @@ class SearchProvider with ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
 
   bool switchStatus=false;
-  final TextEditingController minPriceController = TextEditingController();
-  final TextEditingController maxPriceController = TextEditingController();
 
 
-  setSearch(bool value){
-    switchStatus=value;
-    notifyListeners();
-  }
-  List<String> getPriceFiler(){
-    List<String> _temp=[];
-    if(switchStatus){
-      _temp=[minPriceController.text.trim(),maxPriceController.text.trim()];
-    }
-    return _temp;
-  }
+
+
+
 
   clearFilters(){
     switchStatus=false;
     searchController.clear();
-    minPriceController.clear();
-    maxPriceController.clear();
     offset=1;
     _selectedAttributes.clear();
     notifyListeners();
@@ -363,6 +232,7 @@ class SearchProvider with ChangeNotifier {
         reload: reload
     );
   }
+
   Future<void> removeSearchHistoryIndex(int index) async {
     if (index >= 0 && index < _historyList.length) {
       String searchAddressToRemove = _historyList[index];
@@ -373,6 +243,7 @@ class SearchProvider with ChangeNotifier {
       }
     }
   }
+
   void initHistoryList() {
     _historyList = [];
     _historyList.addAll(searchRepo.getSearchAddress());

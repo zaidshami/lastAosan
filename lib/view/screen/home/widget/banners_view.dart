@@ -3,11 +3,13 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../../../../data/model/response/category.dart';
+import '../../../../data/model/response/filter_category_1.dart';
 import '../../../../provider/banner_provider.dart';
 import '../../../../provider/brand_provider.dart';
 import '../../../../provider/category_provider.dart';
 import '../../../../provider/splash_provider.dart';
 import '../../../../provider/top_seller_provider.dart';
+import '../../../../utill/app_constants.dart';
 import '../../../../utill/color_resources.dart';
 import '../../../../utill/images.dart';
 import '../../../../view/screen/product/brand_and_category_product_screen.dart';
@@ -37,6 +39,19 @@ BannersView({this.width,this.height,this.discount =false});
         Navigator.push(context, CupertinoPageRoute(builder: (_) =>
 
             BrandAndCategoryProductScreen(
+              attribute:    Attribute(
+                  id: int.parse(
+                      AppConstants.categoryId),
+                  name: "",
+                  childes: [
+
+                    Child(
+                      id:id.toString(),
+                      name: '${Provider.of<CategoryProvider>(context, listen: false).categoryList[cIndex].name}',
+
+                    )
+                  ]
+              ),
               isDiscounted: discount,
           isBrand: false,
           id: id.toString(),
@@ -62,6 +77,19 @@ BannersView({this.width,this.height,this.discount =false});
 
       subCategory!=null?   Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+              attribute:    Attribute(
+                  id: int.parse(
+                      AppConstants.categoryId),
+                  name: "",
+                  childes: [
+
+                    Child(
+                      id:id.toString(),
+                      name: subCategory.name,
+
+                    )
+                  ]
+              ),
             isDiscounted: discount,
               isBrand: false,
               subSubCategory:subCategory.subSubCategories,
@@ -71,6 +99,19 @@ BannersView({this.width,this.height,this.discount =false});
 
       )):Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+            attribute:    Attribute(
+                id: int.parse(
+                    AppConstants.categoryId),
+                name: "",
+                childes: [
+
+                  Child(
+                    id:id.toString(),
+                    name: ' ',
+
+                  )
+                ]
+            ),
             isDiscounted:discount,
             isBrand: false,
             id:id.toString(),
@@ -100,6 +141,19 @@ BannersView({this.width,this.height,this.discount =false});
 
       subCategory!=null?   Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+              attribute:    Attribute(
+                  id: int.parse(
+                      AppConstants.categoryId),
+                  name: "",
+                  childes: [
+
+                    Child(
+                      id:id.toString(),
+                      name: subCategory.name,
+
+                    )
+                  ]
+              ),
             isDiscounted:discount,
               isBrand: false,
               id:id.toString(),
@@ -108,6 +162,19 @@ BannersView({this.width,this.height,this.discount =false});
 
       )):Navigator.push(context, CupertinoPageRoute(builder: (_) =>
           BrandAndCategoryProductScreen(
+            attribute:    Attribute(
+                id: int.parse(
+                    AppConstants.categoryId),
+                name: "",
+                childes: [
+
+                  Child(
+                    id:id.toString(),
+                    name:'',
+
+                  )
+                ]
+            ),
             isDiscounted:discount,
             isBrand: false,
             id:id.toString(),
@@ -130,6 +197,20 @@ BannersView({this.width,this.height,this.discount =false});
     else if(type == 'brand'){
       if(Provider.of<BrandProvider>(context, listen: false).brandList[bIndex].name != null){
         Navigator.push(context, CupertinoPageRoute(builder: (_) => BrandAndCategoryProductScreen(
+          attribute:    Attribute(
+              id: int.parse(
+                  AppConstants.categoryId),
+              name: "",
+              childes: [
+
+                Child(
+                  id:id.toString(),
+                  name: '${Provider.of<BrandProvider>(context, listen: false).brandList[bIndex].name}',
+
+
+                )
+              ]
+          ),
           isDiscounted:discount,
           isBrand: true,
           id: id.toString(),
@@ -142,6 +223,7 @@ BannersView({this.width,this.height,this.discount =false});
     else if( type == 'shop'){
       if(Provider.of<TopSellerProvider>(context, listen: false).topSellerList[tIndex].name != null){
         Navigator.push(context, CupertinoPageRoute(builder: (_) => TopSellerProductScreen(
+
           topSellerId: id,
           topSeller: Provider.of<TopSellerProvider>(context,listen: false).topSellerList[tIndex],
         )));

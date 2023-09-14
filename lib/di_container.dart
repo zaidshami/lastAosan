@@ -1,7 +1,9 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_Aosan_ecommerce/data/model/response/filter_category.dart';
+import 'package:flutter_Aosan_ecommerce/data/repository/brand_pro_repo.dart';
 import 'package:flutter_Aosan_ecommerce/provider/attributes_provider.dart';
+import 'package:flutter_Aosan_ecommerce/provider/brand_pro_provider.dart';
 import 'package:flutter_Aosan_ecommerce/provider/filter_provider.dart';
 import '../../../../provider/category_provider.dart';
 import 'package:get_it/get_it.dart';
@@ -98,6 +100,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SupportTicketRepo(dioClient: sl()));
   sl.registerLazySingleton(() => LocationRepo(dioClient: sl()));
   sl.registerLazySingleton(() => WalletTransactionRepo(dioClient: sl()));
+  sl.registerLazySingleton(() => BrandProRepo(dioClient: sl()));
 
   // Provider
   sl.registerFactory(() => CategoryProvider(categoryRepo: sl()));
@@ -130,6 +133,7 @@ Future<void> init() async {
   sl.registerFactory(() => WalletTransactionProvider(transactionRepo: sl()));
   sl.registerFactory(() => FilterCategoryProvider( filterCategoryRepo: sl()));
   sl.registerFactory(() => AttributeProvider( attributeRepo: sl()));
+  sl.registerFactory(() => BrandProProvider( brandProRepo: sl()));
 
   // External
   final sharedPreferences = await SharedPreferences.getInstance();

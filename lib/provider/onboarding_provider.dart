@@ -10,6 +10,7 @@ class OnBoardingProvider with ChangeNotifier {
   OnBoardingProvider({@required this.onboardingRepo});
 
   List<OnboardingModel> _onBoardingList = [];
+
   List<OnboardingModel> get onBoardingList => _onBoardingList;
 
   int _selectedIndex = 0;

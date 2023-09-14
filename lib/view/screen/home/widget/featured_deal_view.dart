@@ -31,7 +31,7 @@ class FeaturedDealsView extends StatelessWidget {
           shrinkWrap: false,
           //physics: NeverScrollableScrollPhysics(),
           itemCount: featuredDealProvider.featuredDealProductList.length <20 && isHomePage ?
-          20 :featuredDealProvider.featuredDealProductList.length >20 && isHomePage?20: featuredDealProvider.featuredDealProductList.length,
+          featuredDealProvider.featuredDealProductList.length :featuredDealProvider.featuredDealProductList.length >20 && isHomePage?20: featuredDealProvider.featuredDealProductList.length,
           itemBuilder: (context, index) {
             // print('---ff-------${featuredDealProvider.featuredDealProductList[index].id}-=====================>${featuredDealProvider.featuredDealProductList[0].name}');
             return InkWell(
@@ -171,7 +171,7 @@ class FeaturedDealsView extends StatelessWidget {
           },
         ):
         StaggeredGridView.countBuilder(
-          mainAxisSpacing : 10.0,
+          mainAxisSpacing : 5.0,
           crossAxisSpacing : 5.0,
           scrollDirection:isHomePage ?Axis.horizontal:Axis.vertical,
           // padding: EdgeInsets.symmetric(
@@ -241,7 +241,7 @@ class FeaturedDealsView extends StatelessWidget {
                                   Text(
                                     featuredDealProvider.featuredDealProductList[index].name,
                                     style: robotoBold.copyWith(height: 1.3,fontSize: Dimensions.FONT_SIZE_SMALL),
-                                    maxLines: 2,
+                                    maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
 

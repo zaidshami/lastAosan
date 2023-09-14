@@ -289,6 +289,7 @@ class ConfigModel {
 }
 
 class BaseUrls {
+
   String _productImageUrl;
   String _productThumbnailUrl;
   String _brandImageUrl;
@@ -299,6 +300,9 @@ class BaseUrls {
   String _sellerImageUrl;
   String _shopImageUrl;
   String _notificationImageUrl;
+  String _attribute ;
+  String _attribute2 ;
+
 
   BaseUrls(
       {String productImageUrl,
@@ -310,7 +314,10 @@ class BaseUrls {
         String reviewImageUrl,
         String sellerImageUrl,
         String shopImageUrl,
-        String notificationImageUrl}) {
+        String notificationImageUrl,
+        String attribute,
+        String attribute2,
+      }) {
     this._productImageUrl = productImageUrl;
     this._productThumbnailUrl = productThumbnailUrl;
     this._brandImageUrl = brandImageUrl;
@@ -321,6 +328,8 @@ class BaseUrls {
     this._sellerImageUrl = sellerImageUrl;
     this._shopImageUrl = shopImageUrl;
     this._notificationImageUrl = notificationImageUrl;
+    this._attribute = attribute;
+    this._attribute2 = attribute2;
   }
 
   String get productImageUrl => _productImageUrl;
@@ -333,6 +342,8 @@ class BaseUrls {
   String get sellerImageUrl => _sellerImageUrl;
   String get shopImageUrl => _shopImageUrl;
   String get notificationImageUrl => _notificationImageUrl;
+  String get attribute => _attribute;
+  String get attribute2 => _attribute2;
 
 
   BaseUrls.fromJson(Map<String, dynamic> json) {
@@ -346,6 +357,8 @@ class BaseUrls {
     _sellerImageUrl = json['seller_image_url'];
     _shopImageUrl = json['shop_image_url'];
     _notificationImageUrl = json['notification_image_url'];
+    _attribute = json['attribute'];
+    _attribute2 = json['attribute2'];
   }
 
   Map<String, dynamic> toJson() {
@@ -360,6 +373,8 @@ class BaseUrls {
     data['seller_image_url'] = this._sellerImageUrl;
     data['shop_image_url'] = this._shopImageUrl;
     data['notification_image_url'] = this._notificationImageUrl;
+    data['attribute'] = this._attribute;
+    data['attribute2'] = this._attribute2;
     return data;
   }
 }

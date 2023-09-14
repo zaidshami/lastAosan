@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../data/model/response/base/api_response.dart';
@@ -8,7 +10,10 @@ import '../utill/app_constants.dart';
 
 class AttributeProvider extends ChangeNotifier {
   final AttributeRepo attributeRepo;
+
+  AttributeProvider({@required this.attributeRepo});
   List<Attribute> _attributes = [];
+  int currentAttributeIndex = 0;
 
   MainAttribute _mainAttribute ;
   List<Attribute> get attributes => _attributes;
@@ -32,12 +37,14 @@ int _selectedCount = 0;
 
   set selectedCount(int value) {
     _selectedCount = value;
+    notifyListeners();
   }
 
   void selectedCountIncrement(int value) {
-    _selectedCount += value;
+    _selectedCount = value;
     notifyListeners();
   }
+
   void selectedCountDecrement(int value) {
     _selectedCount -= value;
     notifyListeners();
@@ -49,27 +56,12 @@ int _selectedCount = 0;
   set isCategoryFilter(bool value) {
     _isCategoryFilter = value;
   }
-  void toggleCategoryFilter() {
-    _isCategoryFilter = !_isCategoryFilter;
-    notifyListeners(); // Notify listeners after the value is updated
-  }
 
-  AttributeProvider({@required this.attributeRepo});
+
   bool initialized = false;
 
   int get selectedParentIndex => _selectedParentIndex;
-  List<Child> getCatChilds(List<CategorySearchListModel> category_search_list){
-    List<Child> _temp=[];
 
-    category_search_list.forEach((element) {
-
-      _temp.add(Child(id: element.id.toString(),name: element.name,code: ""));
-
-    });
-
-    return _temp;
-
-  }
   Future<void>  initializeData(String searchText,String catId) async {
     if (!initialized) {
 
@@ -80,8 +72,6 @@ int _selectedCount = 0;
 
 
 
-
-  // Handles the loading state and notifies listeners
   Future<void> fetchCategoryFilterListCatNew(String searchText, String catId) async {
     setLoading(true);
 
@@ -93,14 +83,19 @@ int _selectedCount = 0;
       MainAttribute tdata =MainAttribute.fromJson(response.response.data) ;
       _mainAttribute=tdata;
       print('zzzzz2 ${tdata.toJson()}');
+      print('JSON Data: ${response.response.data}');
+
 
       List<Attribute> list = tdata.data;
-      _attributes.clear();
-    try{
-      _attributes.addAll(list);
-      // list.map((item) => _attributes.add(Attribute.fromJson(item))).toList();
 
-    }catch(e){}
+      selectedCount = tdata.count;
+      // _selectedCount = tdata.count;
+      _attributes.clear();
+      try{
+        _attributes.addAll(list);
+        // list.map((item) => _attributes.add(Attribute.fromJson(item))).toList();
+
+      }catch(e){}
       _attributes.toSet();
     } else {
       errorMessage = 'Failed to fetch attributes: ${response.error.toString()}';
@@ -109,17 +104,42 @@ int _selectedCount = 0;
     print("Dddd ${_attributes.length}");
 
     setLoading(false);
-     notifyListeners();
+    notifyListeners();
   }
-
-   Future<void> fetchCategoryFilterListCatAgain(String searchText,List<Selected> atts) async {
+/*  // Handles the loading state and notifies listeners
+  Future<void> fetchCategoryFilterListCatNew(String searchText, String catId) async {
     setLoading(true);
 
-    ApiResponse response = await attributeRepo.getCategoryFilterListCategoryAgain1( name: searchText,atts: atts);
+    ApiResponse response = _isCategoryFilter ? await attributeRepo.getCategoryFilterListCategory(catId) : await attributeRepo.getCategoryFilterList(searchText);
 
     if (response.response != null) {
 
       List<dynamic> list = response.response.data;
+      _attributes.clear();
+    try{
+      list.map((item) => _attributes.add(Attribute.fromJson(item))).toList();
+
+    }catch(e){}
+      _attributes.toSet();
+    } else {
+      errorMessage = 'Failed to fetch attributes: ${response.error.toString()}';
+      print(errorMessage);
+    }
+
+    setLoading(false);
+     notifyListeners();
+  }*/
+
+   Future<void> fetchCategoryFilterListCatAgain(String searchText,List<Selected> atts) async {
+     List<Selected> filteredAttributes = atts.where((attribute) => attribute.selected.isNotEmpty).toList();
+    setLoading(true);
+    ApiResponse response = await attributeRepo.getCategoryFilterListCategoryAgain1( name: searchText,atts: filteredAttributes);
+   // print('JSON Data: ${jsonEncode(atts)}');
+
+    if (response.response != null) {
+      // print('JSON Data: ${response.response.data}');
+
+      List<dynamic> list = response.response.data['data'];
       _attributes.clear();
     try{
       list.map((item) => _attributes.add(Attribute.fromJson(item))).toList();
@@ -138,13 +158,10 @@ int _selectedCount = 0;
 
   void setLoading(bool value) {
     loading = value;
-
-
   }
-//this coin has blow hy mind
+
   void selectParent(int index) {
     _selectedParentIndex = index;
-    notifyListeners();
+
   }
 }
-

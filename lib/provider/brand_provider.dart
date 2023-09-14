@@ -14,7 +14,6 @@ class BrandProvider extends ChangeNotifier {
 
   List<BrandModel> get brandList => _brandList;
 
-
   List<BrandSearch> get searchbrandList {
     List<BrandSearch> newlist=[];
     _brandList.forEach((element) {
@@ -22,7 +21,6 @@ class BrandProvider extends ChangeNotifier {
     });
     return newlist;
   }
-
   List<BrandModel> _originalBrandList = [];
 
   Future<void> getBrandList(int id,bool reload, BuildContext context) async {

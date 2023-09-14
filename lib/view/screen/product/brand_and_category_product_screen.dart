@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_Aosan_ecommerce/provider/attributes_provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import '../../../data/model/response/category.dart';
@@ -55,9 +56,11 @@ class _BrandAndCategoryProductScreenState
 
   @override
   void initState() {
+    String seearchText = Provider.of<SearchProvider>(context, listen: false).searchController.text.toString();
     Provider.of<ProductProvider>(context, listen: false).isFiltring= false;
     Provider.of<ProductProvider>(context,listen: false).selectedSub = null ;
     Provider.of<ProductProvider>(context, listen: false).initBrandOrCategoryProductList(widget.isBrand, widget.id, context, offset, reload: true);
+    Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,widget.id);
 
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -69,6 +72,7 @@ class _BrandAndCategoryProductScreenState
 
           offset++;
           Provider.of<ProductProvider>(context, listen: false).setcatsloading();
+          Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter= true;
           Provider.of<ProductProvider>(context, listen: false).isFiltring?   fetchMore():  Provider.of<ProductProvider>(context, listen: false).initBrandOrCategoryProductList(widget.isBrand, widget.id, context, offset,   reload: false);
           Provider.of<ProductProvider>(context, listen: false).initBrandOrCategoryProductList(widget.isBrand, widget.id, context, offset,   reload: false);
           print('the ppp is ' + widget.id);
@@ -150,220 +154,211 @@ class _BrandAndCategoryProductScreenState
                       widget.isBrand?SizedBox():
 
 
-                            Column(
-                              children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height / 20,
-                                  child: widget.subSubCategory != null
-                                      ? ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: widget.subSubCategory.length,
-                                    itemBuilder: (context, index) {
-                                      return Consumer<ProductProvider>(
-                                        builder: (context, productProvider, child) =>
-                                         InkWell(
-                                            onTap: () {
-                                              productProvider.selectedSub =
-                                                  index;
-                                              widget.id = widget
-                                                  .subSubCategory[index].id
-                                                  .toString();
+                      Column(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height / 20,
+                            child: widget.subSubCategory != null
+                                ? ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: widget.subSubCategory.length,
+                              itemBuilder: (context, index) {
+                                return Consumer<ProductProvider>(
+                                  builder: (context, productProvider, child) =>
+                                      InkWell(
+                                          onTap: () {
+                                            String seearchText = Provider.of<SearchProvider>(context, listen: false).searchController.text.toString();
 
-                                              offset = 1;
+                                            productProvider.selectedSub =
+                                                index;
+                                            widget.id = widget
+                                                .subSubCategory[index].id
+                                                .toString();
 
-                                              productProvider.isFiltring= false;
+                                            offset = 1;
+
+                                            productProvider.isFiltring= false;
                                             productProvider.initBrandOrCategoryProductList(widget.isBrand, widget
                                                 .subSubCategory[index].id.toString(), context, offset, reload: true);
-                                              print(widget
-                                                  .subSubCategory[index]
-                                                  .name);
-                                              print(widget.name);
-                                              print(widget
-                                                  .subSubCategory[index].id);
-                                              print(widget.id);
-                                              print(productProvider
-                                                  .selectedSub);
-                                            },
-                                            child: Container(
-                                              alignment: Alignment.center,
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                                  3,
-                                              margin: EdgeInsets.only(
-                                                  right: Dimensions
-                                                      .PADDING_SIZE_SMALL,
-                                                  left: Dimensions
-                                                      .PADDING_SIZE_SMALL),
-                                              decoration: BoxDecoration(
+                                            // Provider.of<SearchProvider>(context,listen: false).selectAttribute1(widget.id,widget.subSubCategory[index].id.toString());
+                                            Provider.of<AttributeProvider>(context, listen: false).fetchCategoryFilterListCatNew(seearchText,widget
+                                                .subSubCategory[index].id
+                                                .toString());
+                                            print(widget
+                                                .subSubCategory[index]
+                                                .name);
+                                            print(widget.name);
+                                            print(widget
+                                                .subSubCategory[index].id);
+                                            print(widget.id);
+                                            print(productProvider
+                                                .selectedSub);
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width /
+                                                3,
+                                            margin: EdgeInsets.only(
+                                                right: Dimensions
+                                                    .PADDING_SIZE_SMALL,
+                                                left: Dimensions
+                                                    .PADDING_SIZE_SMALL),
+                                            decoration: BoxDecoration(
+                                                color: productProvider
+                                                    .selectedSub ==
+                                                    index
+                                                    ? Colors.black
+                                                    : Colors.white,
+                                                border: Border.all(
+                                                    color: Colors.grey)),
+                                            child: Text(
+                                                widget.subSubCategory[index]
+                                                    .name,
+                                                style:
+                                                robotoRegular.copyWith(
+                                                  fontWeight: FontWeight.bold,
                                                   color: productProvider
                                                       .selectedSub ==
                                                       index
-                                                      ? Colors.black
-                                                      : Colors.white,
-                                                  border: Border.all(
-                                                      color: Colors.grey)),
-                                              child: Text(
-                                                  widget.subSubCategory[index]
-                                                      .name,
-                                                  style:
-                                                  robotoRegular.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: productProvider
-                                                        .selectedSub ==
-                                                        index
-                                                        ? Colors.white
-                                                        : Colors.black,
-                                                  )),
-                                            )),
-                                      );
-                                    },
-                                  )
-                                      : SizedBox(),
-                                ),
-                                SizedBox(height: 3,),
-                                Container(
-                                  margin:getMargin(all: 10),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: MediaQuery.of(context).size.height / 20,
-                                  child: widget.subSubCategory != null
-                                      ?   Container(
-                                    padding: getPadding(),
-                                    decoration: BoxDecoration(
-                                      color:Colors.black,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    width: MediaQuery.of(context).size.width*0.5,
+                                                      ? Colors.white
+                                                      : Colors.black,
+                                                )),
+                                          )),
+                                );
+                              },
+                            )
+                                : SizedBox(),
+                          ),
+                          SizedBox(height: 3,),
 
+                        ],
+                      ),
 
-                                    // width: 170,
-                                    child: IntrinsicHeight(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          // Expanded(child: Text('${getTranslated('products', context)}',style: robotoBold,)),
-                                          ///التصفية
-                                          Expanded(
-
-                                              child: InkWell(
-                                              onTap: (){
-
-                                                showModalBottomSheet(context: context,
-
-                                                    isScrollControlled: true,
-
-                                                    backgroundColor: Colors.white,
-
-                                                    //   useSafeArea:  false,
-
-                                                    builder: (c) => SearchSortByBottomSheet(widget.attribute,widget.id,true));
-
-                                              },
-                                              child: Center(child: _ItemWidget(getTranslated("sort_and_filters",context),Icons.sort)))),
-                                          // MiddlePageTransition(child: SearchSortByBottomSheet(widget.searchAttribute),),
-
-
-                                          VerticalDivider(thickness: 5,color: Colors.white,),
-                                          Expanded(child: InkWell(
-                                              onTap: (){
-                                                showModalBottomSheet(context: context,
-                                                    isScrollControlled: true, backgroundColor: Colors.transparent,
-                                                    builder: (c) => SearchFilterBottomSheet());
-                                              },
-                                              child: Center(child: _ItemWidget(getTranslated("sort_by",context),Icons.filter_alt)))),
-
-
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                      : SizedBox(),
-                                ),
-                              ],
-                            ),
-
-
-
+//
                     ]
                 );
               },
             ),
             Expanded(
-              child: Container(
-                alignment: Alignment.center,
-                height: MediaQuery.of(context).size.height,
-                child: Consumer<ProductProvider>(
-                  builder: (context, productProvider, child) {
-                    return Column(children: [
-
-
+              child: Consumer<ProductProvider>(
+                builder: (context, productProvider, child) {
+                  return Stack(
+                    children: [
                       SizedBox(
-                          height: Dimensions.PADDING_SIZE_SMALL/2),
+                        height: Dimensions.PADDING_SIZE_SMALL / 2,
+                      ),
                       // Products
-
                       ourList.length > 0
-                          ?
-                      Consumer<ProductProvider>(
-                        builder: (context, value, child) =>
-
-                         Expanded(
-                          flex: 15,
-                          child:
-                          Container(
-                            height: MediaQuery.of(context).size.height *0.8,
-                            child: StaggeredGridView.countBuilder(
-                              // padding: EdgeInsets.symmetric(
-                              //     horizontal: 2),
-
-                              physics: BouncingScrollPhysics(),
-                              crossAxisCount: 2,
-                              itemCount:ourList
-                                  .length,
-                              controller: _scrollController,
-                              shrinkWrap: true,
-                              staggeredTileBuilder:
-                                  (int index) =>
-                                  StaggeredTile.fit(1),
-                              itemBuilder:
-                                  (BuildContext context,
-                                  int index) {
-                                return ProductWidgetNew(
-                                    productModel:ourList[
-                                    index]);
-                              },
-                              crossAxisSpacing: 0,
-                            ),
+                          ? Consumer<ProductProvider>(
+                        builder: (context, value, child) => Container(
+                          height: MediaQuery.of(context).size.height * 0.9,
+                          child: StaggeredGridView.countBuilder(
+                            physics: BouncingScrollPhysics(),
+                            crossAxisCount: 2,
+                            itemCount: ourList.length,
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            staggeredTileBuilder: (int index) => StaggeredTile.fit(1),
+                            itemBuilder: (BuildContext context, int index) {
+                              return ProductWidgetNew(productModel: ourList[index]);
+                            },
+                            crossAxisSpacing: 0,
                           ),
                         ),
                       )
-
                           : Center(
                         child: productProvider.hasData
                             ? ProductShimmer(
                             isHomePage: false,
-                            isEnabled: ourList
-                                .length ==
-                                null)
-                            : NoInternetOrDataScreen(
-                            isNoInternet: false),
+                            isEnabled: ourList.length == null)
+                            : NoInternetOrDataScreen(isNoInternet: false),
                       ),
 
-                      Provider.of<ProductProvider>(context, listen: false).iscOLoading?
-                      Expanded(
-                        flex: 1 ,
-                        child: Consumer<ProductProvider>(
-                            builder: (context, productProvider, child) {
-                              return
-                                getloading(context,productProvider.iscOLoading);
-                            }
-                        ),
-                      ) : SizedBox(),
+                      // Other widgets here
 
-                      // Expanded(flex: 1, child: Container())
-                    ]);
-                  },
-                ),
+                      Provider.of<ProductProvider>(context, listen: false).iscOLoading
+                          ? Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Consumer<ProductProvider>(
+                          builder: (context, productProvider, child) {
+                            return getloading(context, productProvider.iscOLoading);
+                          },
+                        ),
+                      )
+                          : SizedBox(),
+
+                      Positioned(
+                        right: 100,
+                        bottom:30,
+                        child:
+                               Container(
+                          padding: getPadding(right: 6,left: 6,top: 7,bottom: 7),
+                          decoration: BoxDecoration(
+                            color:Colors.black.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          width: MediaQuery.of(context).size.width*0.5,
+
+
+                          // width: 170,
+                          child: IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(child: InkWell(
+                                    onTap: (){
+
+                                      showModalBottomSheet(context: context,
+                                          isScrollControlled: true, backgroundColor: Colors.transparent,
+                                          builder: (c) => SearchFilterBottomSheet(id: widget.id,isSearch: false,));
+                                    },
+                                    child: Center(child: _ItemWidget(getTranslated("sort_by",context),Icons.filter_alt)))),
+
+                                // MiddlePageTransition(child: SearchSortByBottomSheet(widget.searchAttribute),),
+
+
+                                VerticalDivider(thickness: 5,color: Colors.white,),
+
+                                Expanded(
+
+                                    child: InkWell(
+                                        onTap: (){
+
+
+                                          if(                                                Provider.of<AttributeProvider>(context, listen: false).isCategoryFilter)
+                                          {
+                                            Provider.of<SearchProvider>(context, listen: false).clearFilters();
+                                          Provider.of<SearchProvider>(context, listen: false).searchText='';
+                                          Provider.of<SearchProvider>(context, listen: false).searchController.text='';}
+
+                                          showModalBottomSheet(context: context,
+
+                                              isScrollControlled: true,
+
+                                              backgroundColor: Colors.white,
+
+
+
+                                              builder: (c) => SearchSortByBottomSheet(widget.attribute,widget.id,true));
+
+                                        },
+                                        child: Center(child: _ItemWidget(getTranslated("sort_and_filters",context),Icons.sort)))),
+
+                              ],
+                            ),
+                          ),
+                        )
+
+                      ),
+                    ],
+                  );
+
+                },
               ),
             ),
           ],
@@ -388,7 +383,7 @@ Widget _ItemWidget(String title, IconData iconData) {
           style: robotoBold.copyWith(color: Colors.white),
         ),
         Spacer(),
-        Icon(iconData,color: Colors.white),
+        Icon(iconData,color: Colors.white,size: 15,),
         Spacer()
       ],
     ),

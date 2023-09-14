@@ -20,6 +20,7 @@ class ProductProvider extends ChangeNotifier {
   HomeListModel _topsaleProductList = new HomeListModel("top_product");
   HomeListModel _bestproductsProductList = new HomeListModel("best_selling");
   HomeListModel _offerProductList =  new HomeListModel("discounted_product");
+  HomeListModel _sellerProductListti =  new HomeListModel("seller_product");
   int selectedSub ;
   bool _isFiltring = false;
 var _ourList ;
@@ -30,7 +31,7 @@ var _ourList ;
   }
   void clearOurList() {
     _ourList = null;
-    // _iscOLoading= true;
+   // _iscOLoading= true;
     notifyListeners();
 
   }
@@ -132,6 +133,8 @@ HomeListModel get_list_type(
 
   if (value == ProductType.NEW_ARRIVAL) {
 
+
+    //badry la hokalis
     return _n_lastestProductList;
 
   } else if (value == ProductType.TOP_PRODUCT) {
@@ -146,7 +149,12 @@ HomeListModel get_list_type(
 
       return _offerProductList;
 
-  }else{
+  }else if (value == ProductType.SELLER_PRODUCT) {
+
+    return _sellerProductListti;
+
+  }
+  else{
     return _n_lastestProductList;
 
   }
@@ -357,6 +365,11 @@ HomeListModel get_list_type(
   bool _hasData=false;
 
   List<Product> get brandOrCategoryProductList => _brandOrCategoryProductList;
+
+  set brandOrCategoryProductList(List<Product> value) {
+    _brandOrCategoryProductList = value;
+  }
+
   List<Product> get brandOrCategoryProductListWith50Disc => _brandOrCategoryProductListWith50Disc;
 
   bool get hasData => _hasData;
@@ -385,6 +398,7 @@ notifyListeners();
     _iscOLoading = false;
 
     if (/*apiResponse.response != null &&*/ apiResponse.response.statusCode == 200) {
+
       _brandOrCategoryProductList.addAll(ProductModel.fromJson(apiResponse.response.data).products);
 
       for (Product product in _brandOrCategoryProductList) {

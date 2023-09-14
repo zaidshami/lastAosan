@@ -29,7 +29,7 @@ class ItemWidget<T extends MainSearchModel> extends StatelessWidget{
 
              return InkWell(
                onTap: (){
-                 Provider.of<SearchProvider>(context, listen: false).change_search_list(item);
+                 // Provider.of<SearchProvider>(context, listen: false).change_search_list(item);
                },
                child: Container(
                    decoration:BoxDecoration(
