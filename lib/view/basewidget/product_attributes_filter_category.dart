@@ -278,7 +278,7 @@ Widget buildChildWidgets(
   return child.childes == null || child.childes.isEmpty
       ?
   CheckboxListTile(
-    enabled: child.count != 0,
+    // enabled: child.count != 0,
     activeColor: Colors.black,
 
     title: type == 4
