@@ -105,6 +105,8 @@ class Attribute {
   factory Attribute.fromJson(Map<String, dynamic> json) {
     List<Child> childesList = [];
     if (json['childes'] != null) {
+      // childesList = (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [];
+
       childesList = (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [];
     }
 

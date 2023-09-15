@@ -350,7 +350,7 @@ Widget buildChildWidgets(
         print('selected item count is :'+ child.count.toString());
 
       } else {
-        searchProvider.deselectAttribute(parentId, child.id);
+        searchProvider.deselectAttribute(parentId, child.id,attributeProvider.attributes);
         attributeProvider.selectedCountDecrement(child.count);
       }
     },
@@ -381,7 +381,7 @@ Widget buildChildWidgets(
               attributeProvider.selectedCountIncrement(child.count);
               // print('selected item count is :' + child.count.toString());
             } else {
-              searchProvider.deselectAttribute(parentId, child.id);
+              searchProvider.deselectAttribute(parentId, child.id,attributeProvider.attributes);
               attributeProvider.selectedCountDecrement(child.count);
             }
           },

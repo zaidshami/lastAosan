@@ -177,52 +177,89 @@ class SearchProvider with ChangeNotifier {
   }
 
 
-
   void selectAttribute(String category, String attribute,List<Attribute> list) {
 
     if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
       _selectedAttributes[category].add(attribute);
 
     }
-list.where((element) => element.id.toString()==category).forEach((element) {
+    list.where((element) => element.id.toString()==category).forEach((element) {
 
-  if(element.id.toString()==category){
-    // print("namooo "+element.childes.firstWhere((element) => element.id==attribute).name);
-    // print("zzzzzk ${attribute}");
-    // element.childes.forEach((element) {print('childid ${element.id}  child name ${element.name}');});
-    element.childes.forEach((elementm) {
-      // print("zzzzzk2 ${elementm.id}");
+        element.childes.forEach((elementm) {
 
-      elementm.getAllChildIds.forEach((elementsd) {
-       if(attribute==elementsd){
-         // print("zzzzzk3 $elementsd");
-         // print("zzzzzk3 ${elementsd.name}");
-         // _selectedAttributes[category].add(elementsd);
+          elementm.getAllChildIds.forEach((elementsd) {
 
-         elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
-           // print("zzzzzk4 ${elements.id}");
-           // print("zzzzzk5 ${elements.name}");
+            if(elementm.id==attribute){
+              _selectedAttributes[category].add(elementsd);
 
-           elements.getAllChildIds.forEach((element) {
+            }
 
-             _selectedAttributes[category].add(element);
+            if(attribute==elementsd){
 
-           });
-         });
+              elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
+                elements.getAllChildIds.forEach((element) {
+                  _selectedAttributes[category].add(element);
 
-       }
+                });
+              });
+            }
+          });
+        });
 
-      });
+
     });
-
-  }
-
-});
     notifyListeners();
 
 
 
   }
+
+
+//   void selectAttribute(String category, String attribute,List<Attribute> list) {
+//
+//     if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
+//       _selectedAttributes[category].add(attribute);
+//
+//     }
+// list.where((element) => element.id.toString()==category).forEach((element) {
+//
+//   if(element.id.toString()==category){
+//     // print("namooo "+element.childes.firstWhere((element) => element.id==attribute).name);
+//     // print("zzzzzk ${attribute}");
+//     // element.childes.forEach((element) {print('childid ${element.id}  child name ${element.name}');});
+//     element.childes.forEach((elementm) {
+//       // print("zzzzzk2 ${elementm.id}");
+//
+//       elementm.getAllChildIds.forEach((elementsd) {
+//        if(attribute==elementsd){
+//          // print("zzzzzk3 $elementsd");
+//          // print("zzzzzk3 ${elementsd.name}");
+//          // _selectedAttributes[category].add(elementsd);
+//
+//          elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
+//            // print("zzzzzk4 ${elements.id}");
+//            // print("zzzzzk5 ${elements.name}");
+//
+//            elements.getAllChildIds.forEach((element) {
+//
+//              _selectedAttributes[category].add(element);
+//
+//            });
+//          });
+//
+//        }
+//
+//       });
+//     });
+//
+//   }
+//
+// });
+//     notifyListeners();
+//
+//
+//
+//   }
 
   // void selectAttribute(String category, String attribute) {
   //
@@ -238,13 +275,45 @@ list.where((element) => element.id.toString()==category).forEach((element) {
   // }
 
 
-  void deselectAttribute(String category, String attribute) {
+  void deselectAttribute(String category, String attribute,List<Attribute> list) {
     if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
-      _selectedAttributes[category]?.remove(attribute);
-      notifyListeners();
+      _selectedAttributes[category].remove(attribute);
+
     }
+    list.where((element) => element.id.toString()==category).forEach((element) {
+
+      element.childes.forEach((elementm) {
+
+        elementm.getAllChildIds.forEach((elementsd) {
+          if(attribute==elementsd){
+            elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
+              elements.getAllChildIds.forEach((element) {
+                _selectedAttributes[category].remove(element);
+
+              });
+            });
+          }
+        });
+      });
+
+
+    });
+    notifyListeners();
+    //
+    // if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
+    //   _selectedAttributes[category]?.remove(attribute);
+    //   notifyListeners();
+    // }
 
   }
+
+  // void deselectAttribute(String category, String attribute) {
+  //   if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
+  //     _selectedAttributes[category]?.remove(attribute);
+  //     notifyListeners();
+  //   }
+  //
+  // }
 
   void removeAllAttributes() {
     _selectedAttributes.clear();

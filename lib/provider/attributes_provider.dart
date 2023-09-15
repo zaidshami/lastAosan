@@ -147,6 +147,7 @@ int _selectedCount = 0;
     }catch(e){}
       _attributes.toSet();
     } else {
+
       errorMessage = 'Failed to fetch attributes: ${response.error.toString()}';
       print(errorMessage);
     }
