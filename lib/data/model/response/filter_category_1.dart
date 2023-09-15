@@ -34,10 +34,40 @@ class Attribute {
   String name;
   List<Child> childes;
   int count ;
+  // List<String> get getAllChildIds{
+  //   List<String> _temp=[];
+  //   childes.forEach((element) {
+  //
+  //     print("phase 1 ${element.name}");
+  //     if(element.id!=null)
+  //       _temp.add(element.id);
+  //
+  //     element.childes.forEach((element2) {
+  //       print("phase 2 ${element2.name}");
+  //
+  //       if(element2.id!=null)
+  //         _temp.add(element2.id);
+  //
+  //       element2.getAllChildIds.forEach((element3) {
+  //
+  //         if(element3=null)
+  //           _temp.add(element3);
+  //       });
+  //
+  //
+  //     });
+  //
+  //     // if(element.id!=null)
+  //     //   _temp.add(element.id);
+  //   });
+  //   return _temp;
+  // }
 
   List<String> get getChildIds{
     List<String> _temp=[];
     childes.forEach((element) {
+
+
       if(element.id!=null)
         _temp.add(element.id);
     });
@@ -96,6 +126,86 @@ class Child {
   int count ;
   List<Child> childes = [];
 
+  List<String>  get getAllChildIds{
+    List<String> _temp=[];
+    // _temp.add(id);
+
+    childes.forEach((element) {
+
+      if(element.id!=null)
+        _temp.add(element.id);
+
+      print("vvvv parent ${element.name}");
+      print("vvvv parentid  ${element.id}");
+      // print("vvvv parentattr  ${attid}");
+
+     // if(attid==element.id||attid==""){
+        print("my length ${_temp.length}");
+        // print("my lengthj ${element.getAllChildIds('').length}");
+        print("my parent ${element.name}");
+        // if(_temp.firstWhere((elements) => elements==element.id).isEmpty){
+        //   _temp.add(element.id);
+        //
+        // }
+        // if(element.childes.isNotEmpty){
+          print("ccc ${element.name}");
+          // element.childes.forEach((elementk) {
+          //   print("ccc2 ${elementk.id}");
+          //   print("ccc2 ${elementk.name}");
+            print("ccc2 ${element.id}");
+            print("ccc2 ${element.name}");
+            // elementk.childes.forEach((element) {
+            //
+            // });
+
+
+        Child _tempo=element;
+        // _tempo.childes.forEach((element) {
+        //   _temp.add(element.id);
+        //
+        // });
+        _tempo.getAllChildIds.forEach((elementk) {
+          print("ccdd $elementk");
+
+          if(elementk!=null)
+                _temp.add(elementk);
+            });
+          // });
+
+
+          //
+          // element.childes.forEach((element2) {
+          //   getAllChildIds.forEach((element) {
+          //
+          //     if(element!=null)
+          //       _temp.add(element);
+          //   });
+          // });
+        // }
+    //  }
+//       if(element.childes.isNotEmpty){
+// print("ccc ${element.name}");
+//
+//         element.getAllChildIds(element.id).forEach((element) {
+//           if(element!=null)
+//             _temp.add(element);
+//         });
+//
+//         //
+//         // element.childes.forEach((element2) {
+//         //   getAllChildIds.forEach((element) {
+//         //
+//         //     if(element!=null)
+//         //       _temp.add(element);
+//         //   });
+//         // });
+//       }
+
+
+
+    });
+    return _temp;
+  }
   Child({@required this.id, @required this.name, this.code, this.childes, this.count, this.icon});
 
   factory Child.fromJson(Map<String, dynamic> json) {

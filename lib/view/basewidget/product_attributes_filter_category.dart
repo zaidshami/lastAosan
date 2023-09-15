@@ -65,7 +65,9 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                       provider.attributes.forEach((element) =>
                       selectedAttributes[element.id.toString()] = []);
                       if(widget.searchAttribute!=Attribute.nonAttribute()){
-                        try{ selectedAttributes[widget.searchAttribute.id.toString()] =widget.searchAttribute.getChildIds;}catch(e){}
+                        try{
+                          selectedAttributes[widget.searchAttribute.id.toString()]
+                          =widget.searchAttribute.getChildIds;}catch(e){}
 
                       }
                     }
@@ -110,48 +112,48 @@ class _NewProductAttributeListState extends State<NewProductAttributeList> {
                           Center(
                             child:  Text('${Provider.of<SearchProvider>(context,listen: false).searchController.text}',style: robotoBold,)) :SizedBox(),
 
-                        Padding(
-                         padding: getPadding(top: 0),
-                         child: Wrap(
-
-                            spacing: 8,
-                            children: selectedAttributes.entries.map((entry) {
-                              var attributeId = entry.key;
-                              var selectedChildIds = entry.value;
-                              // Use the function in your widget
-                              var grouped = groupChildrenByAttribute(selectedChildIds, provider.attributes);
-                              List<Widget> children = [];
-                              grouped.forEach((attributeName, childNames) {
-                                children.add(
-                                  Text(
-                                    attributeName + ': ' + childNames.join('-'),
-                                    style: robotoRegular,
-                                  ),
-                                );
-                              });
-
-                              Wrap(
-                                spacing: 4,
-                                children: children,
-                              );
-                              // Check if there are selected child attributes before showing the Card
-                              if (selectedChildIds.isNotEmpty) {
-                                return Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: children,
-                                    ),
-                                  ),
-                                );
-                              } else {
-                                // Return an empty Container if there are no selected child attributes
-                                return Container();
-                              }
-                            }).toList(),
-                          ),
-                       ),
+                       //  Padding(
+                       //   padding: getPadding(top: 0),
+                       //   child: Wrap(
+                       //
+                       //      spacing: 8,
+                       //      children: selectedAttributes.entries.map((entry) {
+                       //        var attributeId = entry.key;
+                       //        var selectedChildIds = entry.value;
+                       //        // Use the function in your widget
+                       //        var grouped = groupChildrenByAttribute(selectedChildIds, provider.attributes);
+                       //        List<Widget> children = [];
+                       //        grouped.forEach((attributeName, childNames) {
+                       //          children.add(
+                       //            Text(
+                       //              attributeName + ': ' + childNames.join('-'),
+                       //              style: robotoRegular,
+                       //            ),
+                       //          );
+                       //        });
+                       //
+                       //        Wrap(
+                       //          spacing: 4,
+                       //          children: children,
+                       //        );
+                       //        // Check if there are selected child attributes before showing the Card
+                       //        if (selectedChildIds.isNotEmpty) {
+                       //          return Card(
+                       //            child: Padding(
+                       //              padding: const EdgeInsets.all(8.0),
+                       //              child: Column(
+                       //                crossAxisAlignment: CrossAxisAlignment.start,
+                       //                children: children,
+                       //              ),
+                       //            ),
+                       //          );
+                       //        } else {
+                       //          // Return an empty Container if there are no selected child attributes
+                       //          return Container();
+                       //        }
+                       //      }).toList(),
+                       //    ),
+                       // ),
                         Expanded(
                           flex: 9,
                           child: Row(
@@ -341,7 +343,7 @@ Widget buildChildWidgets(
       // attributeProvider.fetchCategoryFilterListCatAgain(  searchProvider.searchText,searchProvider.filterEncode());
       if (value) {
 
-        searchProvider.selectAttribute(parentId, child.id);
+        searchProvider.selectAttribute(parentId, child.id,attributeProvider.attributes);
         print('the parent is :'+ parentId);
         print('the child is :'+ child.id);
         attributeProvider.selectedCountIncrement(child.count);
@@ -373,7 +375,7 @@ Widget buildChildWidgets(
           onChanged: (bool value) {
             // attributeProvider.fetchCategoryFilterListCatAgain(  searchProvider.searchText,searchProvider.filterEncode());
             if (value) {
-              searchProvider.selectAttribute(parentId, child.id);
+              searchProvider.selectAttribute(parentId, child.id,attributeProvider.attributes);
               // print('the parent is :' + parentId);
               // print('the child is :' + child.id);
               attributeProvider.selectedCountIncrement(child.count);

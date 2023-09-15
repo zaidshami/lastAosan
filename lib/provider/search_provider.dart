@@ -176,16 +176,67 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void selectAttribute(String category, String attribute) {
 
+
+  void selectAttribute(String category, String attribute,List<Attribute> list) {
 
     if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
       _selectedAttributes[category].add(attribute);
-      notifyListeners();
 
     }
+list.where((element) => element.id.toString()==category).forEach((element) {
+
+  if(element.id.toString()==category){
+    // print("namooo "+element.childes.firstWhere((element) => element.id==attribute).name);
+    // print("zzzzzk ${attribute}");
+    // element.childes.forEach((element) {print('childid ${element.id}  child name ${element.name}');});
+    element.childes.forEach((elementm) {
+      // print("zzzzzk2 ${elementm.id}");
+
+      elementm.getAllChildIds.forEach((elementsd) {
+       if(attribute==elementsd){
+         // print("zzzzzk3 $elementsd");
+         // print("zzzzzk3 ${elementsd.name}");
+         // _selectedAttributes[category].add(elementsd);
+
+         elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
+           // print("zzzzzk4 ${elements.id}");
+           // print("zzzzzk5 ${elements.name}");
+
+           elements.getAllChildIds.forEach((element) {
+
+             _selectedAttributes[category].add(element);
+
+           });
+         });
+
+       }
+
+      });
+    });
 
   }
+
+});
+    notifyListeners();
+
+
+
+  }
+
+  // void selectAttribute(String category, String attribute) {
+  //
+  //   if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
+  //     _selectedAttributes[category].add(attribute);
+  //     notifyListeners();
+  //
+  //
+  //   }
+  //
+  //
+  //
+  // }
+
 
   void deselectAttribute(String category, String attribute) {
     if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){

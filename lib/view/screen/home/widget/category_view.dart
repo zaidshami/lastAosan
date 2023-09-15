@@ -81,8 +81,9 @@ class CategoryView extends StatelessWidget {
                         id: categoryProvider.categoryList[categoryProvider.categorySelectedIndex].subCategories[index].id.toString(),
                         name: categoryProvider.categoryList[categoryProvider.categorySelectedIndex].subCategories[index].name,
                     attribute:       Attribute(
-                        id: int.parse(
-                            AppConstants.categoryId),
+                        id:
+                        // categoryProvider.categoryList[categoryProvider.categorySelectedIndex].subCategories[index].id ,
+                        int.parse(AppConstants.categoryId),
                         name: "",
                         childes: [
 
