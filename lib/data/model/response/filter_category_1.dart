@@ -105,11 +105,9 @@ class Attribute {
   factory Attribute.fromJson(Map<String, dynamic> json) {
     List<Child> childesList = [];
     if (json['childes'] != null) {
-      // childesList = (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [];
-
       childesList = (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [];
     }
-
+    // allChildes.addAll(childesList);
     return Attribute(
         id: json['id'],
         name: json['name'],
@@ -119,9 +117,10 @@ class Attribute {
   }
 
 }
-
+List<Child> allChildes=[];
 class Child {
   String id;
+  String parent_id;
   String name;
   String code;
   String icon ;
@@ -131,91 +130,32 @@ class Child {
   List<String>  get getAllChildIds{
     List<String> _temp=[];
     // _temp.add(id);
-
     childes.forEach((element) {
-
       if(element.id!=null)
         _temp.add(element.id);
 
-      print("vvvv parent ${element.name}");
-      print("vvvv parentid  ${element.id}");
-      // print("vvvv parentattr  ${attid}");
-
-     // if(attid==element.id||attid==""){
-        print("my length ${_temp.length}");
-        // print("my lengthj ${element.getAllChildIds('').length}");
-        print("my parent ${element.name}");
-        // if(_temp.firstWhere((elements) => elements==element.id).isEmpty){
-        //   _temp.add(element.id);
-        //
-        // }
-        // if(element.childes.isNotEmpty){
-          print("ccc ${element.name}");
-          // element.childes.forEach((elementk) {
-          //   print("ccc2 ${elementk.id}");
-          //   print("ccc2 ${elementk.name}");
-            print("ccc2 ${element.id}");
-            print("ccc2 ${element.name}");
-            // elementk.childes.forEach((element) {
-            //
-            // });
-
-
         Child _tempo=element;
-        // _tempo.childes.forEach((element) {
-        //   _temp.add(element.id);
-        //
-        // });
+
         _tempo.getAllChildIds.forEach((elementk) {
-          print("ccdd $elementk");
 
           if(elementk!=null)
                 _temp.add(elementk);
             });
-          // });
-
-
-          //
-          // element.childes.forEach((element2) {
-          //   getAllChildIds.forEach((element) {
-          //
-          //     if(element!=null)
-          //       _temp.add(element);
-          //   });
-          // });
-        // }
-    //  }
-//       if(element.childes.isNotEmpty){
-// print("ccc ${element.name}");
-//
-//         element.getAllChildIds(element.id).forEach((element) {
-//           if(element!=null)
-//             _temp.add(element);
-//         });
-//
-//         //
-//         // element.childes.forEach((element2) {
-//         //   getAllChildIds.forEach((element) {
-//         //
-//         //     if(element!=null)
-//         //       _temp.add(element);
-//         //   });
-//         // });
-//       }
-
-
 
     });
     return _temp;
   }
-  Child({@required this.id, @required this.name, this.code, this.childes, this.count, this.icon});
+  Child({@required this.id, @required this.name, this.code,this.parent_id, this.childes, this.count, this.icon});
 
   factory Child.fromJson(Map<String, dynamic> json) {
+    // allChildes.addAll((json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? []);
+
     return Child(
       id: json['id'].toString(),
       name: json['name'],
       code: json['code'],
       count: json['count'],
+      parent_id: json['parent_id'].toString(),
       icon: json['icon'],
       childes: (json['childes'] as List)?.map((i) => Child.fromJson(i))?.toList() ?? [],
     );

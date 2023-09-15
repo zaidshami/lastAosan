@@ -176,7 +176,6 @@ class SearchProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   void selectAttribute(String category, String attribute,List<Attribute> list) {
 
     if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
@@ -185,26 +184,26 @@ class SearchProvider with ChangeNotifier {
     }
     list.where((element) => element.id.toString()==category).forEach((element) {
 
-        element.childes.forEach((elementm) {
+      element.childes.forEach((elementm) {
 
-          elementm.getAllChildIds.forEach((elementsd) {
+        elementm.getAllChildIds.forEach((elementsd) {
 
-            if(elementm.id==attribute){
-              _selectedAttributes[category].add(elementsd);
+          if(elementm.id==attribute){
+            _selectedAttributes[category].add(elementsd);
 
-            }
+          }
 
-            if(attribute==elementsd){
+          if(attribute==elementsd){
 
-              elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
-                elements.getAllChildIds.forEach((element) {
-                  _selectedAttributes[category].add(element);
+            elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
+              elements.getAllChildIds.forEach((element) {
+                _selectedAttributes[category].add(element);
 
-                });
               });
-            }
-          });
+            });
+          }
         });
+      });
 
 
     });
@@ -213,6 +212,42 @@ class SearchProvider with ChangeNotifier {
 
 
   }
+  // void selectAttribute(String category, String attribute,List<Attribute> list) {
+  //
+  //   if(_selectedAttributes[category].where((element) => element==attribute).isEmpty){
+  //     _selectedAttributes[category].add(attribute);
+  //
+  //   }
+  //   list.where((element) => element.id.toString()==category).forEach((element) {
+  //
+  //       element.childes.forEach((elementm) {
+  //
+  //         elementm.getAllChildIds.forEach((elementsd) {
+  //
+  //           if(elementm.id==attribute){
+  //             _selectedAttributes[category].add(elementsd);
+  //
+  //           }
+  //
+  //           if(attribute==elementsd){
+  //
+  //             elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
+  //               elements.getAllChildIds.forEach((element) {
+  //                 _selectedAttributes[category].add(element);
+  //
+  //               });
+  //             });
+  //           }
+  //         });
+  //       });
+  //
+  //
+  //   });
+  //   notifyListeners();
+  //
+  //
+  //
+  // }
 
 
 //   void selectAttribute(String category, String attribute,List<Attribute> list) {
@@ -277,18 +312,39 @@ class SearchProvider with ChangeNotifier {
 
   void deselectAttribute(String category, String attribute,List<Attribute> list) {
     if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
+
+      beforeParent(category,attribute);
+
       _selectedAttributes[category].remove(attribute);
+      removeParent(category,attribute);
+
 
     }
     list.where((element) => element.id.toString()==category).forEach((element) {
 
+
       element.childes.forEach((elementm) {
 
         elementm.getAllChildIds.forEach((elementsd) {
+
+          if(elementm.id==attribute){
+            // _selectedAttributes[category].remove(elementm.parent_id);
+            beforeParent(category,elementsd);
+
+            _selectedAttributes[category].remove(elementsd);
+            removeParent(category,elementsd);
+
+
+          }
+
           if(attribute==elementsd){
+
             elementm.childes.where((element) => element.id==elementsd).forEach((elements) {
               elements.getAllChildIds.forEach((element) {
+                beforeParent(category,element);
+
                 _selectedAttributes[category].remove(element);
+                removeParent(category,element);
 
               });
             });
@@ -298,6 +354,7 @@ class SearchProvider with ChangeNotifier {
 
 
     });
+
     notifyListeners();
     //
     // if(_selectedAttributes[category].where((element) => element==attribute).isNotEmpty){
@@ -305,6 +362,45 @@ class SearchProvider with ChangeNotifier {
     //   notifyListeners();
     // }
 
+  }
+  beforeParent(String category,String childId) {
+    _selectedAttributes.forEach((key, value) {
+      // print("before  key $key : value $value  count${value.length}");
+      // print("value $value");
+    });
+
+  }
+   removeParent(String category,String childId){
+     _selectedAttributes.forEach((key, value) {
+       // print("key $key");
+       // print("after  key $key : value $value  count${value.length}");
+
+       // print("value $value");
+     });
+  return ;
+    _selectedAttributes.forEach((key, value) {
+      print("key $key");
+      print("value $value");
+      value.forEach((elementd) {
+        if(elementd==childId){
+          var io= allChildes.firstWhere((element) => element.id==elementd).parent_id;
+          _selectedAttributes[category].remove(io);
+
+        }
+        // allChildes.forEach((element) {
+        //   _selectedAttributes[category].remove(element);
+        //
+        // });
+        // list.forEach((element) {
+        //   var io=  element.childes.firstWhere((element) => element.id == elementd).parent_id;
+        //
+        // }
+
+       // );
+
+      });
+
+    });
   }
 
   // void deselectAttribute(String category, String attribute) {
